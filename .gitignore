@@ -1,3 +1,5 @@
 *.log
-server/db/config
+**/db/config
 **/node_modules
+app.yaml
+build

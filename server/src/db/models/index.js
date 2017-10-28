@@ -4,19 +4,18 @@ const Sequelize = require('sequelize');
 
 const basename = path.basename(module.filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config')[env];
+const dbConfig = require('../config/db.json')[env];
 const db = {};
 
-
 let sequelize;
-if (config.url) {
-  sequelize = new Sequelize(config.url, { dialect: config.dialect });
+console.log(dbConfig);
+if (dbConfig.url) {
+  sequelize = new Sequelize(dbConfig.url, { dialect: dbConfig.dialect, operatorsAliases: false });
 } else {
   sequelize = new Sequelize(
-    config.database, config.username, config.password, config
+    dbConfig.database, dbConfig.username, dbConfig.password, dbConfig
   );
 }
-
 
 fs
   .readdirSync(__dirname)

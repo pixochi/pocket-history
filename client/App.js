@@ -10,11 +10,11 @@ import MainNavigator from './MainNavigator';
 
 
 export default class App extends Component {
-        render() {
-                return (
-                        <Provider store={store}>
-                                        <MainNavigator />
-                        </Provider>
-                );
-        }
+  render() {
+	  return (
+      <Provider store={store}>
+        <MainNavigator />
+      </Provider>
+	  );
+  }
 }

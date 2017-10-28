@@ -14,13 +14,13 @@ import rootReducer from './rootReducer';
 const reduxLogger = createLogger();
 
 const offlineConfig = {
-        ...config,
-        effect: (effect, action) => axios(effect),
-        persistOptions: {
-                transforms: [
-        createBlacklistFilter('historyOnDay', ['selectedDate', 'isLoading', 'error']),
-        ]
-        }
+  ...config,
+  effect: (effect, action) => axios(effect),
+  persistOptions: {
+    transforms: [
+      createBlacklistFilter('historyOnDay', ['selectedDate', 'isLoading', 'error']),
+    ]
+  }
 };
 
 const store = createStore(

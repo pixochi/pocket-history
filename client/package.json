@@ -6,13 +6,10 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
-    "apollo-client": "^1.9.3",
     "axios": "^0.16.2",
     "expo": "^21.0.0",
-    "graphql-tag": "^2.4.2",
     "prop-types": "^15.6.0",
     "react": "16.0.0-alpha.12",
-    "react-apollo": "^1.4.16",
     "react-native": "https://github.com/expo/react-native/archive/sdk-21.0.2.tar.gz",
     "react-native-elements": "^0.17.0",
     "react-navigation": "^1.0.0-beta.15",

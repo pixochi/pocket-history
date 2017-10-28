@@ -1,0 +1,8 @@
+{
+  "expo": {
+    "name": "Pocket History",
+    "slug": "pocket-history",
+    "sdkVersion": "22.0.0",
+    "privacy": "public"
+  }
+}

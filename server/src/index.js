@@ -16,6 +16,23 @@ app.get('/', (req, res) => {
 	res.status(200).send('Server running');
 });
 
+app.get('/diary', (req, res) => {
+	const record = {
+		title: 'This day is over',
+		keywords: ['google', 'connection', 'sql'],
+		userId: 1
+	}
+
+	db('diaryRecords').insert(record)
+		.then(() => {
+			db('diaryRecords')
+				.then(records => res.send(records))
+		})
+		.catch(err => res.send(err));
+
+	
+});
+
 
 app.get('/users', (req, res) => {
 	db('users')

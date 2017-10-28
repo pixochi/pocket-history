@@ -1,6 +1,5 @@
 
 exports.up = function(knex, Promise) {
-  console.log('migrating')
   return Promise.all([
 
   		knex.schema
@@ -13,7 +12,7 @@ exports.up = function(knex, Promise) {
           table.string('email').unique();
           table.string('image');
           table.timestamp('createdAt').defaultTo(knex.fn.now());
-      	}).then(()=>console.log('users created')),
+      }),
 
 			knex.schema
 				.createTable('questions', function(table) {

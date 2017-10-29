@@ -7,13 +7,23 @@ import {
   ActivityIndicator,
   AsyncStorage
 } from 'react-native';
+import { TabNavigator } from 'react-navigation';
+import { Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-// ACTIONS
-import { fetchFacts } from './actions';
+// SCREENS
+import Events from './Events';
+import Births from './Births';
+import Deaths from './Deaths';
+import News from './News';
 
-// COMPONENTS
+
+// ACTIONS
+import { fetchFacts, changeCategory } from './actions';
+
+// // COMPONENTS
+import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
 
 // shape of a birth, death and an event object
@@ -25,6 +35,13 @@ const factShape = PropTypes.arrayOf(
     year: PropTypes.string.isRequired
   })
 );
+
+const FactsCategories = TabNavigator({
+  events: { screen: Events },
+  births: { screen: Births },
+  deaths: { screen: Deaths },
+  news: { screen: News }
+});
 
 
 class TodayInHistory extends Component {
@@ -43,7 +60,8 @@ class TodayInHistory extends Component {
       })
     ),
     isLoading: PropTypes.bool.isRequired,
-    selectedDate: PropTypes.string.isRequired
+    selectedDate: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired
   }
 
   componentDidMount() {
@@ -72,20 +90,16 @@ class TodayInHistory extends Component {
   }
 
   render() {
-    const { facts, selectedDate, isLoading, rehydrated } = this.props;
+    const { facts, selectedDate, isLoading, rehydrated, category } = this.props;
     const currentFacts = facts.find(day => day.date === selectedDate);
 
     if (isLoading || !rehydrated){
-      return (
-        <View style={styles.spinner}>
-          <ActivityIndicator size='large' />
-        </View>
-      )
+      return <Loader />
     }
 
     if(!currentFacts){
       return (
-        <View style={styles.spinner}>
+        <View style={styles.screenMiddle}>
           <Text>
             NO FACTS FOR THIS DATE
           </Text>
@@ -94,32 +108,31 @@ class TodayInHistory extends Component {
     }
 
     return (
-      <View>
-        <FlatList
-          data = {currentFacts.Events}
-          renderItem = {this.renderFact}
-          extraData = {currentFacts}
-          keyExtractor = {(fact) => fact.text}
-        />
+      <View style={styles.factsContainer}>
+        <FactsCategories screenProps={{currentFacts, renderFact: this.renderFact}} />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  spinner: {
+  factsContainer: {
+    flex: 1
+  },
+  screenMiddle: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15
+    marginBottom: 15,
   }
 });
 
 const mapStateToProps =
-  ({ historyOnDay: { facts, selectedDate, isLoading }, offline, persist}) => (
+  ({ historyOnDay: { facts, selectedDate, isLoading, category }, offline, persist}) => (
     {
       facts,
       selectedDate,
+      category,
       isLoading,
       isOnline: offline.online,
       rehydrated: persist.rehydrated
@@ -129,6 +142,9 @@ const mapStateToProps =
 const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (date) => {
     dispatch(fetchFacts(date))
+  },
+  changeCategory: (category) => {
+    dispatch(changeCategory(category))
   }
 });
 

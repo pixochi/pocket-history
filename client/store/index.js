@@ -7,9 +7,10 @@ import thunk from 'redux-thunk'; // async actions
 import promiseMiddleware from 'redux-promise-middleware';
 import { offline } from 'redux-offline';
 import config from 'redux-offline/lib/defaults';
-import { createBlacklistFilter } from 'redux-persist-transform-filter';
+import { createFilter } from 'redux-persist-transform-filter';
 
 import rootReducer from './rootReducer';
+
 
 const reduxLogger = createLogger();
 
@@ -18,7 +19,7 @@ const offlineConfig = {
   effect: (effect, action) => axios(effect),
   persistOptions: {
     transforms: [
-      createBlacklistFilter('historyOnDay', ['selectedDate', 'isLoading', 'error']),
+      createFilter('historyOnDay', ['facts'])
     ]
   }
 };

@@ -1,21 +1,30 @@
-import { FETCH_FACTS } from '../../constants/actionTypes';
+import { 
+  FETCH_FACTS, 
+  CHANGE_FACTS_CATEGORY 
+} from '../../constants/actionTypes';
+
 
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
+const MONTHS =  [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 // returns the current month and day
 const getDate = () => {
-  const dateObj = new Date(),
-  locale = "en-us",
+  const d = new Date();
   // format: October 25
-  date = dateObj.toLocaleString(locale, { month: "long", day: "numeric" });
+  const day = d.getDate();
+  const month = MONTHS[d.getMonth()];
 
-  return date;
+  return `${month} ${day}`;
 }
 
 const defaultState = {
   facts: [],
+  selectedFacts: [],
   selectedDate: getDate(),
   category: 'Events', // enum ['Events', 'Births', 'Deaths']
   isLoading: false,
@@ -28,17 +37,18 @@ const factsReducer = (state = defaultState, action) => {
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
       const { data } = action.payload;
+      const newFacts = { ...data.data, date: data.date };
       return {
         ...state,
         isLoading: false,
-        facts: [
-        ...state.facts.slice(-MAX_FACTS+1),
-        {...data.data, date: data.date}]
+        selectedFacts: newFacts,
+        facts: [...state.facts, newFacts].slice(-MAX_FACTS)
       }
-      break;
     }
     case `${FETCH_FACTS}_REJECTED`:
       return { ...state, isLoading: false, error: true };
+    case CHANGE_FACTS_CATEGORY:
+      return { ...state, category: action.category }
   }
   return state;
 }

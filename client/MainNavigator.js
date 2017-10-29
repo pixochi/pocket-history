@@ -1,6 +1,6 @@
 // REACT
 import React, { Component } from 'react';
-import { StackNavigator, DrawerNavigator } from 'react-navigation';
+import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
 
 import MenuIcon from './components/MenuIcon';
 
@@ -13,10 +13,9 @@ import MyHistory from './screens/MyHistory';
 import WhichHappenedSooner from './screens/WhichHappenedSooner';
 import LogOut from './screens/LogOut';
 
-
 const todayInHistoryScreen = StackNavigator(
   {
-    todayInHistory: { screen: TodayInHistory },
+    todayInHistory: {screen: TodayInHistory },
     factDetail: { screen: FactDetail }
   },
   {

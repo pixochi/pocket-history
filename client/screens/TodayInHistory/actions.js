@@ -1,11 +1,15 @@
 import axios from 'axios';
 
-import { FETCH_FACTS } from '../../constants/actionTypes';
+import { 
+	FETCH_FACTS, 
+	CHANGE_FACTS_CATEGORY 
+} from '../../constants/actionTypes';
 import { textDateToNumbers } from '../../utils/date';
 
 
 // fetch facts for the selected date
-export const fetchFacts = (date) => (dispatch, getState) => {
+export const fetchFacts = (date) => dispatch => {
+
 // [month]/[day]
 const apiDateFormat = textDateToNumbers(date);
 
@@ -14,4 +18,12 @@ const factsPromise = axios.get(`http://history.muffinlabs.com/date/${apiDateForm
 
 dispatch({ type: FETCH_FACTS, payload: factsPromise })
   .catch(e => console.log(e));
+}
+
+// change a category('Events', 'Births', 'Deaths')
+export const changeCategory = (category) => {
+	return {
+		type: CHANGE_FACTS_CATEGORY,
+		category
+	}
 }

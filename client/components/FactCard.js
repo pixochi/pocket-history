@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
   Text
 } from 'react-native';
 
-class FactCard extends Component {
+class FactCard extends PureComponent {
   render() {
         const { year, text } = this.props;
     return (

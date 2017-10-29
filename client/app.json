@@ -1,8 +1,22 @@
 {
   "expo": {
     "name": "Pocket History",
+    "description": "All about what happened, is happening and will happen.",
     "slug": "pocket-history",
-    "sdkVersion": "22.0.0",
-    "privacy": "public"
+    "privacy": "public",
+    "sdkVersion": "21.0.0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "icon": "./assets/icons/app-icon.png",
+    "loading": {
+      "icon": "./assets/icons/loading-icon.png"
+    },
+    "packagerOpts": {
+      "assetExts": ["ttf", "mp4"]
+    },
+    "ios": {
+      "supportsTablet": true
+    }
   }
 }

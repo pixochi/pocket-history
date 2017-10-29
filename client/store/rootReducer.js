@@ -4,7 +4,15 @@ import { combineReducers } from 'redux';
 import historyOnDay from '../screens/TodayInHistory/reducer';
 
 const rootReducer = combineReducers({
-    historyOnDay
+    historyOnDay,
+    persist: (state={rehydrated: false}, action) => {
+    	switch(action.type) {
+    		case 'persist/REHYDRATE' : {
+    			return { rehydrated: true }
+    		}
+    		default: return state
+    	}
+    }
 });
 
 

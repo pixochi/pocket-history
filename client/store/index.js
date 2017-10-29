@@ -23,14 +23,21 @@ const offlineConfig = {
   }
 };
 
-const store = createStore(
-        rootReducer,
-        {},
-        compose(
-                offline(offlineConfig),
-                applyMiddleware(thunk, reduxLogger, promiseMiddleware()),
+const configureStore = new Promise((resolve, reject) => {
+  try {
+    const store = createStore(
+      rootReducer,
+      {},
+      compose(
+        offline(offlineConfig),
+        applyMiddleware(thunk, reduxLogger, promiseMiddleware()),
+      )
+    );
+    resolve(store);
+  } catch(e) {
+    reject(e);
+  }
+});
 
-        )
-);
 
-export default store;
+export default configureStore;

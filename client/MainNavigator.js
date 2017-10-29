@@ -1,20 +1,43 @@
 // REACT
 import React, { Component } from 'react';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
 
-// STATE MANAGEMENT
-import { Provider } from 'react-redux';
-import store from './store';
+import MenuIcon from './components/MenuIcon';
 
-// COMPONENTS
-import MainNavigator from './MainNavigator';
+// SCREENS
+import TodayInHistory from './screens/TodayInHistory';
+import FactDetail from './screens/FactDetail';
+import Favorite from './screens/Favorite';
+import FuturePredictions from './screens/FuturePredictions';
+import MyHistory from './screens/MyHistory';
+import WhichHappenedSooner from './screens/WhichHappenedSooner';
+import LogOut from './screens/LogOut';
 
 
-export default class App extends Component {
+const todayInHistoryScreen = StackNavigator(
+  {
+    todayInHistory: { screen: TodayInHistory },
+    factDetail: { screen: FactDetail }
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerRight: <MenuIcon navigation={navigation} />
+    }),
+  }
+);
+
+
+export default class MainNavigator extends Component {
   render() {
-    return (
-	    <Provider store={store}>
-	      <MainNavigator />
-	    </Provider>
-    );
+  	const MainNavigator = DrawerNavigator({
+		  todayInHistory: { screen: todayInHistoryScreen },
+		  happenedSooner: { screen: WhichHappenedSooner },
+		  predictions: { screen: FuturePredictions },
+		  MyHistory: { screen: MyHistory },
+		  favorite: { screen: Favorite },
+		  logOut: { screen: LogOut }
+		});
+
+    return <MainNavigator />
   }
 }

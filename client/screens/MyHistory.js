@@ -8,7 +8,8 @@ import {
 
 class MyHistory extends Component {
   static navigationOptions = {
-    drawerLabel: 'Log Out'
+    drawerLabel: 'My History',
+    title: 'My History'
   }
 
   render() {

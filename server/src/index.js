@@ -29,14 +29,12 @@ app.get('/diary', (req, res) => {
 				.then(records => res.send(records))
 		})
 		.catch(err => res.send(err));
-
-	
 });
 
 
 app.get('/users', (req, res) => {
 	db('users')
-		.then((users) => { res.send(visits); })
+		.then((users) => { res.send(users); })
 		.catch(err => res.send(err));
 });
 

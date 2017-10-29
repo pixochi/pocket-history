@@ -29,8 +29,8 @@ const factShape = PropTypes.arrayOf(
 
 class TodayInHistory extends Component {
   static navigationOptions = {
-    title: 'Today In History',
-    drawerLabel: 'Today In History',
+    headerTitle: 'Today In History',
+    drawerLabel: 'Today In History'
   };
 
   static propTypes = {
@@ -48,14 +48,16 @@ class TodayInHistory extends Component {
 
   componentDidMount() {
     // AsyncStorage.clear();
-    const { fetchFacts, selectedDate } = this.props;
-    fetchFacts(selectedDate);
   }
 
   componentWillReceiveProps(nextProps) {
     const { fetchFacts, selectedDate } = this.props;
+    const { facts, rehydrated, isLoading } = nextProps;
 
-    if (nextProps.selectedDate !== selectedDate) {
+    const factsLoaded = facts.filter(factsForDay => factsForDay.date === selectedDate);
+    const dateChanged = nextProps.selectedDate !== selectedDate;
+
+    if (!isLoading && (dateChanged || (rehydrated && factsLoaded.length === 0 ))) {
       fetchFacts(nextProps.selectedDate);
     }
   }
@@ -70,10 +72,10 @@ class TodayInHistory extends Component {
   }
 
   render() {
-    const { facts, selectedDate, isLoading } = this.props;
+    const { facts, selectedDate, isLoading, rehydrated } = this.props;
     const currentFacts = facts.find(day => day.date === selectedDate);
 
-    if (isLoading){
+    if (isLoading || !rehydrated){
       return (
         <View style={styles.spinner}>
           <ActivityIndicator size='large' />
@@ -81,7 +83,7 @@ class TodayInHistory extends Component {
       )
     }
 
-    if(!isLoading && !currentFacts){
+    if(!currentFacts){
       return (
         <View style={styles.spinner}>
           <Text>
@@ -114,11 +116,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps =
-  ({ historyOnDay: { facts, selectedDate, isLoading }}) => (
+  ({ historyOnDay: { facts, selectedDate, isLoading }, offline, persist}) => (
     {
       facts,
       selectedDate,
-      isLoading
+      isLoading,
+      isOnline: offline.online,
+      rehydrated: persist.rehydrated
     }
 )
 

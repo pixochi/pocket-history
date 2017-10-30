@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 13844,
-  "expoServerNgrokUrl": "https://wm-85f.pixochi.client.exp.direct",
-  "packagerNgrokUrl": "https://packager.wm-85f.pixochi.client.exp.direct",
-  "ngrokPid": 13956
+  "packagerPid": 5000,
+  "expoServerNgrokUrl": "https://zh-yst.pixochi.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.zh-yst.pixochi.client.exp.direct",
+  "ngrokPid": 16156
 }

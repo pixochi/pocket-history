@@ -20,7 +20,7 @@ import News from './News';
 
 
 // ACTIONS
-import { fetchFacts, changeCategory } from './actions';
+import { fetchFacts } from './actions';
 
 // // COMPONENTS
 import Loader from '../../components/Loader';
@@ -41,7 +41,7 @@ const FactsCategories = TabNavigator({
   births: { screen: Births },
   deaths: { screen: Deaths },
   news: { screen: News }
-});
+}, { tabBarPosition: 'bottom' });
 
 
 class TodayInHistory extends Component {
@@ -80,6 +80,7 @@ class TodayInHistory extends Component {
     }
   }
 
+  // default rendering of each fact
   renderFact = ({ item }) => {
     return (
       <FactCard
@@ -89,11 +90,8 @@ class TodayInHistory extends Component {
     )
   }
 
-  render() {
-    const { facts, selectedDate, isLoading, rehydrated, category } = this.props;
-    const currentFacts = facts.find(day => day.date === selectedDate);
-
-    if (isLoading || !rehydrated){
+  renderFactScreen = (currentFacts, renderFact, category, isReady) => {
+     if (!isReady){
       return <Loader />
     }
 
@@ -108,8 +106,34 @@ class TodayInHistory extends Component {
     }
 
     return (
+      <View>
+        <FlatList
+          data = {currentFacts[category]}
+          renderItem = {renderFact}
+          extraData = {currentFacts[category]}
+          keyExtractor = {(fact) => fact.text}
+        />
+      </View>
+    )
+  }
+
+  render() {
+    const { facts, isLoading, rehydrated, selectedDate } = this.props;
+    const currentFacts = facts.find(day => day.date === selectedDate);
+
+
+    const screenProps = {
+      currentFacts,
+      renderFact: this.renderFact,
+      renderFactScreen: this.renderFactScreen,
+      isReady: (!isLoading && rehydrated)
+    }
+
+    return (
       <View style={styles.factsContainer}>
-        <FactsCategories screenProps={{currentFacts, renderFact: this.renderFact}} />
+        <FactsCategories
+          screenProps={screenProps} 
+        />
       </View>
     );
   }
@@ -142,9 +166,6 @@ const mapStateToProps =
 const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (date) => {
     dispatch(fetchFacts(date))
-  },
-  changeCategory: (category) => {
-    dispatch(changeCategory(category))
   }
 });
 

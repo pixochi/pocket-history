@@ -19,11 +19,3 @@ const factsPromise = axios.get(`http://history.muffinlabs.com/date/${apiDateForm
 dispatch({ type: FETCH_FACTS, payload: factsPromise })
   .catch(e => console.log(e));
 }
-
-// change a category('Events', 'Births', 'Deaths')
-export const changeCategory = (category) => {
-	return {
-		type: CHANGE_FACTS_CATEGORY,
-		category
-	}
-}

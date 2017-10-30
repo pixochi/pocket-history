@@ -9,17 +9,8 @@ import {
 
 class Births extends Component {
   render() {
-    const { currentFacts, renderFact } = this.props.screenProps;
-    return (
-      <View>
-        <FlatList
-          data = {currentFacts['Births']}
-          renderItem = {renderFact}
-          extraData = {currentFacts['Births']}
-          keyExtractor = {(fact) => fact.text}
-        />
-      </View>
-    )
+    const { currentFacts, renderFact, renderFactScreen, isReady } = this.props.screenProps;
+    return renderFactScreen(currentFacts, renderFact, 'Births', isReady);
   }
 }
 

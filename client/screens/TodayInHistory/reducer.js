@@ -47,10 +47,9 @@ const factsReducer = (state = defaultState, action) => {
     }
     case `${FETCH_FACTS}_REJECTED`:
       return { ...state, isLoading: false, error: true };
-    case CHANGE_FACTS_CATEGORY:
-      return { ...state, category: action.category }
+    default: 
+      return state
   }
-  return state;
 }
 
 export default factsReducer;

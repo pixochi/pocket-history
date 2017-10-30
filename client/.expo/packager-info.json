@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 5000,
+  "packagerPid": 15028,
   "expoServerNgrokUrl": "https://zh-yst.pixochi.client.exp.direct",
   "packagerNgrokUrl": "https://packager.zh-yst.pixochi.client.exp.direct",
-  "ngrokPid": 16156
+  "ngrokPid": 15040
 }

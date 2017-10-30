@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { 
 	FETCH_FACTS, 
-	CHANGE_FACTS_CATEGORY 
+	CHANGE_DATE 
 } from '../../constants/actionTypes';
 import { textDateToNumbers } from '../../utils/date';
 
@@ -18,4 +18,11 @@ const factsPromise = axios.get(`http://history.muffinlabs.com/date/${apiDateForm
 
 dispatch({ type: FETCH_FACTS, payload: factsPromise })
   .catch(e => console.log(e));
+}
+
+export const changeDate = (newDate) => {
+	return {
+		type: CHANGE_DATE,
+		date: newDate
+	}
 }

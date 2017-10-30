@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 // ACTIONS
-import { fetchFacts } from './actions';
+import { fetchFacts, changeDate } from './actions';
 
 // SCREENS
 import Events from './Events';
@@ -62,6 +62,15 @@ class TodayInHistory extends Component {
     const selectedFacts = facts[selectedDate];
     const dateChanged = nextProps.selectedDate !== selectedDate;
 
+    if (dateChanged) {
+      console.log('DATE CHANGED')
+      console.log(nextProps.selectedDate)
+      console.log(selectedDate)
+    } else {
+      console.log('(rehydrated && _.isEmpty(selectedFacts)')
+      console.log(selectedFacts)
+    }
+
     if (!isLoading && isOnline && (dateChanged || (rehydrated && _.isEmpty(selectedFacts) ))) {
       fetchFacts(nextProps.selectedDate);
     }
@@ -78,11 +87,10 @@ class TodayInHistory extends Component {
   }
 
   renderFactScreen = (selectedFacts, renderFact, category, isReady) => {
-     if (!isReady){
-      return <Loader />
-    }
 
-    if(_.isEmpty(selectedFacts)){
+    // no facts after a try to rehydrate
+    // or fetch the facts from API
+    if(isReady && _.isEmpty(selectedFacts)){
       return (
         <View style={styles.screenMiddle}>
           <Text>
@@ -94,12 +102,16 @@ class TodayInHistory extends Component {
 
     return (
       <View>
-        <FlatList
-          data = {selectedFacts[category]}
-          renderItem = {renderFact}
-          extraData = {selectedFacts[category]}
-          keyExtractor = {(fact) => fact.text}
-        />
+        <Loader animating={!isReady} />
+        <Button title='change date' onPress={() => this.props.changeDate('October 31')} />
+        { _.has(selectedFacts, category) &&
+          <FlatList
+            data = {selectedFacts[category]}
+            renderItem = {renderFact}
+            extraData = {selectedFacts[category]}
+            keyExtractor = {(fact) => fact.text}
+          />
+        }
       </View>
     )
   }
@@ -152,7 +164,10 @@ const mapStateToProps =
 
 const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (date) => {
-    dispatch(fetchFacts(date))
+    dispatch(fetchFacts(date));
+  },
+  changeDate: (date) => {
+    dispatch(changeDate(date));
   }
 });
 

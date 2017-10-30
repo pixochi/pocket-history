@@ -2,24 +2,28 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  ActivityIndicator,
+  ActivityIndicator
 } from 'react-native';
- 
 
-const Loader = () => {
+
+const Loader = ({animating}) => {
 	return (
 		<View style={styles.spinner}>
-			<ActivityIndicator size='large' />
+			<ActivityIndicator size={70} animating={animating} />
 		</View>
 	); 
 }
- 
+
 const styles = StyleSheet.create({
 	spinner: {
-		flex: 1,
+		position: 'absolute',
+		zIndex: -1000,
 		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 15
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0
 	}
 });
  

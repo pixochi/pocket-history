@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { 
   FETCH_FACTS, 
-  CHANGE_FACTS_CATEGORY 
+  CHANGE_DATE 
 } from '../../constants/actionTypes';
 
 
@@ -33,9 +33,9 @@ const defaultState = {
 }
 
 // @param max - number of daily facts saved
-// saves the specified number of facts
+// returns the specified number of facts
 const saveFactsSubset = (facts, max) => {
-  return _.pick(facts, Object.keys(facts).slice(-max))
+  return _.pick(facts, _.keys(facts).slice(-max));
 }
 
 const factsReducer = (state = defaultState, action) => {
@@ -50,13 +50,15 @@ const factsReducer = (state = defaultState, action) => {
         ...state,
         isLoading: false,
         selectedFacts: newFacts,
-        facts: saveFactsSubset({...state.facts, ...newFacts })
+        facts: saveFactsSubset({...state.facts, ...newFacts }, MAX_FACTS)
       }
     }
     case `${FETCH_FACTS}_REJECTED`:
       return { ...state, isLoading: false, error: true };
-    default: 
-      return state
+    case CHANGE_DATE: {
+      return { ...state, selectedDate: action.date }
+    }
+    default: return state
   }
 }
 

@@ -11,17 +11,18 @@ import { createFilter } from 'redux-persist-transform-filter';
 
 import rootReducer from './rootReducer';
 
-
+// shows all dispatched actions in the console
 const reduxLogger = createLogger();
 
+// redux-offline configuration
 const offlineConfig = {
   ...config,
   effect: (effect, action) => axios(effect),
-  persistOptions: {
-    transforms: [
-      createFilter('historyOnDay', ['facts'])
-    ]
-  }
+  // persistOptions: {
+  //   transforms: [
+  //     createFilter('historyOnDay', ['facts'])
+  //   ]
+  // }
 };
 
 const configureStore = new Promise((resolve, reject) => {

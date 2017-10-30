@@ -11,6 +11,10 @@ import { TabNavigator } from 'react-navigation';
 import { Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import _ from 'lodash';
+
+// ACTIONS
+import { fetchFacts } from './actions';
 
 // SCREENS
 import Events from './Events';
@@ -18,13 +22,10 @@ import Births from './Births';
 import Deaths from './Deaths';
 import News from './News';
 
-
-// ACTIONS
-import { fetchFacts } from './actions';
-
 // // COMPONENTS
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
+import { Calendar } from 'react-native-calendars';
 
 // shape of a birth, death and an event object
 const factShape = PropTypes.arrayOf(
@@ -50,32 +51,18 @@ class TodayInHistory extends Component {
     drawerLabel: 'Today In History'
   };
 
-  static propTypes = {
-    facts: PropTypes.arrayOf(
-      PropTypes.shape({
-        date: PropTypes.string,
-        Births: factShape,
-        Deaths: factShape,
-        Events: factShape
-      })
-    ),
-    isLoading: PropTypes.bool.isRequired,
-    selectedDate: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired
-  }
-
   componentDidMount() {
     // AsyncStorage.clear();
   }
 
   componentWillReceiveProps(nextProps) {
     const { fetchFacts, selectedDate } = this.props;
-    const { facts, rehydrated, isLoading } = nextProps;
+    const { facts, rehydrated, isLoading, isOnline } = nextProps;
 
-    const factsLoaded = facts.filter(factsForDay => factsForDay.date === selectedDate);
+    const selectedFacts = facts[selectedDate];
     const dateChanged = nextProps.selectedDate !== selectedDate;
 
-    if (!isLoading && (dateChanged || (rehydrated && factsLoaded.length === 0 ))) {
+    if (!isLoading && isOnline && (dateChanged || (rehydrated && _.isEmpty(selectedFacts) ))) {
       fetchFacts(nextProps.selectedDate);
     }
   }
@@ -90,12 +77,12 @@ class TodayInHistory extends Component {
     )
   }
 
-  renderFactScreen = (currentFacts, renderFact, category, isReady) => {
+  renderFactScreen = (selectedFacts, renderFact, category, isReady) => {
      if (!isReady){
       return <Loader />
     }
 
-    if(!currentFacts){
+    if(_.isEmpty(selectedFacts)){
       return (
         <View style={styles.screenMiddle}>
           <Text>
@@ -108,9 +95,9 @@ class TodayInHistory extends Component {
     return (
       <View>
         <FlatList
-          data = {currentFacts[category]}
+          data = {selectedFacts[category]}
           renderItem = {renderFact}
-          extraData = {currentFacts[category]}
+          extraData = {selectedFacts[category]}
           keyExtractor = {(fact) => fact.text}
         />
       </View>
@@ -119,7 +106,7 @@ class TodayInHistory extends Component {
 
   render() {
     const { facts, isLoading, rehydrated, selectedDate } = this.props;
-    const currentFacts = facts.find(day => day.date === selectedDate);
+    const currentFacts = facts[selectedDate];
 
 
     const screenProps = {

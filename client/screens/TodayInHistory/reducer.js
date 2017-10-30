@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { 
   FETCH_FACTS, 
   CHANGE_FACTS_CATEGORY 
@@ -13,9 +14,9 @@ const MONTHS =  [
 ];
 
 // returns the current month and day
+// format: October 25
 const getDate = () => {
   const d = new Date();
-  // format: October 25
   const day = d.getDate();
   const month = MONTHS[d.getMonth()];
 
@@ -23,12 +24,18 @@ const getDate = () => {
 }
 
 const defaultState = {
-  facts: [],
-  selectedFacts: [],
+  facts: {},
+  selectedFacts: {},
   selectedDate: getDate(),
   category: 'Events', // enum ['Events', 'Births', 'Deaths']
   isLoading: false,
   error: false
+}
+
+// @param max - number of daily facts saved
+// saves the specified number of facts
+const saveFactsSubset = (facts, max) => {
+  return _.pick(facts, Object.keys(facts).slice(-max))
 }
 
 const factsReducer = (state = defaultState, action) => {
@@ -37,12 +44,13 @@ const factsReducer = (state = defaultState, action) => {
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
       const { data } = action.payload;
-      const newFacts = { ...data.data, date: data.date };
+      let newFacts = {};
+      newFacts[data.date] = {...data.data};
       return {
         ...state,
         isLoading: false,
         selectedFacts: newFacts,
-        facts: [...state.facts, newFacts].slice(-MAX_FACTS)
+        facts: saveFactsSubset({...state.facts, ...newFacts })
       }
     }
     case `${FETCH_FACTS}_REJECTED`:

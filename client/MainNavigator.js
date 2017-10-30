@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
 
+// COMPONENTS
 import MenuIcon from './components/MenuIcon';
 
 // SCREENS

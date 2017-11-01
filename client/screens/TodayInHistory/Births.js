@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList
-} from 'react-native';
+
+import FactsScreen from './FactsScreen';
 
 
 class Births extends Component {
   render() {
-    const { currentFacts, renderFact, renderFactScreen, isReady } = this.props.screenProps;
-    return renderFactScreen(currentFacts, renderFact, 'Births', isReady);
+    const { screenProps } = this.props;
+    
+    return (
+    	<FactsScreen 
+    		{...screenProps}
+    		category='Births'
+    	/>
+    )
   }
 }
 

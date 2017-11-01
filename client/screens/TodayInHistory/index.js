@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  FlatList,
-  ActivityIndicator,
   AsyncStorage
 } from 'react-native';
 import { TabNavigator } from 'react-navigation';
@@ -23,9 +20,8 @@ import Deaths from './Deaths';
 import News from './News';
 
 // // COMPONENTS
-import Loader from '../../components/Loader';
-import FactCard from '../../components/FactCard';
 import { Calendar } from 'react-native-calendars';
+import FactCard from '../../components/FactCard';
 
 // shape of a birth, death and an event object
 const factShape = PropTypes.arrayOf(
@@ -42,7 +38,7 @@ const FactsCategories = TabNavigator({
   births: { screen: Births },
   deaths: { screen: Deaths },
   news: { screen: News }
-}, { tabBarPosition: 'bottom' });
+}, { tabBarPosition: 'bottom', lazy: true });
 
 
 class TodayInHistory extends Component {
@@ -56,22 +52,13 @@ class TodayInHistory extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetchFacts, selectedDate } = this.props;
-    const { facts, rehydrated, isLoading, isOnline } = nextProps;
+    const { facts, rehydrated, isLoading, 
+      isOnline, selectedDate, fetchFacts } = nextProps;
 
     const selectedFacts = facts[selectedDate];
-    const dateChanged = nextProps.selectedDate !== selectedDate;
+    const dateChanged = selectedDate !== this.props.selectedDate;
 
-    if (dateChanged) {
-      console.log('DATE CHANGED')
-      console.log(nextProps.selectedDate)
-      console.log(selectedDate)
-    } else {
-      console.log('(rehydrated && _.isEmpty(selectedFacts)')
-      console.log(selectedFacts)
-    }
-
-    if (!isLoading && isOnline && (dateChanged || (rehydrated && _.isEmpty(selectedFacts) ))) {
+    if (!isLoading && isOnline && rehydrated && _.isEmpty(selectedFacts) ) {
       fetchFacts(nextProps.selectedDate);
     }
   }
@@ -86,50 +73,26 @@ class TodayInHistory extends Component {
     )
   }
 
-  renderFactScreen = (selectedFacts, renderFact, category, isReady) => {
-
-    // no facts after a try to rehydrate
-    // or fetch the facts from API
-    if(isReady && _.isEmpty(selectedFacts)){
-      return (
-        <View style={styles.screenMiddle}>
-          <Text>
-            NO FACTS FOR THIS DATE
-          </Text>
-        </View>
-      )
-    }
-
-    return (
-      <View>
-        <Loader animating={!isReady} />
-        <Button title='change date' onPress={() => this.props.changeDate('October 31')} />
-        { _.has(selectedFacts, category) &&
-          <FlatList
-            data = {selectedFacts[category]}
-            renderItem = {renderFact}
-            extraData = {selectedFacts[category]}
-            keyExtractor = {(fact) => fact.text}
-          />
-        }
-      </View>
-    )
+  moveByDay = (direction) => {
+    const d = new Date(this.props.selectedDate);
+    d.setDate(d.getDate() + direction);
+    this.props.changeDate(d);
   }
 
   render() {
-    const { facts, isLoading, rehydrated, selectedDate } = this.props;
-    const currentFacts = facts[selectedDate];
-
+    const { facts, isLoading, rehydrated, selectedDate, changeDate } = this.props;
+    const selectedFacts = facts[selectedDate];
 
     const screenProps = {
-      currentFacts,
+      selectedFacts,
       renderFact: this.renderFact,
-      renderFactScreen: this.renderFactScreen,
       isReady: (!isLoading && rehydrated)
     }
 
     return (
       <View style={styles.factsContainer}>
+        <Button title='prev date' onPress={() => this.moveByDay(-1)} />
+        <Button title='next date' onPress={() => this.moveByDay(1)} />
         <FactsCategories
           screenProps={screenProps} 
         />
@@ -141,21 +104,14 @@ class TodayInHistory extends Component {
 const styles = StyleSheet.create({
   factsContainer: {
     flex: 1
-  },
-  screenMiddle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
   }
 });
 
 const mapStateToProps =
-  ({ historyOnDay: { facts, selectedDate, isLoading, category }, offline, persist}) => (
+  ({ historyOnDay: { facts, selectedDate, isLoading }, offline, persist}) => (
     {
       facts,
       selectedDate,
-      category,
       isLoading,
       isOnline: offline.online,
       rehydrated: persist.rehydrated

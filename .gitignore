@@ -3,4 +3,5 @@
 **/node_modules
 app.yaml
 build
-.*/
+**/.expo/packager-info.json
+**/.expo/settings.json

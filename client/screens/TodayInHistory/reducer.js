@@ -3,30 +3,18 @@ import {
   FETCH_FACTS, 
   CHANGE_DATE 
 } from '../../constants/actionTypes';
+import { toStateDate } from '../../utils/date';
 
 
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
-const MONTHS =  [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
 
-// returns the current month and day
-// format: October 25
-const getDate = () => {
-  const d = new Date();
-  const day = d.getDate();
-  const month = MONTHS[d.getMonth()];
-
-  return `${month} ${day}`;
-}
+const today = toStateDate(new Date());
 
 const defaultState = {
   facts: {},
-  selectedFacts: {},
-  selectedDate: getDate(),
+  selectedDate: today,
   category: 'Events', // enum ['Events', 'Births', 'Deaths']
   isLoading: false,
   error: false

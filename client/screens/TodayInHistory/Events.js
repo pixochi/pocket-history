@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 
+import FactsScreen from './FactsScreen';
+
 
 class Events extends Component {
   render() {
-    const { currentFacts, renderFact, renderFactScreen, isReady } = this.props.screenProps;
-    return renderFactScreen(currentFacts, renderFact, 'Events', isReady);
+    const { screenProps } = this.props;
+
+    return (
+    	<FactsScreen 
+    		{...screenProps}
+    		category='Events'
+    	/>
+    )   
   }
 }
 

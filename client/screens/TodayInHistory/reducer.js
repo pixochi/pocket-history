@@ -22,8 +22,15 @@ const defaultState = {
 
 // @param max - number of daily facts saved
 // returns the specified number of facts
-const saveFactsSubset = (facts, max) => {
-  return _.pick(facts, _.keys(facts).slice(-max));
+const saveFactsSubset = (facts, max, todaysDate) => {
+  const todaysFacts = facts[todaysDate]; // always save today's facts
+  let savedFacts = _.pick(facts, _.keys(facts).slice(-max+1));
+
+  if(todaysFacts !== null && _.isEmpty(savedFacts[todaysDate])){  
+    savedFacts[todaysDate] = todaysFacts;
+  }
+
+  return savedFacts;
 }
 
 const factsReducer = (state = defaultState, action) => {
@@ -38,7 +45,7 @@ const factsReducer = (state = defaultState, action) => {
         ...state,
         isLoading: false,
         selectedFacts: newFacts,
-        facts: saveFactsSubset({...state.facts, ...newFacts }, MAX_FACTS)
+        facts: saveFactsSubset({...state.facts, ...newFacts }, MAX_FACTS, state.selectedDate)
       }
     }
     case `${FETCH_FACTS}_REJECTED`:

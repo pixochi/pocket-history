@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
+  Text,
   AsyncStorage
 } from 'react-native';
 import { TabNavigator } from 'react-navigation';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -91,8 +92,21 @@ class TodayInHistory extends Component {
 
     return (
       <View style={styles.factsContainer}>
-        <Button title='prev date' onPress={() => this.moveByDay(-1)} />
-        <Button title='next date' onPress={() => this.moveByDay(1)} />
+        <View style={styles.header}>
+          <Icon 
+            name='keyboard-arrow-left'
+            size={44}
+            onPress={() => this.moveByDay(-1)} 
+          />
+          <Text style={styles.headerDate}>
+            { selectedDate }
+          </Text>
+          <Icon 
+            name='keyboard-arrow-right'
+            size={44}
+            onPress={() => this.moveByDay(1)} 
+          />
+        </View>
         <FactsCategories
           screenProps={screenProps} 
         />
@@ -104,6 +118,14 @@ class TodayInHistory extends Component {
 const styles = StyleSheet.create({
   factsContainer: {
     flex: 1
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  headerDate: {
+    fontSize: 25
   }
 });
 

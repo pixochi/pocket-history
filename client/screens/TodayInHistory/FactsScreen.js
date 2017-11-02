@@ -3,17 +3,22 @@ import {
   StyleSheet,
   View,
   Text,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native';
 import _ from 'lodash';
 
 // COMPONENTS
 import Loader from '../../components/Loader';
 
+import { HEADER_HEIGHT } from '../../constants/components';
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends Component {
   render() {
-  const { selectedFacts, renderFact, category, isReady } = this.props;
+  const { selectedFacts, renderFact, category, isReady, onScroll,
+  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
 
   // no facts after a try to rehydrate
   // or fetch the facts from API
@@ -31,11 +36,17 @@ class FactsScreen extends Component {
     <View style={{flex: 1}}>
       <Loader animating={!isReady} />
       { _.has(selectedFacts, category) &&
-        <FlatList
+        <AnimatedFlatList
+         	contentContainerStyle={styles.list}
           data = {selectedFacts[category]}
           extraData = {selectedFacts[category]}
           keyExtractor = {(fact) => fact.text}
           renderItem = {renderFact}
+          scrollEventThrottle={16}
+          onScroll={onScroll}
+          onMomentumScrollBegin={onMomentumScrollBegin}
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          onScrollEndDrag={onScrollEndDrag}
           getItemLayout={(data, index) => (
             {length: 80, offset: 80 * index, index}
           )}
@@ -52,6 +63,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
+  },
+  list: {
+  	padding: 4,
+  	paddingTop: HEADER_HEIGHT
   }
 });
 

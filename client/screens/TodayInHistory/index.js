@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  Animated,
   AsyncStorage
 } from 'react-native';
 import { TabNavigator } from 'react-navigation';
@@ -20,19 +21,12 @@ import Births from './Births';
 import Deaths from './Deaths';
 import News from './News';
 
-// // COMPONENTS
+// COMPONENTS
 import { Calendar } from 'react-native-calendars';
 import FactCard from '../../components/FactCard';
 
-// shape of a birth, death and an event object
-const factShape = PropTypes.arrayOf(
-  PropTypes.shape({
-    html: PropTypes.string,
-    links: PropTypes.arrayOf(PropTypes.object),
-    text: PropTypes.string,
-    year: PropTypes.string.isRequired
-  })
-);
+//CONSTANTS
+import { HEADER_HEIGHT } from '../../constants/components';
 
 const FactsCategories = TabNavigator({
   events: { screen: Events },
@@ -41,18 +35,77 @@ const FactsCategories = TabNavigator({
   news: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
 
-
 class TodayInHistory extends Component {
   static navigationOptions = {
     headerTitle: 'Today In History',
     drawerLabel: 'Today In History'
   };
 
+  state = {
+    scrollAnim: new Animated.Value(0),
+    offsetAnim: new Animated.Value(0),
+  };
+
+  _handleScroll = ({ value }) => {
+    this._previousScrollvalue = this._currentScrollValue;
+    this._currentScrollValue = value;
+  };
+  
+  _handleScrollEndDrag = () => {
+    this._scrollEndTimer = setTimeout(this._handleMomentumScrollEnd, 250);
+  };
+
+  _handleMomentumScrollBegin = () => {
+    clearTimeout(this._scrollEndTimer);
+  };
+
+  _showDate = () => {   
+    const previous = this._previousScrollvalue;
+    const current = this._currentScrollValue;
+    const currentDiff = previous - current;
+
+    // date is already shown
+    if (this.diff !== currentDiff && (previous <= current || current >= HEADER_HEIGHT) ) {
+      Animated.timing(
+      this.state.offsetAnim,
+      {
+        toValue: -this._currentScrollValue,
+        duration: 0,
+      }                              
+    ).start();
+      this.diff = previous - current;
+    }  
+  }
+  
+  _handleMomentumScrollEnd = () => {
+    const previous = this._previousScrollvalue;
+    const current = this._currentScrollValue;
+    
+    if (previous > current || current < HEADER_HEIGHT) {
+      Animated.spring(this.state.offsetAnim, {
+        toValue: -current,
+        tension: 300,
+        friction: 35,
+      }).start();
+    } else {
+      Animated.timing(this.state.offsetAnim, {
+        toValue: 0,
+        duration: 500,
+      }).start();
+    }
+  };
+
   componentDidMount() {
     // AsyncStorage.clear();
+     this.state.scrollAnim.addListener(this._handleScroll);
+  }
+
+  componentWillUnMount() {
+     this.state.scrollAnim.removeListener(this._handleScroll);
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
     const { facts, rehydrated, isLoading, 
       isOnline, selectedDate, fetchFacts } = nextProps;
 
@@ -83,16 +136,29 @@ class TodayInHistory extends Component {
   render() {
     const { facts, isLoading, rehydrated, selectedDate, changeDate } = this.props;
     const selectedFacts = facts[selectedDate];
+    const { scrollAnim, offsetAnim } = this.state;
+   
+    const translateY = Animated.add(scrollAnim, offsetAnim).interpolate({
+      inputRange: [0, HEADER_HEIGHT],
+      outputRange: [0, -HEADER_HEIGHT],
+      extrapolate: 'clamp'
+    });
 
     const screenProps = {
       selectedFacts,
       renderFact: this.renderFact,
-      isReady: (!isLoading && rehydrated)
+      isReady: (!isLoading && rehydrated),
+      onScroll: Animated.event(
+        [ { nativeEvent: { contentOffset: { y: this.state.scrollAnim } } } ],
+      ),
+      onMomentumScrollBegin: this._handleMomentumScrollBegin,
+      onMomentumScrollEnd: this._handleMomentumScrollEnd,
+      onScrollEndDrag: this._handleScrollEndDrag
     }
 
     return (
       <View style={styles.factsContainer}>
-        <View style={styles.header}>
+        <Animated.View style={[styles.header, { transform: [{translateY}] }]}>
           <Icon 
             name='keyboard-arrow-left'
             size={44}
@@ -106,8 +172,9 @@ class TodayInHistory extends Component {
             size={44}
             onPress={() => this.moveByDay(1)} 
           />
-        </View>
+        </Animated.View>
         <FactsCategories
+          onNavigationStateChange={this._showDate}
           screenProps={screenProps} 
         />
       </View>
@@ -120,9 +187,16 @@ const styles = StyleSheet.create({
     flex: 1
   },
   header: {
+    backgroundColor: 'green',
+    height: HEADER_HEIGHT,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000
   },
   headerDate: {
     fontSize: 25

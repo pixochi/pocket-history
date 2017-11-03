@@ -16,6 +16,12 @@ import { HEADER_HEIGHT } from '../../constants/components';
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends Component {
+	getItemLayout = (data, index) => (
+    {length: 80, offset: 80 * index, index}
+  );
+
+
+
   render() {
   const { selectedFacts, renderFact, category, isReady, onScroll,
   	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
@@ -47,9 +53,8 @@ class FactsScreen extends Component {
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           onScrollEndDrag={onScrollEndDrag}
-          getItemLayout={(data, index) => (
-            {length: 80, offset: 80 * index, index}
-          )}
+          getItemLayout={this.getItemLayout}
+          initialNumToRender={10}
         />
       }
     </View>

@@ -60,6 +60,7 @@ class TodayInHistory extends Component {
   };
 
   _showDate = () => {   
+    console.log('navigation changed')
     const previous = this._previousScrollvalue;
     const current = this._currentScrollValue;
     const currentDiff = previous - current;
@@ -105,7 +106,6 @@ class TodayInHistory extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
     const { facts, rehydrated, isLoading, 
       isOnline, selectedDate, fetchFacts } = nextProps;
 
@@ -133,16 +133,15 @@ class TodayInHistory extends Component {
     this.props.changeDate(d);
   }
 
-  render() {
-    const { facts, isLoading, rehydrated, selectedDate, changeDate } = this.props;
-    const selectedFacts = facts[selectedDate];
-    const { scrollAnim, offsetAnim } = this.state;
-   
-    const translateY = Animated.add(scrollAnim, offsetAnim).interpolate({
+  translateY = Animated.add(this.state.scrollAnim, this.state.offsetAnim).interpolate({
       inputRange: [0, HEADER_HEIGHT],
       outputRange: [0, -HEADER_HEIGHT],
       extrapolate: 'clamp'
     });
+
+  render() {
+    const { facts, isLoading, rehydrated, selectedDate, changeDate } = this.props;
+    const selectedFacts = facts[selectedDate];
 
     const screenProps = {
       selectedFacts,
@@ -156,6 +155,7 @@ class TodayInHistory extends Component {
       onScrollEndDrag: this._handleScrollEndDrag
     }
 
+    const translateY = this.translateY;
     return (
       <View style={styles.factsContainer}>
         <Animated.View style={[styles.header, { transform: [{translateY}] }]}>

@@ -9,7 +9,11 @@ import {
 const Loader = ({animating}) => {
 	return (
 		<View style={styles.spinner}>
-			<ActivityIndicator size={70} animating={animating} />
+			<ActivityIndicator 
+				size={70} 
+				animating={animating}
+				color='#B351E1'
+			/>
 		</View>
 	); 
 }

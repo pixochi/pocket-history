@@ -11,8 +11,9 @@ import { createFilter, createBlacklistFilter  } from 'redux-persist-transform-fi
 
 import rootReducer from './rootReducer';
 
-const { NODE_ENV = 'production' } = process.env;
-
+let { NODE_ENV } = process.env;
+NODE_ENV = 'production';
+// NODE_ENV = 'dev';
 
 // redux-offline configuration
 const offlineConfig = {
@@ -28,6 +29,7 @@ const offlineConfig = {
 
 let middleware = [thunk, promiseMiddleware()];
 if(NODE_ENV !== 'production'){
+  console.log(NODE_ENV)
   const reduxLogger = createLogger();
   middleware = [...middleware, reduxLogger]
 }

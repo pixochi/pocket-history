@@ -4,27 +4,28 @@ import {
 	FETCH_FACTS, 
 	CHANGE_DATE 
 } from '../../constants/actionTypes';
-import { toApiFactDate, toStateDate } from '../../utils/date';
+import { toApiFactDate, toFactDate } from '../../utils/date';
 
 
 // fetch facts for the selected date
-export const fetchFacts = (date) => dispatch => {
+export const fetchFacts = (timestamp) => dispatch => {
 
-// [month]/[day]
-const factsDate = toApiFactDate(date);
+// [month]/[day] -> 12/30
+const factApiDate = toApiFactDate(timestamp);
 
 // facts - events, births, deaths
-const factsPromise = axios.get(`http://history.muffinlabs.com/date/${factsDate}`);
+const factsPromise = axios.get(`http://history.muffinlabs.com/date/${factApiDate}`);
 
 dispatch({ type: FETCH_FACTS, payload: factsPromise })
   .catch(e => console.log(e));
 }
 
-export const changeDate = (dateObj) => {
-	const newDate = toStateDate(dateObj);
-
+export const changeDate = (timestamp) => {
 	return {
 		type: CHANGE_DATE,
-		date: newDate
+		date: {
+			timestamp,
+			factDate: toFactDate(timestamp)
+		}
 	}
 }

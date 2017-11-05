@@ -7,6 +7,7 @@ import {
   Animated
 } from 'react-native';
 import _ from 'lodash';
+import { Button } from 'react-native-elements';
 
 // COMPONENTS
 import Loader from '../../components/Loader';
@@ -20,45 +21,52 @@ class FactsScreen extends Component {
     {length: 80, offset: 80 * index, index}
   );
 
+  refetchFacts = () => {
+  	const { canFetch, fetchFacts, selectedDate } = this.props;
 
-
-  render() {
-  const { selectedFacts, renderFact, category, isReady, onScroll,
-  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
-
-  // no facts after a try to rehydrate
-  // or fetch the facts from API
-  if(isReady && _.isEmpty(selectedFacts)){
-    return (
-      <View style={styles.screenMiddle}>
-        <Text>
-          Check your internet connection and try again.
-        </Text>
-      </View>
-    )
+  	if (canFetch) {
+  		fetchFacts(selectedDate.timestamp);
+  	}
   }
 
-  return (
-    <View style={{flex: 1}}>
-      <Loader animating={!isReady} />
-      { _.has(selectedFacts, category) &&
-        <AnimatedFlatList
-         	contentContainerStyle={styles.list}
-          data = {selectedFacts[category]}
-          extraData = {selectedFacts[category]}
-          keyExtractor = {(fact) => fact.text}
-          renderItem = {renderFact}
-          scrollEventThrottle={16}
-          onScroll={onScroll}
-          onMomentumScrollBegin={onMomentumScrollBegin}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onScrollEndDrag={onScrollEndDrag}
-          getItemLayout={this.getItemLayout}
-          initialNumToRender={10}
-        />
-      }
-    </View>
-  )
+  render() {
+	  const { selectedFacts, renderFact, category, isReady, onScroll,
+	  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
+
+	  // no facts after a try to rehydrate
+	  // or fetch the facts from API
+	  if(isReady && _.isEmpty(selectedFacts)){
+	    return (
+	      <View style={styles.screenMiddle}>
+	        <Text>
+	          Check your internet connection and try again.
+	        </Text>
+	        <Button title='Try again' onPress={this.refetchFacts} />
+	      </View>
+	    )
+	  }
+
+	  return (
+	    <View style={{flex: 1}}>
+	      <Loader animating={!isReady} />
+	      { _.has(selectedFacts, category) &&
+	        <AnimatedFlatList
+	         	contentContainerStyle={styles.list}
+	          data = {selectedFacts[category]}
+	          extraData = {selectedFacts[category]}
+	          keyExtractor = {(fact) => fact.text}
+	          renderItem = {renderFact}
+	          scrollEventThrottle={16}
+	          onScroll={onScroll}
+	          onMomentumScrollBegin={onMomentumScrollBegin}
+	          onMomentumScrollEnd={onMomentumScrollEnd}
+	          onScrollEndDrag={onScrollEndDrag}
+	          getItemLayout={this.getItemLayout}
+	          initialNumToRender={10}
+	        />
+      	}
+    	</View>
+  	)
   }
 }
 

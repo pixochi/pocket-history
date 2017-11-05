@@ -3,19 +3,21 @@ import {
   FETCH_FACTS, 
   CHANGE_DATE 
 } from '../../constants/actionTypes';
-import { toStateDate } from '../../utils/date';
+import { toFactDate } from '../../utils/date';
 
 
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
 
-const today = toStateDate(new Date());
+const today = new Date();
 
 const defaultState = {
   facts: {},
-  selectedDate: today,
-  category: 'Events', // enum ['Events', 'Births', 'Deaths']
+  selectedDate: {
+    timestamp: today.getTime(),
+    factDate: toFactDate(today)
+  },
   isLoading: false,
   error: false
 }
@@ -38,20 +40,20 @@ const factsReducer = (state = defaultState, action) => {
     case `${FETCH_FACTS}_PENDING`:
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
-      const { data } = action.payload;
+      const { data, date } = action.payload.data;
       let newFacts = {};
-      newFacts[data.date] = {...data.data};
+      newFacts[date] = {...data};
       return {
         ...state,
         isLoading: false,
-        selectedFacts: newFacts,
         facts: saveFactsSubset({...state.facts, ...newFacts }, MAX_FACTS, state.selectedDate)
       }
     }
     case `${FETCH_FACTS}_REJECTED`:
       return { ...state, isLoading: false, error: true };
     case CHANGE_DATE: {
-      return { ...state, selectedDate: action.date }
+      // const { factDate, timestamp } = action.date;
+      return { ...state, selectedDate: {...action.date} }
     }
     default: return state
   }

@@ -11,6 +11,7 @@ import { Button } from 'react-native-elements';
 
 // COMPONENTS
 import Loader from '../../components/Loader';
+import FactCard from '../../components/FactCard';
 
 import { HEADER_HEIGHT } from '../../constants/components';
 
@@ -21,13 +22,15 @@ class FactsScreen extends Component {
     {length: 80, offset: 80 * index, index}
   );
 
-  refetchFacts = () => {
+  _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
 
   	if (canFetch) {
   		fetchFacts(selectedDate.timestamp);
   	}
   }
+
+  _renderFact = ({ item }) => <FactCard {...item} />
 
   render() {
 	  const { selectedFacts, renderFact, category, isReady, onScroll,
@@ -41,7 +44,7 @@ class FactsScreen extends Component {
 	        <Text>
 	          Check your internet connection and try again.
 	        </Text>
-	        <Button title='Try again' onPress={this.refetchFacts} />
+	        <Button title='Try again' onPress={this._refetchFacts} />
 	      </View>
 	    )
 	  }
@@ -55,7 +58,7 @@ class FactsScreen extends Component {
 	          data = {selectedFacts[category]}
 	          extraData = {selectedFacts[category]}
 	          keyExtractor = {(fact) => fact.text}
-	          renderItem = {renderFact}
+	          renderItem = {this._renderFact}
 	          scrollEventThrottle={16}
 	          onScroll={onScroll}
 	          onMomentumScrollBegin={onMomentumScrollBegin}

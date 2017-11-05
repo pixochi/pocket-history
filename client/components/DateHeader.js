@@ -17,6 +17,7 @@ const DateHeader = (props) => {
   return (
    	<Animated.View style={[styles.header, headerStyle]}>
       <Icon 
+        raised
         name='keyboard-arrow-left'
         color='#fff'
         underlayColor='#1d70b1'
@@ -32,6 +33,7 @@ const DateHeader = (props) => {
         onPress={openModal} 
       />
       <Icon 
+        raised
         name='keyboard-arrow-right'
         color='#fff'
         underlayColor='#1d70b1'

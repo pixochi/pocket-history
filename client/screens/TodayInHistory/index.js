@@ -26,7 +26,6 @@ import News from './News';
 // COMPONENTS
 import CalendarModal from '../../components/CalendarModal';
 import DateHeader from '../../components/DateHeader';
-import FactCard from '../../components/FactCard';
 
 //CONSTANTS
 import { HEADER_HEIGHT } from '../../constants/components';
@@ -50,6 +49,27 @@ class TodayInHistory extends Component {
     offsetAnim: new Animated.Value(0),
     isModalVisible: false
   };
+
+  componentDidMount() {
+    // AsyncStorage.clear();
+     this.state.scrollAnim.addListener(this._handleScroll);
+  }
+
+  componentWillUnMount() {
+     this.state.scrollAnim.removeListener(this._handleScroll);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { facts, rehydrated, isLoading, 
+      isOnline, selectedDate, fetchFacts } = nextProps;
+
+    const selectedFacts = facts[selectedDate.factDate];
+    const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
+
+    if (this.canFetch(nextProps) && _.isEmpty(selectedFacts) ) {
+      fetchFacts(nextProps.selectedDate.timestamp);
+    }
+  }  
 
   _handleScroll = ({ value }) => {
     this._previousScrollvalue = this._currentScrollValue;
@@ -105,43 +125,6 @@ class TodayInHistory extends Component {
     return (!isLoading && isOnline && rehydrated);
   }
 
-  componentDidMount() {
-    // AsyncStorage.clear();
-     this.state.scrollAnim.addListener(this._handleScroll);
-  }
-
-  componentWillUnMount() {
-     this.state.scrollAnim.removeListener(this._handleScroll);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { facts, rehydrated, isLoading, 
-      isOnline, selectedDate, fetchFacts } = nextProps;
-
-    const selectedFacts = facts[selectedDate.factDate];
-    const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
-
-    if (this.canFetch(nextProps) && _.isEmpty(selectedFacts) ) {
-      fetchFacts(nextProps.selectedDate.timestamp);
-    }
-  }
-
-  // default rendering of each fact
-  renderFact = ({ item }) => {
-    return (
-      <FactCard
-        text={item.text}
-        year={item.year}
-      />
-    )
-  }
-
-  translateY = Animated.add(this.state.scrollAnim, this.state.offsetAnim).interpolate({
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [0, -HEADER_HEIGHT],
-    extrapolate: 'clamp'
-  });
-
   closeModal = () => {
     this.setState({ isModalVisible: false });
   }
@@ -150,7 +133,12 @@ class TodayInHistory extends Component {
     this.setState({ isModalVisible: true });
   }
 
-  
+  translateY = Animated.add(this.state.scrollAnim, this.state.offsetAnim).interpolate({
+    inputRange: [0, HEADER_HEIGHT],
+    outputRange: [0, -HEADER_HEIGHT],
+    extrapolate: 'clamp'
+  });
+
   render() {
     const { facts, isLoading, rehydrated, selectedDate,
        changeDate, fetchFacts } = this.props;

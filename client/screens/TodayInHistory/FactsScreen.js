@@ -30,7 +30,7 @@ class FactsScreen extends Component {
   	}
   }
 
-  _renderFact = ({ item }) => <FactCard {...item} />
+  _renderFact = ({ item }) => <FactCard {...item} navigation={this.props.navigation} />
 
   render() {
 	  const { selectedFacts, renderFact, category, isReady, onScroll,

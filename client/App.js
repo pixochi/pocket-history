@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 
+import { MenuContext } from 'react-native-popup-menu';
+
 // STATE MANAGEMENT
 import { Provider } from 'react-redux';
 import configureStore from './store';
@@ -26,7 +28,9 @@ export default class App extends Component {
   	if (store) {
   		return (
 	      <Provider store={store}>
-	        <MainNavigator />
+	      	<MenuContext>
+	        	<MainNavigator />
+	        </MenuContext>
 	      </Provider>
 	  	);
   	}

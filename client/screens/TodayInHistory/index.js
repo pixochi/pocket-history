@@ -6,7 +6,7 @@ import {
   Animated,
   AsyncStorage
 } from 'react-native';
-import { TabNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 import { Button, Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -22,6 +22,7 @@ import Events from './Events';
 import Births from './Births';
 import Deaths from './Deaths';
 import News from './News';
+import FactDetail from '../FactDetail';
 
 // COMPONENTS
 import CalendarModal from '../../components/CalendarModal';
@@ -31,7 +32,10 @@ import DateHeader from '../../components/DateHeader';
 import { HEADER_HEIGHT } from '../../constants/components';
 
 const FactsCategories = TabNavigator({
-  events: { screen: Events },
+  events: { screen: StackNavigator({
+    events: { screen: Events },
+    eventDetail: { screen: FactDetail }
+  }) },
   births: { screen: Births },
   deaths: { screen: Deaths },
   news: { screen: News }
@@ -96,7 +100,7 @@ class TodayInHistory extends Component {
       {
         toValue: -this._currentScrollValue,
         duration: 0,
-      }                              
+      }
     ).start();
       this.diff = previous - current;
     }  
@@ -141,11 +145,12 @@ class TodayInHistory extends Component {
 
   render() {
     const { facts, isLoading, rehydrated, selectedDate,
-       changeDate, fetchFacts } = this.props;
+       changeDate, fetchFacts, navigation } = this.props;
 
     const selectedFacts = facts[selectedDate.factDate];
 
     const screenProps = {
+      navigation,
       selectedFacts,
       selectedDate,
       renderFact: this.renderFact,

@@ -33,7 +33,7 @@ export default class MainNavigator extends Component {
 		  todayInHistory: { screen: todayInHistoryScreen },
 		  happenedSooner: { screen: WhichHappenedSooner },
 		  predictions: { screen: FuturePredictions },
-		  MyHistory: { screen: MyHistory },
+		  myHistory: { screen: MyHistory },
 		  favorite: { screen: Favorite },
 		  logOut: { screen: LogOut }
 		});

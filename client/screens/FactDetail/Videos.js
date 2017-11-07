@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-
 import {
   StyleSheet,
   View,
   Text
 } from 'react-native';
 
-class FactDetail extends Component {
-
+class Videos extends Component {
   render() {
     return (
       <View>
-        <Text>
-          FactDetail
-        </Text>
+      	<Text>
+      	  Videos
+      	</Text>
       </View>
     );
   }
@@ -24,4 +22,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default FactDetail;
+export default Videos;

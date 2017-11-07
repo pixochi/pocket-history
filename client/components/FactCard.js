@@ -40,7 +40,7 @@ class FactCard extends PureComponent {
   }
 
   render() {
-    const { year, html, text } = this.props;
+    const { year, html, text, links } = this.props;
     const currentYear = new Date().getFullYear();
 
     const  options = [
@@ -100,7 +100,8 @@ class FactCard extends PureComponent {
           name='arrow-right-bold-circle'
           type='material-community'
           size={30}
-          style={styles.openDetailIcon} 
+          style={styles.openDetailIcon}
+          onPress={() => this.props.navigation.navigate('factDetail', { text, links })}
         />  
       </View>
     );

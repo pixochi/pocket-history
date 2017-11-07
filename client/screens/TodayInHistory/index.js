@@ -32,10 +32,7 @@ import DateHeader from '../../components/DateHeader';
 import { HEADER_HEIGHT } from '../../constants/components';
 
 const FactsCategories = TabNavigator({
-  events: { screen: StackNavigator({
-    events: { screen: Events },
-    eventDetail: { screen: FactDetail }
-  }) },
+  events: { screen: Events },
   births: { screen: Births },
   deaths: { screen: Deaths },
   news: { screen: News }

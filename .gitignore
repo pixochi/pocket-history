@@ -2,6 +2,7 @@
 **/db/config
 **/node_modules
 app.yaml
+config.json
 build
 **/.expo/packager-info.json
 **/.expo/settings.json

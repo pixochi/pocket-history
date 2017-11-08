@@ -55,7 +55,8 @@ const factsReducer = (state = defaultState, action) => {
       // const { factDate, timestamp } = action.date;
       return { ...state, selectedDate: {...action.date} }
     }
-    default: return state
+    default: 
+      return state;
   }
 }
 

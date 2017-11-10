@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 
-const Loader = ({animating}) => {
+const Loader = ({animating = true}) => {
 	return (
 		<View style={styles.spinner}>
 			<ActivityIndicator 

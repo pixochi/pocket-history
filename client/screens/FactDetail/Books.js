@@ -6,6 +6,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
+// COMPONENTS
+import Loader from '../../components/Loader';
+import BookCard from '../../components/BookCard';
+
 // ACTIONS
 import { fetchBooks } from './actions';
 
@@ -19,20 +23,19 @@ class Books extends Component {
 
   _renderBooks(books) {
     return books.map(book => (
-      <Text key={book.id}>
-        { book.title }
-      </Text>
+      <BookCard key={book.id} book={book} />
     ));
   }
 
   render() {
-    const { books } = this.props;
+    const { books, isLoading } = this.props;
+
+    if (isLoading) {
+      return <Loader />;
+    }
 
     return (
       <View>
-      	<Text>
-      	  Books
-      	</Text>
         <View>
           { this._renderBooks(books) }
         </View>

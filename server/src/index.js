@@ -5,7 +5,7 @@ import db from './db'; //database connection
 import booksRoute from './api/routes/books';
 
 
-const { PORT = 8000 } = process.env;
+const { PORT = 8800 } = process.env;
 
 const app = express();
 app.enable('trust proxy');
@@ -17,10 +17,9 @@ app.get('/', (req, res) => {
 	res.status(200).send('Server running');
 });
 
-// app.get('/api', booksController.getBooksForOneFact)
 app.use(booksRoute);
 
-app.get('*', (req, res) => res.send('this route wasnt caught'))
+app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 
 // FOR LATER USE
 // app.get('/diary', (req, res) => {
@@ -44,7 +43,6 @@ app.get('*', (req, res) => res.send('this route wasnt caught'))
 // 		.then((users) => { res.send(users); })
 // 		.catch(err => res.send(err));
 // });
-
 
 app.listen(PORT , () => {
 	console.log(`Server is now running on http://localhost:${PORT}`);

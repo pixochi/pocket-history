@@ -3,6 +3,7 @@
 **/node_modules
 app.yaml
 config.json
+config.js
 build
-**/.expo/packager-info.json
-**/.expo/settings.json
+packager-info.json
+settings.json

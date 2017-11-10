@@ -25,7 +25,7 @@ const defaultState = {
 const factDetailReducer = (state = defaultState, action) => {
   switch(action.type) {
     case `${FETCH_FACT_BOOKS}_PENDING`:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, books: [] };
     case `${FETCH_FACT_BOOKS}_FULFILLED`: 
       return {
         ...state,

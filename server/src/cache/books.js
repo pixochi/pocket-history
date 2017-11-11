@@ -10,10 +10,15 @@ export const getCachedBooks = (req, res, next) => {
     res.status(400).send('Missing parameter: textQuery');
   }
 
+  console.log('GETTING CACHED BOOKS')
+
   const hashedText = hash(textQuery);
 
   redisClient.get(hashedText, (err, data) => {
-    if (err) console.log(err);
+    if (err){
+      console.log(err);
+      next();
+    } 
 
     if (data != null) {
       res.send(data);

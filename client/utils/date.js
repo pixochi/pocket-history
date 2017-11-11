@@ -33,3 +33,16 @@ export const toCalendarDate = (timestamp) => {
 
   return `${year}-${month}-${day}`; // 2017-11-03
 }
+
+export const yearsAgo = (year) => {
+  const currentYear = new Date().getFullYear();
+
+  //remove strings from the beginning and end (BC,AC)
+  const yearNumber = parseInt(year.replace( /^\D+/g, ''));
+
+  if (year.indexOf('BC') > -1) {
+    return (currentYear + yearNumber);
+  }
+  
+  return currentYear - yearNumber;
+}

@@ -1,3 +1,5 @@
+// take into account only words which
+// start with a capital letter
 export const optimizeQuery = (queryText) => {
 	const words = queryText.split(' ');
 	let startsWithCapital = [];
@@ -9,5 +11,6 @@ export const optimizeQuery = (queryText) => {
 	});
 
 	const optimizedQuery = startsWithCapital.join(' ');
+
 	return optimizedQuery;
 }

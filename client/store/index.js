@@ -22,7 +22,8 @@ const offlineConfig = {
   persistOptions: {
     transforms: [
       createFilter('historyOnDay', ['facts']),
-      createBlacklistFilter('persist', ['rehydrated'])
+      createBlacklistFilter('persist', ['rehydrated']),
+      createBlacklistFilter('factDetail', ['books', 'videos'])
     ]
   }
 };

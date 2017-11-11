@@ -4,7 +4,8 @@ import {
   View,
   Text,
   Clipboard,
-  Share
+  Share,
+  Linking
 } from 'react-native';
 import HTMLView from 'react-native-htmlview';
 import {
@@ -14,6 +15,9 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import { Icon } from 'react-native-elements';
+
+import { yearsAgo } from '../utils/date';
+import { fixWikiLink } from '../utils/link';
 
 
 class FactCard extends PureComponent {
@@ -41,8 +45,7 @@ class FactCard extends PureComponent {
 
   render() {
     const { year, html, text, links } = this.props;
-    const currentYear = new Date().getFullYear();
-
+    
     const  options = [
       {
         onSelect: () => this._shareFact(text),
@@ -72,7 +75,7 @@ class FactCard extends PureComponent {
             </Text>
             <View style={{marginLeft: 15}}>
               <Text>
-                { currentYear - year } years ago
+                { yearsAgo(year) } years ago
               </Text>
             </View>
           </View>
@@ -80,7 +83,11 @@ class FactCard extends PureComponent {
           <View style={styles.menuContainer}>
             <Menu>
               <MenuTrigger>
-                <Icon name='options-vertical' type='simple-line-icon' />
+                <Icon 
+                  name='options-vertical' 
+                  type='simple-line-icon'
+                  color='#517fa4' 
+                />
               </MenuTrigger>
               <MenuOptions>
                 { this._renderMenuOptions(options) }
@@ -94,13 +101,16 @@ class FactCard extends PureComponent {
           value={html}
           RootComponent={Text}
           style={styles.factText}
+          onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
         />
 
         <Icon 
-          name='arrow-right-bold-circle'
+          name='chevron-double-right'
           type='material-community'
-          size={30}
+          size={40}
+          color='#517fa4'
           style={styles.openDetailIcon}
+          containerStyle={{ width: 50}}
           onPress={() => this.props.navigation.navigate('factDetail', { text, links })}
         />  
       </View>
@@ -111,11 +121,11 @@ class FactCard extends PureComponent {
 const styles = StyleSheet.create({
   factCard: {
     backgroundColor: '#fff',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#B351E1',
     borderRadius: 3,
-    margin: 4,
-    padding: 4
+    margin: 6,
+    padding: 8
   },
   cardHeader: {
     flexDirection: 'row',
@@ -140,8 +150,11 @@ const styles = StyleSheet.create({
   },
   openDetailIcon: {
     alignSelf: 'flex-end',
+  },
+  factText: {
+    // uncomment when finishing
+    // fontSize: 18 
   }
-
 });
 
 

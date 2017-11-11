@@ -24,6 +24,7 @@ const CalendarModal = (props) => {
       <Modal 
         isVisible={isVisible} 
         onBackdropPress={closeModal}
+        onBackButtonPress={closeModal}
       >
       <View style={{flex: 1}}>
         <Calendar
@@ -48,7 +49,7 @@ const CalendarModal = (props) => {
 
 const styles = StyleSheet.create({
   cancelBtn: {
-    backgroundColor: '#B351E1'
+    backgroundColor: 'rgb(255, 87, 35)'
   },
   cancelBtnText: {
     fontSize: 18

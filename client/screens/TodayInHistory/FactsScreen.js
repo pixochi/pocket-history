@@ -7,20 +7,18 @@ import {
   Animated
 } from 'react-native';
 import _ from 'lodash';
-import { Button } from 'react-native-elements';
 
 // COMPONENTS
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
+import NetworkProblem from '../../components/NetworkProblem';
 
 import { HEADER_HEIGHT } from '../../constants/components';
+
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends Component {
-	getItemLayout = (data, index) => (
-    {length: 80, offset: 80 * index, index}
-  );
 
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
@@ -39,18 +37,11 @@ class FactsScreen extends Component {
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
 	  if(isReady && _.isEmpty(selectedFacts)){
-	    return (
-	      <View style={styles.screenMiddle}>
-	        <Text>
-	          Check your internet connection and try again.
-	        </Text>
-	        <Button title='Try again' onPress={this._refetchFacts} />
-	      </View>
-	    )
+	    return <NetworkProblem solveConnection={this._refetchFacts} />
 	  }
 
 	  return (
-	    <View style={{flex: 1}}>
+	    <View style={styles.listContainer}>
 	      <Loader animating={!isReady} />
 	      { _.has(selectedFacts, category) &&
 	        <AnimatedFlatList
@@ -64,8 +55,7 @@ class FactsScreen extends Component {
 	          onMomentumScrollBegin={onMomentumScrollBegin}
 	          onMomentumScrollEnd={onMomentumScrollEnd}
 	          onScrollEndDrag={onScrollEndDrag}
-	          getItemLayout={this.getItemLayout}
-	          initialNumToRender={10}
+	          initialNumToRender={7}
 	        />
       	}
     	</View>
@@ -74,12 +64,10 @@ class FactsScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  screenMiddle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
+	listContainer: {
+		flex: 1,
+		marginBottom: 15
+	},
   list: {
   	padding: 4,
   	paddingTop: HEADER_HEIGHT

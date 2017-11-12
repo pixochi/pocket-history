@@ -29,7 +29,7 @@ export const getBooks = async(req, res) => {
 
 	try {
 		// data doesn't have a field 'items'
-		// if not books were found
+		// if no books were found
 		const { data: {items} } = await axios(apiUrl);
 
 		// no books found

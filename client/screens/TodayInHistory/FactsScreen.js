@@ -20,6 +20,20 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends Component {
 
+	// used to make the screen change faster
+	// first empty View is rendered instead of FlatList
+	state = { fakeLoading: false }
+
+	componentWillReceiveProps(nextProps) {
+		const { selectedDate } = this.props;
+		const dateChanged = (selectedDate.factDate !== nextProps.selectedDate.factDate);
+	  if (!this.state.fakeLoading && dateChanged) this.setState({ fakeLoading: true });
+	}
+
+	componentDidUpdate() {
+		if (this.state.fakeLoading) this.setState({ fakeLoading: false });
+	}
+
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
 
@@ -40,6 +54,10 @@ class FactsScreen extends Component {
 	    return <NetworkProblem solveConnection={this._refetchFacts} />
 	  }
 
+	  if (this.state.fakeLoading) {
+	  	return <View />
+	  }
+
 	  return (
 	    <View style={styles.listContainer}>
 	      <Loader animating={!isReady} />
@@ -55,7 +73,7 @@ class FactsScreen extends Component {
 	          onMomentumScrollBegin={onMomentumScrollBegin}
 	          onMomentumScrollEnd={onMomentumScrollEnd}
 	          onScrollEndDrag={onScrollEndDrag}
-	          initialNumToRender={7}
+	          initialNumToRender={8}
 	        />
       	}
     	</View>

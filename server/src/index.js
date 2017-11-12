@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 
 import db from './db'; //database connection
 import booksRoute from './api/routes/books';
+import videosRoute from './api/routes/videos';
 
 
 const { PORT = 8800 } = process.env;
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(booksRoute);
+app.use(videosRoute);
 
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 

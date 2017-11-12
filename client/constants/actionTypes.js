@@ -2,3 +2,4 @@
 export const FETCH_FACTS = 'FETCH_FACTS';
 export const CHANGE_DATE = 'CHANGE_DATE';
 export const FETCH_FACT_BOOKS = 'FETCH_FACT_BOOKS';
+export const FETCH_FACT_VIDEOS = 'FETCH_FACT_VIDEOS';

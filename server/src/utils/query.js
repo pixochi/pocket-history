@@ -2,6 +2,11 @@
 // start with a capital letter
 export const optimizeQuery = (queryText) => {
 	const words = queryText.split(' ');
+
+	if (words.length === 0) {
+		return queryText;
+	}
+
 	let startsWithCapital = [];
 
 	words.forEach((w) => {

@@ -6,6 +6,7 @@ import {
 
 const defaultState = {
   books: [],
+  videos: [],
   isLoading: false,
   error: false
 }

@@ -83,8 +83,7 @@ class FactsScreen extends Component {
 
 const styles = StyleSheet.create({
 	listContainer: {
-		flex: 1,
-		marginBottom: 15
+		flex: 1
 	},
   list: {
   	padding: 4,

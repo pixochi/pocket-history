@@ -10,7 +10,7 @@ const FactDetail = TabNavigator({
   articles: { screen: Articles },
   books: { screen: Books },
   videos: { screen: Videos },
-}, { tabBarPosition: 'bottom', lazy: true });
+}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false });
 
 
 export default FactDetail;

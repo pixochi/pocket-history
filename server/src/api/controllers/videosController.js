@@ -10,7 +10,7 @@ import { optimizeQuery } from '../../utils/query';
 const YTB_API_KEY = CONFIG.youtube.key;
 const YTB_API_URL = 'https://www.googleapis.com/youtube/v3/search?';
 
-export const getVideos = async(req, res) => {
+export const getVideos = async (req, res) => {
 	console.log('GETTING VIDEOS FROM API');
 
 	const { textQuery } = req.query;
@@ -38,8 +38,13 @@ export const getVideos = async(req, res) => {
 		if (!items){
 			res.send([]);
 		} else {
-			// return only videoIds
-			const videos = items.map(video => ({id: video.id.videoId}));
+			// return only videoIds and titles
+			const videos = items.map(video => (
+				{
+					id: video.id.videoId,
+					title: video.snippet.title
+				}
+			));
 
 			cacheVideos(textQuery, videos).then(() => {
 				res.send(videos);

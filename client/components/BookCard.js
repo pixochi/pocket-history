@@ -9,14 +9,15 @@ import {
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 
-const removeHtmlTags = (str) => {
-  if ((str == null) || (str === '')) return false;
-  return str.replace(/<[^>]*>/g, '');
-}
+import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
+
+import gStyles from '../styles';
+
 
 const BookCard = ({book, onBookPress}) => {
 	const fullScreenBookPreview = `${book.previewLink}#f=true`;
-	const description = book.description || removeHtmlTags(book.textSnippet);
+	let description = book.description || book.textSnippet || '';
+	description = replaceHtmlChars(removeHtmlTags(description));
 
   return (
     <View style={styles.bookCardContainer}>
@@ -29,11 +30,13 @@ const BookCard = ({book, onBookPress}) => {
 	    		title='Read'
 	    		onPress={() => Linking.openURL(fullScreenBookPreview)}
 	    		buttonStyle={styles.btn}
+	    		textStyle={styles.btnText}
 	    	/>
 	    	<Button 
 	    		title='Buy'
 	    		onPress={() => Linking.openURL(book.infoLink)}
 	    		buttonStyle={styles.btn}
+	    		textStyle={styles.btnText}
 	    	/>
     	</View>
     	<TouchableOpacity 
@@ -44,13 +47,12 @@ const BookCard = ({book, onBookPress}) => {
 	    		style={styles.img}
 	        source={{uri: book.image}}
 	      />
-	      <View style={styles.bookOverlay}>
-	      	<Icon 
+	      <View style={gStyles.overlay}>
+	      	<Icon
 	      		name='magnifying-glass'
 	      		type='entypo'
 	      		size={50}
 	      		color='#962939'
-	      		style={styles.bookIcon}
 	      	/>
 	      </View>
       </TouchableOpacity>
@@ -83,6 +85,8 @@ const styles = StyleSheet.create({
 	},
 	imgContainer: {
 		flex: .35,
+		alignItems: 'center',
+		justifyContent: 'center',
 		height: 180,
 		margin: 5,
 		marginLeft: 0,
@@ -93,20 +97,12 @@ const styles = StyleSheet.create({
 		borderColor: '#ddd',
 		borderWidth: 1
 	},
-	bookOverlay: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
-		zIndex: 1000,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'rgba(255,255,255,.3)'
-	},
 	btn: {
 		marginBottom: 10,
 		backgroundColor: '#B351E1'
+	},
+	btnText: {
+		fontSize: 16
 	}
 });
 

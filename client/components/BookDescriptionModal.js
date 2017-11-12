@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff'
 	},
 	descriptionText: {
+		textAlign: 'center',
 		fontSize: 18
 	},
 	closeBtn: {

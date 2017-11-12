@@ -21,7 +21,7 @@ class Loader extends Component {
 	_startTimer(){
 		this._timer = setTimeout(
 			() => this.setState({ isMessageVisible: true }
-		), 2500);
+		), 3000);
 	}
 
 	componentDidMount() {
@@ -29,15 +29,13 @@ class Loader extends Component {
 	}
 
 	componentWillUnmount() {
-		this.setState({ isMessageVisible: false });
-	  this._timer = null;
+	  clearTimeout(this._timer);
 	}
 
 	render() {
 		const canShowMessage = this.state.isMessageVisible && this.props.animating;
 
 		return (
-
 			<View style={styles.spinner}>
 				{ canShowMessage && 
 					<Text style={styles.message}>

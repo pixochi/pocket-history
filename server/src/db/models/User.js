@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
 
     socialId: { type: DataTypes.STRING , unique: true },
 
+    token: { type: DataTypes.STRING, unique: true, allowNull: false },
+
     provider: { type: DataTypes.STRING },
 
     firstName: { type: DataTypes.STRING, allowNull: false },

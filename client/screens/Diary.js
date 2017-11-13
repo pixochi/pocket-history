@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
-
 import {
   StyleSheet,
   View,
   Text
 } from 'react-native';
 
-class LogOut extends Component {
+
+class Diary extends Component {
   static navigationOptions = {
-    drawerLabel: 'Log Out'
+    drawerLabel: 'Diary',
+    title: 'Diary'
   }
 
   render() {
     return (
       <View>
         <Text>
-          LogOut
+          Diary
         </Text>
       </View>
     );
@@ -27,4 +28,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default LogOut;
+export default Diary;

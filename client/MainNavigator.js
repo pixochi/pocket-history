@@ -6,13 +6,14 @@ import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation'
 import MenuIcon from './components/MenuIcon';
 
 // SCREENS
-import TodayInHistory from './screens/TodayInHistory';
 import FactDetail from './screens/FactDetail';
 import Favorite from './screens/Favorite';
 import FuturePredictions from './screens/FuturePredictions';
-import MyHistory from './screens/MyHistory';
+import MyAccount from './screens/MyAccount';
+import Diary from './screens/Diary';
+import TodayInHistory from './screens/TodayInHistory';
 import WhichHappenedSooner from './screens/WhichHappenedSooner';
-import LogOut from './screens/LogOut';
+
 
 const todayInHistoryScreen = StackNavigator(
   {
@@ -33,9 +34,9 @@ export default class MainNavigator extends Component {
 		  todayInHistory: { screen: todayInHistoryScreen },
 		  happenedSooner: { screen: WhichHappenedSooner },
 		  predictions: { screen: FuturePredictions },
-		  myHistory: { screen: MyHistory },
+		  diary: { screen: Diary },
 		  favorite: { screen: Favorite },
-		  logOut: { screen: LogOut }
+		  myAccount: { screen: MyAccount }
 		});
 
     return <MainNavigator />

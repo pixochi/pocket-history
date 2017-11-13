@@ -103,6 +103,13 @@ class Books extends Component {
   }
 }
 
+const styles = StyleSheet.create({
+  bookList: {
+    paddingLeft: 16,
+    paddingRight: 16
+  }
+});
+
 const mapStateToProps = ({ factDetail: { books, isLoading }, offline}) => (
   {
     books,
@@ -114,13 +121,6 @@ const mapStateToProps = ({ factDetail: { books, isLoading }, offline}) => (
 const mapDispatchToProps = (dispatch) => ({
   fetchBooks: (textQuery) => {
     dispatch(fetchBooks(textQuery));
-  }
-});
-
-const styles = StyleSheet.create({
-  bookList: {
-    paddingLeft: 16,
-    paddingRight: 16
   }
 });
 

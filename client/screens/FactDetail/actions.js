@@ -6,7 +6,8 @@ import {
 	FETCH_FACT_VIDEOS
 } from '../../constants/actionTypes';
 
-const API_ROOT_URL = config[config.env].apiRootUrl;
+const { NODE_ENV = 'development' } = process.env;
+const API_ROOT_URL = config[NODE_ENV].apiRootUrl;
 
 // fetch books for the selected fact
 export const fetchBooks = (textQuery) => dispatch => {

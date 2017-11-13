@@ -97,10 +97,6 @@ class Videos extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-
-});
-
 const mapStateToProps = ({ factDetail: { videos, isLoading }, offline}) => (
   {
     videos,

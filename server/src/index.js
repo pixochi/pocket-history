@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import db from './db'; //database connection
 import booksRoute from './api/routes/books';
 import videosRoute from './api/routes/videos';
+import authRoute from './api/routes/auth';
 
 
 const { PORT = 8800 } = process.env;
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 	res.status(200).send('Server running');
 });
 
+app.use(authRoute);
 app.use(booksRoute);
 app.use(videosRoute);
 

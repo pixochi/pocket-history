@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 
 // REDUCERS
-import historyOnDay from '../screens/TodayInHistory/reducer';
+import account from '../screens/MyAccount/reducer';
 import factDetail from '../screens/FactDetail/reducer';
+import historyOnDay from '../screens/TodayInHistory/reducer';
 
 
 const rootReducer = combineReducers({
-  historyOnDay,
   factDetail,
+  historyOnDay,
+  account,
   persist: (state={rehydrated: false}, action) => {
   	switch(action.type) {
   		case 'persist/REHYDRATE' : {

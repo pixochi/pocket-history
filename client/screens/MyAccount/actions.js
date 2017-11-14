@@ -17,12 +17,24 @@ export const fbLogIn = () => async dispatch => {
       permissions: ['public_profile'],
   });
   if (type === 'success') {
-    // Get the user's id using Facebook's Graph API
-    const response = await fetch(`https://graph.facebook.com/me?fields=id&access_token=${token}`);
-    const { id } = await response.json();
-
-    const userInfo = { token, id };
-    axios.post(`${API_ROOT_URL}/auth/fb`, userInfo);
+    try {
+      // don't change the property name 'access_token'
+      const response = await axios.post(`${API_ROOT_URL}/auth/fb`, { access_token: token }); 
+      const userToken = response.headers['x-auth-token'];
+      if (userToken) {
+        return dispatch({
+          type: FB_LOGIN_FULFILLED,
+          token: userToken,
+          user: response.data
+        });
+      }
+    } catch(e) {
+      return dispatch({
+        type: FB_LOGIN_REJECTED, 
+        message: e.message
+      });
+    }
+    
   } else {
     return dispatch({
       type: FB_LOGIN_REJECTED, 

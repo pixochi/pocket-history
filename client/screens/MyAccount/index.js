@@ -68,6 +68,7 @@ const styles = {
   },
   signInBtnText: { 
     padding: 8,
+    paddingLeft: 0,
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',

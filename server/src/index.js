@@ -1,7 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import passport from 'passport'
 
 import db from './db'; //database connection
+import passportStrategies from './api/passport';
 import booksRoute from './api/routes/books';
 import videosRoute from './api/routes/videos';
 import authRoute from './api/routes/auth';
@@ -11,11 +14,21 @@ const { PORT = 8800 } = process.env;
 
 const app = express();
 app.enable('trust proxy');
+const corsOptions = {
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.get('/', (req, res) => {
+	// db('users').where('id', 4).del().then(() => console.log('deleted'));
 	res.status(200).send('Server running');
 });
 

@@ -13,7 +13,7 @@ import rootReducer from './rootReducer';
 
 let { NODE_ENV } = process.env;
 NODE_ENV = 'production';
-// NODE_ENV = 'dev';
+NODE_ENV = 'dev';
 
 // redux-offline configuration
 const offlineConfig = {

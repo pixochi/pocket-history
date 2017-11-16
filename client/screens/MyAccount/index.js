@@ -7,8 +7,12 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Button, Icon } from 'react-native-elements';
+import _ from 'lodash';
 
-import { fbLogIn } from './actions';
+import Loader from '../../components/Loader';
+import NetworkProblem from '../../components/NetworkProblem';
+
+import { fbLogIn, logout } from './actions';
 
 
 class MyAccount extends Component {
@@ -17,17 +21,46 @@ class MyAccount extends Component {
     headerTitle: 'My Account'
   }
 
-  render() {
-    const { authenticated } = this.props;
+  _renderLoginError = () => {
+    const { error } = this.props;
+    if (!error) return null; 
+    return (
+      <View style={styles.errorBox}>
+        <Text style={styles.errorMsg}>
+          { error }
+        </Text>
+      </View>
+    );
+  }
 
-    if(authenticated) {
+  render() {
+   const { user, token, isLoading, error } = this.props;
+   const isOnline = this.props;
+
+    if (token && !_.isEmpty(user)) {
+      const { firstName = '', lastName = '' } = user;
       return (
-        <View>
+        <View style={styles.signInContainer}>
           <Text>
             AUTHENTICATED
           </Text>
+          <Text>
+            { `${firstName} ${lastName}` }
+          </Text>
+          <Button 
+            title='Log out'
+            onPress={this.props.logout}
+          />
         </View>
       )
+    }
+
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    if (!isOnline) {
+      return <NetworkProblem />;
     }
 
     return (
@@ -35,7 +68,7 @@ class MyAccount extends Component {
         <Button 
           large
           title='Log in with Facebook'
-          onPress={() => this.props.fbLogIn()}
+          onPress={this.props.fbLogIn}
           icon={{name: 'facebook', type: 'entypo', size:35}}
           backgroundColor='#3b5998'
           textStyle={styles.signInBtnText}
@@ -49,6 +82,7 @@ class MyAccount extends Component {
           textStyle={styles.signInBtnText}
           buttonStyle={styles.signInBtn}
         />
+        { this._renderLoginError() }
       </View>
     );
   }
@@ -72,21 +106,34 @@ const styles = {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  errorBox: {
+    margin: 8
+  },
+  errorMsg: {
+    fontSize: 18,
+    padding: 8,
+    color: 'red'
   }
 }
 
-const mapStateToProps = ({ account: { user, authenticated, isLoading }, offline}) => (
-  {
+const mapStateToProps = ({ account, offline }) => {
+  const { user, token, isLoading, error } = account;
+  return {
     user,
-    authenticated,
+    token,
     isLoading,
+    error,
     isOnline: offline.online
   }
-)
+}
 
 const mapDispatchToProps = (dispatch) => ({
   fbLogIn: () => {
     dispatch(fbLogIn());
+  },
+  logout: () => {
+    dispatch(logout());
   }
 });
 

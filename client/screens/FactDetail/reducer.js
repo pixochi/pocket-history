@@ -8,7 +8,7 @@ const defaultState = {
   books: [],
   videos: [],
   isLoading: false,
-  error: false
+  error: ''
 }
 
 // // @param max - number of daily facts saved
@@ -37,7 +37,7 @@ const factDetailReducer = (state = defaultState, action) => {
       }
     case `${FETCH_FACT_BOOKS}_REJECTED`:
     case `${FETCH_FACT_VIDEOS}_REJECTED`:
-      return { ...state, isLoading: false, error: true };
+      return { ...state, isLoading: false, error: action.payload.message };
     case `${FETCH_FACT_VIDEOS}_FULFILLED`: 
       return {
         ...state,

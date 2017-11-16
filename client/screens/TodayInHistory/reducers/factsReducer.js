@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import { 
-  FETCH_FACTS, 
+  FETCH_FACTS,
   CHANGE_DATE 
-} from '../../constants/actionTypes';
-import { toFactDate } from '../../utils/date';
+} from '../../../constants/actionTypes';
+import { toFactDate } from '../../../utils/date';
 
 
 // maximum number of days
@@ -37,6 +37,7 @@ const saveFactsSubset = (facts, max, todaysDate) => {
 
 const factsReducer = (state = defaultState, action) => {
   switch(action.type) {
+    // FETCHING FACTS BLOCK
     case `${FETCH_FACTS}_PENDING`:
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
@@ -55,9 +56,10 @@ const factsReducer = (state = defaultState, action) => {
       // const { factDate, timestamp } = action.date;
       return { ...state, selectedDate: {...action.date} }
     }
-    default: 
+    default:
       return state;
   }
 }
+
 
 export default factsReducer;

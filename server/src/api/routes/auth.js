@@ -10,12 +10,12 @@ const router = express.Router();
 // Log in an existing user or sign him up
 // if the user doesn't exist
 router.post('/api/auth/fb',
-	passport.authenticate('facebook-token', { session: false } ), 
+	passport.authenticate('facebook-token', { session: false }),
 	(req, res, next) => {
 		if (!req.user) {
-      return res.send(401, 'User Not Authenticated');
-    }
-    next();
+      return res.send(401, 'Not authenticated');
+    } 
+    next();  
 	}, generateToken, sendToken
 );
 

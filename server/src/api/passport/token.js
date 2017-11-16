@@ -19,5 +19,5 @@ export const generateToken = (req, res, next) => {
 
 export const sendToken = (req, res) => {
   res.setHeader('x-auth-token', req.token);
-  res.status(200).send(req.user);
+  res.status(200).send({user: req.user});
 };

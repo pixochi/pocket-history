@@ -10,7 +10,7 @@ import { optimizeQuery } from '../../utils/query';
 const GOOGLE_API_KEY = CONFIG.googleAPI.key;
 const GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes?';
 
-export const getBooks = async(req, res) => {
+export const getBooks = async (req, res) => {
 	console.log('GETTING BOOKS FROM API');
 
 	const { textQuery } = req.query;
@@ -54,9 +54,8 @@ export const getBooks = async(req, res) => {
 				}
 			});
 
-			cacheBooks(textQuery, books).then(() => {
-				res.send(books);
-			}).catch(e => console.log(e));
+			await cacheBooks(textQuery, books);
+			res.send(books);
 		}	
 	} catch(err) {
 		console.log('GET BOOKS FROM API ERROR:')

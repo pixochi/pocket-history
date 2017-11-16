@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 
 
@@ -34,7 +35,7 @@ class Loader extends Component {
 
 	render() {
 		const canShowMessage = this.state.isMessageVisible && this.props.animating;
-
+		const indicatorSize = Platform.OS === 'android' ? 70 : 'large';
 		return (
 			<View style={styles.spinner}>
 				{ canShowMessage && 
@@ -43,7 +44,7 @@ class Loader extends Component {
 					</Text> 
 				}
 				<ActivityIndicator 
-					size={70} 
+					size={indicatorSize}
 					animating={this.props.animating}
 					color='#B351E1'
 				/>

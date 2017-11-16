@@ -11,26 +11,27 @@ import { createFilter, createBlacklistFilter  } from 'redux-persist-transform-fi
 
 import rootReducer from './rootReducer';
 
-let { NODE_ENV } = process.env;
-NODE_ENV = 'production';
-NODE_ENV = 'dev';
+import appConfig from '../constants/config';
+
+
+const ENV = appConfig.env;
 
 // redux-offline configuration
 const offlineConfig = {
   ...config,
   effect: (effect, action) => axios(effect),
   persistOptions: {
+    blacklist: ['persist', 'factDetail'],
     transforms: [
       createFilter('historyOnDay', ['facts']),
-      createBlacklistFilter('auth'),
-      createBlacklistFilter('factDetail', ['books', 'videos']),
-      createBlacklistFilter('persist', ['rehydrated']),      
+      createFilter('news', ['articles', 'lastTimeFetched']),
+      createBlacklistFilter('account', ['error', 'isLoading']),    
     ]
   }
 };
 
 let middleware = [thunk, promiseMiddleware()];
-if(NODE_ENV !== 'production'){
+if(ENV !== 'production'){
   const reduxLogger = createLogger();
   middleware = [...middleware, reduxLogger]
 }

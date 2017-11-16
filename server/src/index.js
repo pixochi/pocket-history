@@ -8,6 +8,7 @@ import passportStrategies from './api/passport';
 import booksRoute from './api/routes/books';
 import videosRoute from './api/routes/videos';
 import authRoute from './api/routes/auth';
+import newsRoute from './api/routes/news';
 
 
 const { PORT = 8800 } = process.env;
@@ -28,13 +29,14 @@ app.use(passport.session());
 
 
 app.get('/', (req, res) => {
-	// db('users').where('id', 4).del().then(() => console.log('deleted'));
+	// db('users').where('id', 16).del().then(() => console.log('deleted'));
 	res.status(200).send('Server running');
 });
 
 app.use(authRoute);
 app.use(booksRoute);
 app.use(videosRoute);
+app.use(newsRoute);
 
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 

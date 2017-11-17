@@ -26,8 +26,8 @@ class Books extends Component {
   }
 
   componentDidMount() {
-    const { navigation, fetchBooks } = this.props;
-    fetchBooks(navigation.state.params.text);
+    const { screenProps, fetchBooks } = this.props;
+    fetchBooks(screenProps.navigation.state.params.text);
   } 
 
   componentWillReceiveProps(nextProps) {
@@ -64,6 +64,7 @@ class Books extends Component {
         key={book.id} 
         book={book}
         onBookPress={this._onBookPress}
+        addToFavorite={this.props.screenProps.addToFavorite}
       />
     ));
   }

@@ -4,13 +4,17 @@ import {
   View,
   Text,
   FlatList,
-  Animated
+  Animated,
+  Clipboard,
+  Share
 } from 'react-native';
 import _ from 'lodash';
+import hash from 'string-hash';
 
 // COMPONENTS
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
+import CardMenu from '../../components/CardMenu';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { HEADER_HEIGHT } from '../../constants/components';
@@ -36,13 +40,53 @@ class FactsScreen extends Component {
 
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
-
   	if (canFetch) {
   		fetchFacts(selectedDate.timestamp);
   	}
   }
 
-  _renderFact = ({ item }) => <FactCard {...item} navigation={this.props.navigation} />
+  _addFactToFavorite = (fact) => {
+    const { addToFavorite, selectedDate } = this.props;
+    const id = hash(fact.text+selectedDate.timestamp);
+    let favoriteFact = _.omit(fact, ['links']);
+    favoriteFact = { ...fact, date: selectedDate.factDate, id }
+    addToFavorite(favoriteFact, 'facts');
+  }
+
+  _createCardMenuOptions = (item) => {
+  	return [
+      {
+        onSelect: () => Share.share({ title: 'Pocket History', message: item.text }),
+        iconProps: { name: 'share' },
+        optionText: 'Share'
+      },
+      {
+        onSelect: () => this._addFactToFavorite(item),
+        iconProps: { name: 'star' },
+        optionText: 'Save'
+      },
+      {
+        onSelect: () => Clipboard.setString(copy),
+        iconProps: { name: 'clipboard', type: 'font-awesome' },
+        optionText: 'Copy'
+      }
+    ]
+  }
+
+  _renderFact = ({ item }) => {
+  	const { navigation } = this.props;
+  	return (
+  		<FactCard 
+		  	{...item}
+		  	isFavorite={false}
+		  	navigation={navigation} 
+	  	>
+		  	<CardMenu 
+	        options={this._createCardMenuOptions(item)}
+	      />
+	  	</FactCard>
+  	);
+  }
 
   render() {
 	  const { selectedFacts, renderFact, category, isReady, onScroll,

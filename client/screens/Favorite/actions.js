@@ -6,10 +6,22 @@ import {
   FETCH_FAVORITE
 } from '../../constants/actionTypes';
 
+// @param item object - enum(event, book, video, article)
+// @param category string - enum(event, book, video, article)
+export const addToFavorite = (item, category) => (dispatch, getState) => {
+	const store = getState();
+	const { online } = store.offline;
+	const { user } = store.account;
 
-export const f = () => dispatch => {
+	return dispatch({
+		type: ADD_FAVORITE,
+		category,
+		item
+	});
 
-
-dispatch({ type: ADD_FAVORITE, payload: 'factsPromise' })
-  .catch(e => console.log(e));
 }
+
+const saveFavorite = (item) => {
+
+}
+

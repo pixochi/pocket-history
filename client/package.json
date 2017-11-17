@@ -22,7 +22,8 @@
     "redux-offline": "^2.0.0",
     "redux-persist-transform-filter": "0.0.15",
     "redux-promise-middleware": "^4.4.1",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "string-hash": "^1.1.3"
   },
   "scripts": {
     "test": "jest"

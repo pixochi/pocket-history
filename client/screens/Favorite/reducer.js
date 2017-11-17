@@ -15,7 +15,12 @@ const defaultState = {
 const favoriteReducer = (state = defaultState, action) => {
   switch(action.type) {
     case ADD_FAVORITE: {
-      return { ...state, isLoading: true }
+      let stateField = {};
+      stateField[action.category] = [...state[action.category], action.item];
+      return { 
+        ...state, 
+        ...stateField  
+      }
     }
     default: 
       return state;

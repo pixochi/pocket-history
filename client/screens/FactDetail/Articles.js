@@ -1,35 +1,32 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Linking,
   ScrollView
 } from 'react-native';
-import { Button } from 'react-native-elements';
 
-import { fixWikiLink } from '../../utils/link';
+import ArticleCard from '../../components/ArticleCard';
 
 
-const Articles = ({ navigation }) => {
-
-	const _renderArticles = (links) => {
+const Articles = ({ screenProps }) => {
+	console.log('ARTICLES')
+	console.log(screenProps)
+	const renderArticles = (links) => {
 		return links.map((link,i) => (
-			<Button
-				key={i}
-				title={link.title}
-				onPress={() => Linking.openURL(fixWikiLink(link.link))}
-				buttonStyle={styles.articleBtn}
-				textStyle={styles.articleTitle}
+			<ArticleCard 
+				key= {i}
+				addToFavorite={screenProps.addToFavorite}
+				{...link}
 			/>
 		));
 	}
 
-  const { links } = navigation.state.params;
+  const { links } = screenProps.navigation.state.params;
 
   return (
   	<ScrollView style={styles.articlesContainer}>
-    	{ _renderArticles(links) }
+    	{ renderArticles(links) }
     </ScrollView>
   ); 
 }
@@ -37,17 +34,6 @@ const Articles = ({ navigation }) => {
 const styles = StyleSheet.create({
 	articlesContainer: {
 		margin: 20
-	},
-	articleBtn: {
-		marginBottom: 8,
-		padding: 12,
-		borderRadius: 4,
-		backgroundColor: '#B351E1'
-	},
-	articleTitle: {
-		fontSize: 20,
-		color: '#fff',
-		textAlign: 'center'
 	}
 });
 

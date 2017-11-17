@@ -14,6 +14,16 @@ export const toApiFactDate = (timestamp) => {
   return `${month}/${day}`; // 10/25
 }
 
+
+// news api format date ("october/25")
+export const toApiNewsDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const month = MONTHS[date.getMonth()].toLowerCase();
+  const day = date.getDate();
+
+  return `${month}/${day}`; // october/25
+}
+
 // returns the format of the selected date
 // in the state
 // format: October 25

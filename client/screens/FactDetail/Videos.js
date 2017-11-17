@@ -31,8 +31,8 @@ class Videos extends Component {
   }
 
   componentDidMount() {
-    const { navigation, fetchVideos } = this.props;
-    fetchVideos(navigation.state.params.text);
+    const { screenProps, fetchVideos } = this.props;
+    fetchVideos(screenProps.navigation.state.params.text);
   }
 
   _closeVideoModal = () => {
@@ -59,6 +59,7 @@ class Videos extends Component {
       <VideoCard
         key={video.id}
         onVideoPress={this._onVideoPress}
+        addToFavorite={this.props.screenProps.addToFavorite}
         {...video}
       />
     ));

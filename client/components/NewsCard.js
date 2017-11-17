@@ -4,7 +4,7 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
+  TouchableHighlight,
   Linking,
   Dimensions
 } from 'react-native';
@@ -16,36 +16,37 @@ import gStyles from '../styles';
 const NewsCard = (props) => {
 
 	const openArticle = (link) => {
+		console.log('OPENING')
+		console.log(link)
 		Linking.openURL(link);
 	}
 
 	const { title, description, img, link } = props;
 
   return (
-    <View
-    	onPress={() => openArticle(link)}
-    	style={styles.cardContainer}
-    >
-	    <View style={styles.titleContainer}>
-	    	<Text style={styles.title}>
-	    	  { title }
-	    	</Text>
-	    </View>
+  	<TouchableHighlight onPress={() => openArticle(link)}>
+	    <View style={styles.cardContainer}>
+		    <View style={styles.titleContainer}>
+		    	<Text style={styles.title}>
+		    	  { title }
+		    	</Text>
+		    </View>
 
-	    <View style={styles.imgContainer}>
-	    	<Image
-	    	  style={styles.image}
-	    	  source={{uri: img}}
-	    	  resizeMode="contain"
-	    	/>
-	    </View>   	
-    	
-	    <View style={styles.descriptionContainer}>
-	    	<Text style={styles.description}>
-	    	  { description }
-	    	</Text>
-	   	</View>
-    </View>
+		    <View style={styles.imgContainer}>
+		    	<Image
+		    	  style={styles.image}
+		    	  source={{uri: img}}
+		    	  resizeMode="contain"
+		    	/>
+		    </View>   	
+	    	
+		    <View style={styles.descriptionContainer}>
+		    	<Text style={styles.description}>
+		    	  { description }
+		    	</Text>
+		   	</View>
+	    </View>
+	  </TouchableHighlight>
   );
 
 }
@@ -64,22 +65,24 @@ const styles = StyleSheet.create({
 		borderWidth: 1
 	},
 	titleContainer: {
-		marginBottom: 4
+		
 	},
 	title: {
 		padding: 6,
+		paddingBottom: 2,
 		textAlign: 'center',
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: '#777'
 	},
 	descriptionContainer: {
-		marginBottom: 4
+
 	},
 	description: {
 		textAlign: 'center',
 		fontSize: 17,
-		padding: 6
+		padding: 6,
+		paddingTop: 2
 	},
 	imgContainer: {
 		flex: 1,

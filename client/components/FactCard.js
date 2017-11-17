@@ -3,18 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  Clipboard,
-  Share,
   Linking
 } from 'react-native';
-import HTMLView from 'react-native-htmlview';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+import HTMLView from 'react-native-htmlview'; // not same as webview
 import { Icon } from 'react-native-elements';
+
+import CardMenu from './CardMenu';
 
 import { yearsAgo } from '../utils/date';
 import { fixWikiLink } from '../utils/link';
@@ -22,53 +16,14 @@ import { fixWikiLink } from '../utils/link';
 
 class FactCard extends PureComponent {
 
-  _renderMenuOptions(options) {
-    return options.map(({onSelect, iconProps, optionText}) => (
-      <MenuOption key={optionText} onSelect={onSelect} >
-        <View style={styles.optionContainer}>
-          <Icon {...iconProps} />
-          <View style={styles.optionText}>
-            <Text>{optionText}</Text>
-          </View>
-        </View>
-      </MenuOption>
-    ));
-  }
-
-  _copyToClipboard(content) {
-    Clipboard.setString(content);
-  }
-
-  _shareFact(message) {
-    Share.share({ title: 'Pocket History', message });
-  }
-
   render() {
-    const { year, html, text, links } = this.props;
-    
-    const  options = [
-      {
-        onSelect: () => this._shareFact(text),
-        iconProps: { name: 'share' },
-        optionText: 'Share'
-      },
-      {
-        onSelect: () => null,
-        iconProps: { name: 'star' },
-        optionText: 'Save'
-      },
-      {
-        onSelect: () => this._copyToClipboard(text),
-        iconProps: { name: 'clipboard', type: 'font-awesome' },
-        optionText: 'Copy'
-      }
-    ]
+    const { year, html, text, links, isFavorite } = this.props;
+    const fact = { text, year, html }
 
     return (
       <View style={styles.factCard}>
 
         <View style={styles.cardHeader}>
-
           <View style={styles.yearsContainer}>
             <Text style={styles.year}>
               { year }
@@ -78,23 +33,11 @@ class FactCard extends PureComponent {
                 { yearsAgo(year) } years ago
               </Text>
             </View>
-          </View>
+          </View> 
           
-          <View style={styles.menuContainer}>
-            <Menu>
-              <MenuTrigger>
-                <Icon 
-                  name='options-vertical' 
-                  type='simple-line-icon'
-                  color='#517fa4' 
-                />
-              </MenuTrigger>
-              <MenuOptions>
-                { this._renderMenuOptions(options) }
-              </MenuOptions>
-            </Menu>     
-          </View>
-             
+          {/* PLACE FOR MENU */}
+          { this.props.children }
+
         </View>
           
         <HTMLView 
@@ -104,15 +47,18 @@ class FactCard extends PureComponent {
           onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
         />
 
-        <Icon 
-          name='chevron-double-right'
-          type='material-community'
-          size={40}
-          color='#517fa4'
-          style={styles.openDetailIcon}
-          containerStyle={{ width: 50}}
-          onPress={() => this.props.navigation.navigate('factDetail', { text, links })}
-        />  
+        { !isFavorite && 
+          <Icon 
+            name='chevron-double-right'
+            type='material-community'
+            size={40}
+            color='#517fa4'
+            style={styles.openDetailIcon}
+            containerStyle={{ width: 50}}
+            onPress={() => this.props.navigation.navigate('factDetail', { text, links })}
+          /> 
+        }
+
       </View>
     );
   }
@@ -139,22 +85,13 @@ const styles = StyleSheet.create({
   year: {
     fontSize: 21,  
   },
-  menuContainer: {
-    justifyContent: 'flex-end'
-  },
-  optionContainer: {
-    flexDirection: 'row'
-  },
-  optionText: {
-    marginLeft: 10
+  factText: {
+    // uncomment when finishing
+    // fontSize: 18 
   },
   openDetailIcon: {
     alignSelf: 'flex-end',
   },
-  factText: {
-    // uncomment when finishing
-    // fontSize: 18 
-  }
 });
 
 

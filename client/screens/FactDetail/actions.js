@@ -15,7 +15,7 @@ export const fetchBooks = (textQuery) => dispatch => {
 	const queryParams = {
 		params: { textQuery }
 	}
-	const booksPromise = axios(`${API_ROOT_URL}/api/books`, queryParams);
+	const booksPromise = axios(`${API_ROOT_URL}/books`, queryParams);
 
 	dispatch({ type: FETCH_FACT_BOOKS, payload: booksPromise })
 	  .catch(e => console.log(e));
@@ -25,7 +25,7 @@ export const fetchVideos = (textQuery) => dispatch => {
 	const queryParams = {
 		params: { textQuery }
 	}
-	const videosPromise = axios(`${API_ROOT_URL}/api/videos`, queryParams);
+	const videosPromise = axios(`${API_ROOT_URL}/videos`, queryParams);
 
 	dispatch({ type: FETCH_FACT_VIDEOS, payload: videosPromise })
 	  .catch(e => console.log(e));

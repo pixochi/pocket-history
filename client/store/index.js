@@ -25,7 +25,7 @@ const offlineConfig = {
     transforms: [
       createFilter('historyOnDay', ['facts']),
       createFilter('news', ['articles', 'lastTimeFetched']),
-      createBlacklistFilter('account', ['error', 'isLoading']),    
+      createBlacklistFilter('account', ['error', 'isLoading'])
     ]
   }
 };

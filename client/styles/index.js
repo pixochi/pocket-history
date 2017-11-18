@@ -23,4 +23,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,.3)'
   },
+  cardMenu: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: 1000,
+    padding: 4,
+    backgroundColor:'rgba(255,255,255,.8)'
+  },
 });

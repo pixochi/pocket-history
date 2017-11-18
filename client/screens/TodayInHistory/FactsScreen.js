@@ -17,6 +17,8 @@ import FactCard from '../../components/FactCard';
 import CardMenu from '../../components/CardMenu';
 import NetworkProblem from '../../components/NetworkProblem';
 
+import { copy, share, save } from '../../components/utils/cardMenuOptions';
+
 import { HEADER_HEIGHT } from '../../constants/components';
 
 
@@ -54,22 +56,10 @@ class FactsScreen extends Component {
   }
 
   _createCardMenuOptions = (item) => {
-  	return [
-      {
-        onSelect: () => Share.share({ title: 'Pocket History', message: item.text }),
-        iconProps: { name: 'share' },
-        optionText: 'Share'
-      },
-      {
-        onSelect: () => this._addFactToFavorite(item),
-        iconProps: { name: 'star' },
-        optionText: 'Save'
-      },
-      {
-        onSelect: () => Clipboard.setString(copy),
-        iconProps: { name: 'clipboard', type: 'font-awesome' },
-        optionText: 'Copy'
-      }
+    return [
+      copy({ content: item.text }),
+      share({ message: item.text }),
+      save({ onSelect: () => this._addFactToFavorite(item) })
     ]
   }
 
@@ -81,7 +71,7 @@ class FactsScreen extends Component {
 		  	isFavorite={false}
 		  	navigation={navigation} 
 	  	>
-		  	<CardMenu 
+		  	<CardMenu
 	        options={this._createCardMenuOptions(item)}
 	      />
 	  	</FactCard>

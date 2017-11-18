@@ -13,9 +13,13 @@ import {
 } from 'react-native-popup-menu';
 
 
+// @param defaultOptions bool - use default options(share, copy, save, remove)
+// @param optionProps obj - properties for the default options
+// @param options array - any custom options
+
 const CardMenu = ({ options }) => {
 
-	 const renderMenuOptions = (options) => {
+	const renderMenuOptions = (options) => {
     return options.map(({onSelect, iconProps, optionText}) => (
       <MenuOption key={optionText} onSelect={onSelect} >
         <View style={styles.optionContainer}>

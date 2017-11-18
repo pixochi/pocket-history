@@ -10,8 +10,6 @@ import ArticleCard from '../../components/ArticleCard';
 
 
 const Articles = ({ screenProps }) => {
-	console.log('ARTICLES')
-	console.log(screenProps)
 	const renderArticles = (links) => {
 		return links.map((link,i) => (
 			<ArticleCard 

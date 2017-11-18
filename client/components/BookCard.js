@@ -12,6 +12,7 @@ import {
 import { Button, Icon } from 'react-native-elements';
 
 import CardMenu from './CardMenu';
+import { copy, share, save } from './utils/cardMenuOptions';
 
 import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
 
@@ -24,21 +25,9 @@ const BookCard = ({book, onBookPress, addToFavorite}) => {
 	description = replaceHtmlChars(removeHtmlTags(description));
 
 	const menuOptions = [
-		{
-      onSelect: () => Share.share({ title: 'Pocket History', message: book.title }),
-      iconProps: { name: 'share' },
-      optionText: 'Share'
-    },
-    {
-      onSelect: () => addToFavorite(book, 'books'),
-      iconProps: { name: 'star' },
-      optionText: 'Save'
-    },
-    {
-      onSelect: () => Clipboard.setString(book.title),
-      iconProps: { name: 'clipboard', type: 'font-awesome' },
-      optionText: 'Copy'
-    }
+		copy({ content: book.title }),
+		share({ message: book.title }),
+		save({ onSelect: () => addToFavorite(book) })
 	]
 
   return (
@@ -79,9 +68,9 @@ const BookCard = ({book, onBookPress, addToFavorite}) => {
 	      	/>
 	      </View>
       </TouchableOpacity>
-      <View style={styles.menu}>
-      	<CardMenu options={menuOptions}/>
-      </View>
+	    <View style={gStyles.cardMenu}>
+	      <CardMenu options={menuOptions}/>
+	    </View>
     </View>
   );
 }
@@ -123,14 +112,6 @@ const styles = StyleSheet.create({
 		height: 180,
 		borderColor: '#ddd',
 		borderWidth: 1
-	},
-	menu: {
-		position: 'absolute',
-		right: 2,
-		top: 2,
-		zIndex: 1000,
-		padding: 4,
-		backgroundColor:'#fff'
 	},
 	btn: {
 		marginBottom: 10,

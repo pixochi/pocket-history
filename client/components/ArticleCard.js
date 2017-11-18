@@ -11,29 +11,20 @@ import {
 import hash from 'string-hash';
 
 import CardMenu from './CardMenu';
+import { copy, share, save } from './utils/cardMenuOptions';
 
 import { fixWikiLink } from '../utils/link';
+
+import gStyles from '../styles';
 
 
 const ArticleCard = ({ link, title, addToFavorite }) => {
 
 	const id = hash(link+title);
 	const menuOptions = [
-			{
-	      onSelect: () => Share.share({ title: 'Pocket History', message: title }),
-	      iconProps: { name: 'share' },
-	      optionText: 'Share'
-	    },
-	    {
-	      onSelect: () => addToFavorite({link, title, id}, 'articles'),
-	      iconProps: { name: 'star' },
-	      optionText: 'Save'
-	    },
-	    {
-	      onSelect: () => Clipboard.setString(link),
-	      iconProps: { name: 'clipboard', type: 'font-awesome' },
-	      optionText: 'Copy Link'
-	    }
+		copy({ content: link, optionText: 'Copy Link' }),
+		share({ message: title }),
+		save({ onSelect: () => addToFavorite({link, title, id}, 'articles') })
 	]
 
   return (
@@ -47,7 +38,7 @@ const ArticleCard = ({ link, title, addToFavorite }) => {
 					</Text>
 				</View>
 			</TouchableHighlight>
-			<View style={styles.menu}>
+			<View style={[gStyles.cardMenu,styles.menu]}>
 				<CardMenu options={menuOptions} />
 			</View>
 		</View>
@@ -67,15 +58,10 @@ const styles = StyleSheet.create({
 		textAlign: 'center'
 	},
 	menu: {
-		position: 'absolute',
 		justifyContent: 'center',
 		alignItems: 'center',
-		right: 0,
-		top: 0,
 		bottom: 8,
-		zIndex: 1000,
-		padding: 4,
-		backgroundColor:'#fff'
+		backgroundColor: '#fff'
 	},
 });
 

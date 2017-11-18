@@ -10,43 +10,54 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
+import CardMenu from './CardMenu';
+import { copy, share, save } from './utils/cardMenuOptions';
+
 import gStyles from '../styles';
 
 
 const NewsCard = (props) => {
 
 	const openArticle = (link) => {
-		console.log('OPENING')
-		console.log(link)
 		Linking.openURL(link);
 	}
 
 	const { title, description, img, link } = props;
+	const menuOptions = [
+  	copy({ content: `${title}. ${description}` }),
+		share({ message: `${title}. ${description}` })
+	]
 
   return (
-  	<TouchableHighlight onPress={() => openArticle(link)}>
-	    <View style={styles.cardContainer}>
-		    <View style={styles.titleContainer}>
-		    	<Text style={styles.title}>
-		    	  { title }
-		    	</Text>
-		    </View>
+  	<View>
+	  	<TouchableHighlight onPress={() => openArticle(link)}>
+		    <View style={styles.cardContainer}>
+			    <View style={styles.titleContainer}>
+			    	<Text style={styles.title}>
+			    	  { title }
+			    	</Text>
+			    	 <View style={[ styles.menu]}>
+			    		<CardMenu options={menuOptions}/>
+			      </View>
+			    </View>
 
-		    <View style={styles.imgContainer}>
-		    	<Image
-		    	  style={styles.image}
-		    	  source={{uri: img}}
-		    	  resizeMode="contain"
-		    	/>
-		    </View>   	
-	    	
-		    <View style={styles.descriptionContainer}>
-		    	<Text style={styles.description}>
-		    	  { description }
-		    	</Text>
-		   	</View>
-	    </View>
-	  </TouchableHighlight>
+			    <View style={styles.imgContainer}>
+			    	<Image
+			    	  style={styles.image}
+			    	  source={{uri: img}}
+			    	  resizeMode="contain"
+			    	/>
+			    </View>   	
+		    	
+			    <View style={styles.descriptionContainer}>
+			    	<Text style={styles.description}>
+			    	  { description }
+			    	</Text>
+			   	</View>
+		    </View>
+		  </TouchableHighlight>
+		 
+    </View>
   );
 
 }
@@ -65,15 +76,21 @@ const styles = StyleSheet.create({
 		borderWidth: 1
 	},
 	titleContainer: {
-		
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between'
 	},
 	title: {
+		flex: .9,
 		padding: 6,
 		paddingBottom: 2,
 		textAlign: 'center',
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: '#777'
+	},
+	menu: {
+		flex: .1,
 	},
 	descriptionContainer: {
 

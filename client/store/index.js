@@ -21,11 +21,14 @@ const offlineConfig = {
   ...config,
   effect: (effect, action) => axios(effect),
   persistOptions: {
-    blacklist: ['persist', 'factDetail'],
     transforms: [
       createFilter('historyOnDay', ['facts']),
       createFilter('news', ['articles', 'lastTimeFetched']),
-      createBlacklistFilter('account', ['error', 'isLoading'])
+      createFilter('factDetail', ['facts', 'articles', 'books', 'videos']),
+      createBlacklistFilter('account', ['error', 'isLoading']),
+      createBlacklistFilter('persist', ['rehydrated']),
+      createBlacklistFilter('toast', ['message', 'error', 'warning', 'duration']),
+      createBlacklistFilter('modal', ['isVisible'])
     ]
   }
 };

@@ -17,7 +17,7 @@ import { fixWikiLink } from '../utils/link';
 class FactCard extends PureComponent {
 
   render() {
-    const { year, html, text, links, isFavorite } = this.props;
+    const { year, html, text, links, isFavorite, menuOptions } = this.props;
     const fact = { text, year, html }
 
     return (
@@ -34,10 +34,7 @@ class FactCard extends PureComponent {
               </Text>
             </View>
           </View> 
-          
-          {/* PLACE FOR MENU */}
-          { this.props.children }
-
+          <CardMenu options={menuOptions} />
         </View>
           
         <HTMLView 
@@ -47,7 +44,7 @@ class FactCard extends PureComponent {
           onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
         />
 
-        { !isFavorite && 
+        { !isFavorite &&
           <Icon 
             name='chevron-double-right'
             type='material-community'

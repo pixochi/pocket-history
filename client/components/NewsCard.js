@@ -29,35 +29,34 @@ const NewsCard = (props) => {
 	]
 
   return (
-  	<View>
 	  	<TouchableHighlight onPress={() => openArticle(link)}>
-		    <View style={styles.cardContainer}>
-			    <View style={styles.titleContainer}>
-			    	<Text style={styles.title}>
-			    	  { title }
-			    	</Text>
-			    	 <View style={[ styles.menu]}>
-			    		<CardMenu options={menuOptions}/>
-			      </View>
-			    </View>
+	  		<View>
+		  		<View style={[gStyles.cardMenu, styles.menu]}>
+	  				<CardMenu options={menuOptions}/>
+	    		</View>
+		    	<View style={styles.cardContainer}>
+				    <View style={styles.titleContainer}>
+				    	<Text style={styles.title}>
+				    	  { title }
+				    	</Text>
+				    </View>
 
-			    <View style={styles.imgContainer}>
-			    	<Image
-			    	  style={styles.image}
-			    	  source={{uri: img}}
-			    	  resizeMode="contain"
-			    	/>
-			    </View>   	
+				    <View style={styles.imgContainer}>
+				    	<Image
+				    	  style={styles.image}
+				    	  source={{uri: img}}
+				    	  resizeMode="contain"
+				    	/>
+				    </View>   	
 		    	
-			    <View style={styles.descriptionContainer}>
-			    	<Text style={styles.description}>
-			    	  { description }
-			    	</Text>
-			   	</View>
+				    <View style={styles.descriptionContainer}>
+				    	<Text style={styles.description}>
+				    	  { description }
+				    	</Text>
+				   	</View>
+		    	</View>
 		    </View>
 		  </TouchableHighlight>
-		 
-    </View>
   );
 
 }
@@ -78,7 +77,9 @@ const styles = StyleSheet.create({
 	titleContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between'
+		justifyContent: 'space-between',
+		marginLeft: 10,
+		marginRight: 10
 	},
 	title: {
 		flex: .9,
@@ -90,7 +91,8 @@ const styles = StyleSheet.create({
 		color: '#777'
 	},
 	menu: {
-		flex: .1,
+		marginTop: 7,
+		marginRight: 10
 	},
 	descriptionContainer: {
 

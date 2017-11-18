@@ -14,7 +14,6 @@ import hash from 'string-hash';
 // COMPONENTS
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
-import CardMenu from '../../components/CardMenu';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
@@ -48,14 +47,14 @@ class FactsScreen extends Component {
   }
 
   _addFactToFavorite = (fact) => {
-    const { addToFavorite, selectedDate } = this.props;
-    const id = hash(fact.text+selectedDate.timestamp);
+    const { addFavorite, selectedDate } = this.props;
+    const id = hash(fact.text+fact.year);
     let favoriteFact = _.omit(fact, ['links']);
     favoriteFact = { ...fact, date: selectedDate.factDate, id }
-    addToFavorite(favoriteFact, 'facts');
+    addFavorite(favoriteFact, 'facts');
   }
 
-  _createCardMenuOptions = (item) => {
+  _cardMenuOptions = (item) => {
     return [
       copy({ content: item.text }),
       share({ message: item.text }),
@@ -69,12 +68,9 @@ class FactsScreen extends Component {
   		<FactCard 
 		  	{...item}
 		  	isFavorite={false}
-		  	navigation={navigation} 
-	  	>
-		  	<CardMenu
-	        options={this._createCardMenuOptions(item)}
-	      />
-	  	</FactCard>
+		  	navigation={navigation}
+		  	menuOptions={this._cardMenuOptions(item)}
+	  	/>
   	);
   }
 

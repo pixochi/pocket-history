@@ -11,7 +11,6 @@ import {
 import { Icon } from 'react-native-elements';
 
 import CardMenu from './CardMenu';
-import { copy, share, save } from './utils/cardMenuOptions';
 
 import gStyles from '../styles';
 
@@ -22,15 +21,9 @@ const IMG_SIZE = 'mqdefault.jpg' // medium, 320*180
 class VideoCard extends Component {
 
   render() {
-  	const { id, title, onVideoPress, addToFavorite } = this.props;
+  	const { id, title, onVideoPress, addToFavorite, menuOptions } = this.props;
   	const imgUri = `${IMG_ROOT_URL}/${id}/${IMG_SIZE}`;
   	const videoUrl = 'https://www.youtube.com/watch?v='+id;
-
-  	const menuOptions = [
-	  	copy({ content: videoUrl }),
-			share({ message: videoUrl }),
-			save({ onSelect: () => addToFavorite({id, title}, 'videos') })
-		]
 
     return (
       <View
@@ -65,7 +58,7 @@ class VideoCard extends Component {
 	      </View>
 
     	  <View style={gStyles.cardMenu}>
-    			<CardMenu options={menuOptions} />
+    	  	<CardMenu options={menuOptions}/>
     		</View>
 
       </View>

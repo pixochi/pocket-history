@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
 export default StyleSheet.create({
 	container: {
@@ -30,5 +32,13 @@ export default StyleSheet.create({
     zIndex: 1000,
     padding: 4,
     backgroundColor:'rgba(255,255,255,.8)'
+  },
+  videoContainer: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  videoPlayer: {
+    flex: 1,
+    height: SCREEN_HEIGHT - 80
   },
 });

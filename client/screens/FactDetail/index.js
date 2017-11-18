@@ -7,7 +7,7 @@ import Articles from './Articles';
 import Books from './Books';
 import Videos from './Videos';
 
-import { addToFavorite } from '../Favorite/actions';
+import { addFavorite } from '../Favorite/actions';
 
 
 const FactDetailNav = TabNavigator({
@@ -18,16 +18,16 @@ const FactDetailNav = TabNavigator({
 
 class FactDetail extends Component {
 	render() {
-		const { addToFavorite, navigation } = this.props;
+		const { addFavorite, navigation } = this.props;
 		return (
-			<FactDetailNav screenProps={{addToFavorite, navigation}} />
+			<FactDetailNav screenProps={{addFavorite, navigation}} />
 		)
 	}
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  addToFavorite: (item, category) => {
-    dispatch(addToFavorite(item, category));
+  addFavorite: (item, category) => {
+    dispatch(addFavorite(item, category));
   }
 });
 

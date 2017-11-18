@@ -9,20 +9,21 @@ import { connect } from 'react-redux';
 
 // COMPONENTS
 import BookCard from '../../components/BookCard';
-import BookDescriptionModal from '../../components/BookDescriptionModal';
+import { copy, share, save } from '../../components/utils/cardMenuOptions';
 import Loader from '../../components/Loader';
+import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
 
 // ACTIONS
 import { fetchBooks } from './actions';
+import { openModal } from '../../components/Modal/actions';
 
 import gStyles from '../../styles';
 
 
 class Books extends Component {
-  state = {
-    isDescriptionModalVisible: false,
-    selectedDescription: ''
+  state = { 
+    bookDescription: "Sorry, we couldn't find a description for the selected book." 
   }
 
   componentDidMount() {
@@ -37,25 +38,25 @@ class Books extends Component {
     if (!isLoading && connectionChanged && books.length === 0 ) {
       fetchBooks(navigation.state.params.text);
     }
-  }  
+  }
+
+  _cardMenuOptions = ({id, link, title}) => {
+    const { addFavorite } = this.props.screenProps;
+    const menuOptions = [
+      copy({ content: title }),
+      share({ message: title }),
+      save({ onSelect: () => addFavorite({id, link, title}, 'books')})
+    ]
+    return menuOptions;
+  }
 
   _refetchBooks = () => {
     const { navigation, fetchBooks } = this.props;
     fetchBooks(navigation.state.params.text);
   }
 
-  _closeDescriptionModal = () => {
-    this.setState({ isDescriptionModalVisible: false });
-  }
-
-  _openDescriptionModal = () => {
-    this.setState({ isDescriptionModalVisible: true });
-  }
-
-  _onBookPress = (description) => {
-    this.setState({ selectedDescription: description }, () => {
-      this._openDescriptionModal();
-    });
+  _onBookPress = (bookDescription) => {
+    this.setState({ bookDescription }, () => this.props.openModal());
   }
  
   _renderBooks(books) {
@@ -64,14 +65,14 @@ class Books extends Component {
         key={book.id} 
         book={book}
         onBookPress={this._onBookPress}
-        addToFavorite={this.props.screenProps.addToFavorite}
+        menuOptions={this._cardMenuOptions(book)}
       />
     ));
   }
 
   render() {
     const { books, isLoading, isOnline } = this.props;
-    const { isDescriptionModalVisible, selectedDescription } = this.state;
+    const { bookDescription } = this.state;
 
     if (isLoading) {
       return <Loader />;
@@ -94,11 +95,13 @@ class Books extends Component {
         <ScrollView style={styles.bookList}>
           { this._renderBooks(books) }
         </ScrollView>
-        <BookDescriptionModal 
-          bookDescription={selectedDescription}
-          isVisible={isDescriptionModalVisible}
-          closeModal={this._closeDescriptionModal}
-        />
+        <Modal>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>
+              { bookDescription }
+            </Text>
+          </View> 
+        </Modal>
       </View>
     );
   }
@@ -108,6 +111,15 @@ const styles = StyleSheet.create({
   bookList: {
     paddingLeft: 16,
     paddingRight: 16
+  },
+  descriptionContainer: {
+    flex: 1,
+    padding: 15,
+    backgroundColor: '#fff'
+  },
+  descriptionText: {
+    textAlign: 'center',
+    fontSize: 18
   }
 });
 
@@ -122,6 +134,9 @@ const mapStateToProps = ({ factDetail: { books, isLoading }, offline}) => (
 const mapDispatchToProps = (dispatch) => ({
   fetchBooks: (textQuery) => {
     dispatch(fetchBooks(textQuery));
+  },
+  openModal: () => {
+    dispatch(openModal());
   }
 });
 

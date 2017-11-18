@@ -8,24 +8,15 @@ import {
   Clipboard,
   TouchableHighlight
 } from 'react-native';
-import hash from 'string-hash';
 
 import CardMenu from './CardMenu';
-import { copy, share, save } from './utils/cardMenuOptions';
 
 import { fixWikiLink } from '../utils/link';
 
 import gStyles from '../styles';
 
 
-const ArticleCard = ({ link, title, addToFavorite }) => {
-
-	const id = hash(link+title);
-	const menuOptions = [
-		copy({ content: link, optionText: 'Copy Link' }),
-		share({ message: title }),
-		save({ onSelect: () => addToFavorite({link, title, id}, 'articles') })
-	]
+const ArticleCard = ({ link, title, menuOptions }) => {
 
   return (
   	<View>
@@ -39,7 +30,7 @@ const ArticleCard = ({ link, title, addToFavorite }) => {
 				</View>
 			</TouchableHighlight>
 			<View style={[gStyles.cardMenu,styles.menu]}>
-				<CardMenu options={menuOptions} />
+				<CardMenu options={menuOptions}/>
 			</View>
 		</View>
   );

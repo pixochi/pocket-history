@@ -12,23 +12,16 @@ import {
 import { Button, Icon } from 'react-native-elements';
 
 import CardMenu from './CardMenu';
-import { copy, share, save } from './utils/cardMenuOptions';
 
 import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
 
 import gStyles from '../styles';
 
 
-const BookCard = ({book, onBookPress, addToFavorite}) => {
+const BookCard = ({book, onBookPress, menuOptions}) => {
 	const fullScreenBookPreview = `${book.previewLink}#f=true`;
 	let description = book.description || book.textSnippet || '';
 	description = replaceHtmlChars(removeHtmlTags(description));
-
-	const menuOptions = [
-		copy({ content: book.title }),
-		share({ message: book.title }),
-		save({ onSelect: () => addToFavorite(book) })
-	]
 
   return (
     <View style={styles.bookCardContainer}>
@@ -69,7 +62,7 @@ const BookCard = ({book, onBookPress, addToFavorite}) => {
 	      </View>
       </TouchableOpacity>
 	    <View style={gStyles.cardMenu}>
-	      <CardMenu options={menuOptions}/>
+	    	<CardMenu options={menuOptions} />
 	    </View>
     </View>
   );

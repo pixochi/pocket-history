@@ -15,3 +15,7 @@ export const LOG_OUT = 'LOG_OUT';
 export const ADD_FAVORITE = 'ADD_FAVORITE';
 export const REMOVE_FAVORITE = 'REMOVE_FAVORITE';
 export const FETCH_FAVORITE = 'FETCH_FAVORITE';
+
+// MODAL - COMPONENT
+export const CLOSE_MODAL = 'CLOSE_MODAL';
+export const OPEN_MODAL = 'OPEN_MODAL';

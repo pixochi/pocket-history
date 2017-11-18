@@ -1,8 +1,9 @@
 // REACT
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, AsyncStorage } from 'react-native';
 
 import { MenuContext } from 'react-native-popup-menu';
+import { Toast } from 'react-native-redux-toast';
 
 // STATE MANAGEMENT
 import { Provider } from 'react-redux';
@@ -29,6 +30,7 @@ export default class App extends Component {
   		return (
 	      <Provider store={store}>
 	      	<MenuContext>
+	      		<Toast messageStyle={{ color: 'white' }} />
 	        	<MainNavigator />
 	        </MenuContext>
 	      </Provider>

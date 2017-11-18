@@ -2,25 +2,56 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  Text
+  Text,
+  FlatList
 } from 'react-native';
+import { connect } from 'react-redux';
+
+import { removeFavorite } from './actions';
+
+import Favorites from './Favorites';
+import FactCard from '../../components/FactCard';
+import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 
 class FavoriteFacts extends Component {
-  render() {
+
+  _createCardMenuOptions = (fact) => {
+    const { removeFavorite } = this.props.screenProps;
+    return [
+      copy({ content: fact.text }),
+      share({ message: fact.text }),
+      remove({ onSelect: () => removeFavorite(fact.id, 'facts') })
+    ]
+  }
+
+  _renderFact = ({item}) => {
+    const { navigation } = this.props;
     return (
-      <View>
-      	<Text>
-	        FAVORITE FACTS
-	      </Text>	
-      </View>
+      <FactCard 
+        {...item}
+        isFavorite={true}
+        navigation={navigation}
+        menuOptions={this._createCardMenuOptions(item)} 
+      />
+    );
+  }
+
+  render() {
+    const { facts } = this.props;
+    return (
+      <Favorites
+        data={facts}
+        category='facts'
+        renderFavorite={this._renderFact}
+      />
     );
   }
 }
 
-const styles = StyleSheet.create({
-
+const mapStateToProps = ({ favorite }) => ({
+  facts: favorite.facts,
 });
 
 
-export default FavoriteFacts;
+export default connect(mapStateToProps)(FavoriteFacts);

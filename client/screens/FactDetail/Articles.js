@@ -5,16 +5,29 @@ import {
   Text,
   ScrollView
 } from 'react-native';
+import hash from 'string-hash';
 
 import ArticleCard from '../../components/ArticleCard';
+import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 
 const Articles = ({ screenProps }) => {
+
+	const cardMenuOptions = ({link, title}) => {
+		const id = hash(link+title);
+		const menuOptions = [
+			copy({ content: link, optionText: 'Copy Link' }),
+			share({ message: title }),
+			save({ onSelect: () => screenProps.addFavorite({link, title, id}, 'articles') })
+		]
+		return menuOptions;
+	}
+
 	const renderArticles = (links) => {
 		return links.map((link,i) => (
 			<ArticleCard 
 				key= {i}
-				addToFavorite={screenProps.addToFavorite}
+				menuOptions={cardMenuOptions(link)}
 				{...link}
 			/>
 		));

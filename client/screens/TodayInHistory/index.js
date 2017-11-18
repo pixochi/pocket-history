@@ -16,7 +16,7 @@ import { toCalendarDate } from '../../utils/date';
 
 // ACTIONS
 import { fetchFacts, changeDate } from './actions';
-import { addToFavorite } from '../Favorite/actions';
+import { addFavorite } from '../Favorite/actions';
 
 // SCREENS
 import Events from './Events';
@@ -142,7 +142,7 @@ class TodayInHistory extends Component {
   });
 
   render() {
-    const { facts, addToFavorite, isLoading, rehydrated, selectedDate,
+    const { facts, addFavorite, isLoading, rehydrated, selectedDate,
        changeDate, fetchFacts, navigation } = this.props;
 
     const selectedFacts = facts[selectedDate.factDate];
@@ -151,7 +151,7 @@ class TodayInHistory extends Component {
       navigation,
       selectedFacts,
       selectedDate,
-      addToFavorite,
+      addFavorite,
       renderFact: this.renderFact,
       isReady: (!isLoading && rehydrated),
       canFetch: this.canFetch(this.props),
@@ -215,8 +215,8 @@ const mapDispatchToProps = (dispatch) => ({
   changeDate: (date) => {
     dispatch(changeDate(date));
   },
-  addToFavorite: (item, category) => {
-    dispatch(addToFavorite(item, category));
+  addFavorite: (item, category) => {
+    dispatch(addFavorite(item, category));
   }
 });
 

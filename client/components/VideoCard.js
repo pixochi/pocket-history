@@ -41,13 +41,15 @@ class VideoCard extends Component {
 		      	  source={{uri: imgUri}}
 		      	/>
 		      </View>
-		      <View style={[gStyles.overlay, styles.icon]}>
-		      	<Icon 
-		      		name='youtube-play'
-		      		type='font-awesome'
-		      		size={70}
-		      		color='#ff0000'
-		      	/>
+		      <View style={[gStyles.overlay, styles.iconContainer]}>
+		      		<Icon
+		      			reverse
+			      		name='play'
+			      		type='font-awesome'
+			      		size={35}
+			      		color='#ff0000'
+			      		iconStyle={{paddingLeft: 8}}
+			      	/>
 	      	</View>
 		    </TouchableOpacity>
 
@@ -65,6 +67,9 @@ class VideoCard extends Component {
     );
   }
 }
+
+const IMG_WIDTH = 320;
+const IMG_HEIGHT =  180;
 
 const styles = StyleSheet.create({
 	videoCardContainer: {
@@ -91,12 +96,12 @@ const styles = StyleSheet.create({
 		height: 190,
 	},
 	image:{
-		height: 180,
-		width: 320
+		height: IMG_HEIGHT,
+		width: IMG_WIDTH
 	},
-	icon: {
-		backgroundColor: 'rgba(0,0,0,.2)'
-	}
+	iconContainer: {
+		backgroundColor: 'rgba(0,0,0,.25)'
+	},
 });
 
 

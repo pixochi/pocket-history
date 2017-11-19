@@ -35,13 +35,28 @@ const saveFactsSubset = (facts, max, todaysDate) => {
   return savedFacts;
 }
 
+// @param data object - {Events, Births, Deaths}
+// @param keys array - keys of properties to be deleted
+// deletes specified properties from facts
+const deleteProps = (data, keys) => {
+  if (!data || !keys) return false;
+
+  _.forEach(data, (factCategory) => {
+    _.forEach(factCategory, (fact) => {
+      _.unset(fact, keys);
+    })
+  });
+  return data;
+}
+
 const factsReducer = (state = defaultState, action) => {
   switch(action.type) {
     // FETCHING FACTS BLOCK
     case `${FETCH_FACTS}_PENDING`:
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
-      const { data, date } = action.payload.data;
+      let { data, date } = action.payload.data;
+      deleteProps(data, ['text']);
       let newFacts = {};
       newFacts[date] = {...data};
       return {

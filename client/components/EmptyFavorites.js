@@ -7,17 +7,12 @@ import {
 
 import gStyles from '../styles';
 
-const EmptyFavorites = ({ message, loggedIn }) => {
-	const loginMessage = "Did you save some to your account? Because you're not logged in.";
+const EmptyFavorites = ({ message }) => {
   return (
     <View style={gStyles.screenMiddle}>
       <Text style={styles.message}>
         { message }
-      </Text>
-      { !loggedIn && <Text style={styles.message}>
-        { loginMessage }
-      </Text>
-    	}
+      </Text> 	
     </View>
   );
 }

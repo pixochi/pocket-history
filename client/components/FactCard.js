@@ -17,8 +17,8 @@ import { fixWikiLink } from '../utils/link';
 class FactCard extends PureComponent {
 
   render() {
-    const { year, html, text, links, isFavorite, menuOptions } = this.props;
-    const fact = { text, year, html }
+    const { year, html, links, isFavorite, menuOptions } = this.props;
+    const fact = { year, html }
 
     return (
       <View style={styles.factCard}>
@@ -52,7 +52,7 @@ class FactCard extends PureComponent {
             color='#517fa4'
             style={styles.openDetailIcon}
             containerStyle={{ width: 50}}
-            onPress={() => this.props.navigation.navigate('factDetail', { text, links })}
+            onPress={() => this.props.navigation.navigate('factDetail', { html, links })}
           /> 
         }
 

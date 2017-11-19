@@ -18,7 +18,6 @@ class Favorites extends Component {
       return (
         <EmptyFavorites 
           message='No favorites yet.'
-          loggedIn={user && user.id}
         />
       );
     }

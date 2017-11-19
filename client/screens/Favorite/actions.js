@@ -14,23 +14,25 @@ import {
 // @param category string - enum('events', 'books', 'videos', 'articles')
 export const addFavorite = (item, category) => (dispatch, getState) => {
 	const store = getState();
-	// const { online } = store.offline;
-	// const { user } = store.account;
+	const { token } = store.account;
 	const { favorite } = store;
-	const favoriteItem = _.find(favorite[category], (fact) => fact.id === item.id);
+	const favoriteItemExists = _.find(favorite[category], (fact) => fact.id === item.id);
 
-	if (!favoriteItem) {
+	if (!favoriteItemExists) {
 		dispatch({
 			type: ADD_FAVORITE,
 			item,
 			category
 		});
+		if (token) {
+			saveFavorite(item)
+		}
 	}
 	 dispatch(ToastActionsCreators.displayInfo('Saved', 2000));
 }
 
 const saveFavorite = (item) => {
-
+	
 }
 
 // @param category string - enum('events', 'books', 'videos', 'articles')

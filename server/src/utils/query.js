@@ -1,3 +1,6 @@
+import _ from 'lodash';
+
+
 // take into account only words which
 // start with a capital letter
 export const optimizeQuery = (queryText) => {
@@ -14,6 +17,8 @@ export const optimizeQuery = (queryText) => {
 	  	startsWithCapital.push(w);
 	  }
 	});
+
+	startsWithCapital = _.uniq(startsWithCapital);
 
 	const optimizedQuery = startsWithCapital.join(' ');
 

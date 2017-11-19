@@ -48,9 +48,9 @@ class FactsScreen extends Component {
 
   _addFactToFavorite = (fact) => {
     const { addFavorite, selectedDate } = this.props;
-    const id = hash(fact.text+fact.year);
-    let favoriteFact = _.omit(fact, ['links']);
-    favoriteFact = { ...fact, date: selectedDate.factDate, id }
+    const id = hash(fact.html+fact.year);
+    let favoriteFact = _.omit(fact, ['links', 'text']);
+    favoriteFact = { ...favoriteFact, date: selectedDate.factDate, id }
     addFavorite(favoriteFact, 'facts');
   }
 
@@ -63,10 +63,11 @@ class FactsScreen extends Component {
   }
 
   _renderFact = ({ item }) => {
-  	const { navigation } = this.props;
+  	const { navigation, category } = this.props;
   	return (
   		<FactCard 
 		  	{...item}
+		  	category={category}
 		  	isFavorite={false}
 		  	navigation={navigation}
 		  	menuOptions={this._cardMenuOptions(item)}
@@ -77,7 +78,6 @@ class FactsScreen extends Component {
   render() {
 	  const { selectedFacts, renderFact, category, isReady, onScroll,
 	  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
-
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
 	  if(isReady && _.isEmpty(selectedFacts)){
@@ -96,7 +96,7 @@ class FactsScreen extends Component {
 	         	contentContainerStyle={styles.list}
 	          data = {selectedFacts[category]}
 	          extraData = {selectedFacts[category]}
-	          keyExtractor = {(fact) => fact.text}
+	          keyExtractor = {(fact) => fact.html}
 	          renderItem = {this._renderFact}
 	          scrollEventThrottle={16}
 	          onScroll={onScroll}

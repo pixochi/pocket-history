@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import Loader from '../../components/Loader';
 import VideoCard from '../../components/VideoCard';
 import Modal from '../../components/Modal';
+import NetworkProblem from '../../components/NetworkProblem';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 // ACTIONS
@@ -32,7 +33,7 @@ class Videos extends Component {
 
   componentDidMount() {
     const { screenProps, fetchVideos } = this.props;
-    fetchVideos(screenProps.navigation.state.params.text);
+    fetchVideos(screenProps.navigation.state.params.html);
   }
 
   _cardMenuOptions = ({id, title}) => {
@@ -55,7 +56,7 @@ class Videos extends Component {
 
   _refetchVideos = () => {
     const { navigation, fetchVideos } = this.props;
-    fetchVideos(navigation.state.params.text);
+    fetchVideos(navigation.state.params.html);
   }
 
   _renderVideos(videos) {
@@ -82,12 +83,14 @@ class Videos extends Component {
       return <NetworkProblem solveConnection={this._refetchVideos} />
     }
 
-    if (videos.length === 0) {
-      <View style={gStyles.screenMiddle}>
-        <Text>
-          No videos found.
-        </Text>
-      </View>
+    if (!videos || videos.length === 0) {
+      return (
+        <View style={gStyles.screenMiddle}>
+          <Text style={styles.screenMessage}>
+            No videos found.
+          </Text>
+        </View>
+      );
     }
 
     return (
@@ -116,6 +119,9 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     margin: -8
+  },
+  screenMessage: {
+    fontSize: 16
   }
 });
 

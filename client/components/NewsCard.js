@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 		color: '#777'
 	},
 	menu: {
-		marginTop: 7,
+		marginTop: 8,
 		marginRight: 10
 	},
 	descriptionContainer: {

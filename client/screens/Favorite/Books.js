@@ -44,7 +44,8 @@ class FavoriteBooks extends Component {
 
   render() {
    const { books } = this.props;
-   const { bookDescription } = this.state;
+   const { bookDescription = "Sorry, we couldn't find a description for the selected book." 
+     } = this.state;
     return (
       <View style={{flex: 1}}>
         <Favorites

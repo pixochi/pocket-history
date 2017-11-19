@@ -28,7 +28,7 @@ class Books extends Component {
 
   componentDidMount() {
     const { screenProps, fetchBooks } = this.props;
-    fetchBooks(screenProps.navigation.state.params.text);
+    fetchBooks(screenProps.navigation.state.params.html);
   } 
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +36,7 @@ class Books extends Component {
     const connectionChanged = !this.props.isOnline && isOnline;
 
     if (!isLoading && connectionChanged && books.length === 0 ) {
-      fetchBooks(navigation.state.params.text);
+      fetchBooks(navigation.state.params.html);
     }
   }
 
@@ -53,7 +53,7 @@ class Books extends Component {
 
   _refetchBooks = () => {
     const { navigation, fetchBooks } = this.props;
-    fetchBooks(navigation.state.params.text);
+    fetchBooks(navigation.state.params.html);
   }
 
   _onBookPress = (bookDescription) => {
@@ -73,7 +73,8 @@ class Books extends Component {
 
   render() {
     const { books, isLoading, isOnline } = this.props;
-    const { bookDescription } = this.state;
+    const { bookDescription = "Sorry, we couldn't find a description for the selected book." 
+     } = this.state;
 
     if (isLoading) {
       return <Loader />;

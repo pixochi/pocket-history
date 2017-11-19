@@ -7,11 +7,21 @@ import {
 } from 'react-native';
 import hash from 'string-hash';
 
+import { dateRangeFromString } from '../../utils/date';
+
 import ArticleCard from '../../components/ArticleCard';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 
 const Articles = ({ screenProps }) => {
+
+	const { html } =  screenProps.navigation.state.params;
+	console.log('ARTICLES HTML')
+	console.log(html)
+
+	console.log('SCREEN PROPS')
+	console.log(screenProps)
+
 
 	const cardMenuOptions = ({link, title}) => {
 		const id = hash(link+title);

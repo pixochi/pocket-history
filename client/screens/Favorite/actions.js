@@ -26,7 +26,7 @@ export const addFavorite = (item, category) => (dispatch, getState) => {
 			category
 		});
 	}
-	 dispatch(ToastActionsCreators.displayInfo('Saved', 2500));
+	 dispatch(ToastActionsCreators.displayInfo('Saved', 2000));
 }
 
 const saveFavorite = (item) => {
@@ -44,6 +44,6 @@ export const removeFavorite = (itemId, category) => (dispatch, getState) => {
 		itemId,
 		category
 	});
-	dispatch(ToastActionsCreators.displayInfo('Removed', 2500));
+	dispatch(ToastActionsCreators.displayInfo('Removed', 2000));
 }
 

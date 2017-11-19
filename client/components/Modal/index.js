@@ -9,26 +9,31 @@ import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import Modal from 'react-native-modal';
 
-import { openModal, closeModal } from './actions';
+import { closeModal } from './actions';
 
 
 class ReduxModal extends Component {
 
-	_btnClose = (
-	   <Button 
-  		title='Close'
-  		onPress={this.props.closeModal}
-  		buttonStyle={styles.closeBtn}
-  		textStyle={styles.closeBtnText}
-  	/>
-	)
+	_btnClose = () => {
+		const { closeModal } = this.props;
+		return (
+			<Button 
+	  		title='Close'
+	  		onPress={() => closeModal()}
+	  		buttonStyle={styles.closeBtn}
+	  		textStyle={styles.closeBtnText}
+	  	/>
+		)
+	}
 
 	render() {
 		const { 
 			isVisible,
 			closeModal,
 			isScrollable = true,
-			btnClose = this._btnClose,
+			name = '', 
+			currentName,
+			btnClose = this._btnClose(),
 			modalStyle = styles.modal,
 			children = null
 		} = this.props;
@@ -36,7 +41,7 @@ class ReduxModal extends Component {
 
 		return (
 		  <Modal 
-	      isVisible={isVisible} 
+	      isVisible={isVisible && name === currentName} 
 	      onBackdropPress={closeModal}
 	      onBackButtonPress={closeModal}
 	      style={modalStyle}
@@ -71,7 +76,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({ modal }) => ({
-	isVisible: modal.isVisible
+	isVisible: modal.isVisible,
+	currentName: modal.currentName
 });
 
 const mapDispatchToProps = (dispatch) => ({

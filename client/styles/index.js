@@ -23,7 +23,7 @@ export default StyleSheet.create({
     zIndex: 1000,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,.3)'
+    backgroundColor: 'rgba(0,0,0,.3)'
   },
   cardMenu: {
     position: 'absolute',

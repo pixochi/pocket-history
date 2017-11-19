@@ -18,7 +18,7 @@ class FavoriteBooks extends Component {
     bookDescription: "Sorry, we couldn't find a description for the selected book." 
   }
 
-  _cardMenuOptions = ({id, link, title}) => {
+  _cardMenuOptions = ({id, title}) => {
     const { removeFavorite } = this.props.screenProps;
     const menuOptions = [
       copy({ content: title }),
@@ -29,7 +29,7 @@ class FavoriteBooks extends Component {
   }
 
   _onBookPress = (bookDescription) => {
-    this.setState({ bookDescription }, () => this.props.openModal());
+    this.setState({ bookDescription }, () => this.props.openModal('favBook'));
   }
 
   _renderBook = ({item}) => {
@@ -52,7 +52,7 @@ class FavoriteBooks extends Component {
           category='books'
           renderFavorite={this._renderBook}
         />
-        <Modal>
+        <Modal name='favBook'>
           <View style={styles.descriptionContainer}>
             <Text style={styles.descriptionText}>
               { bookDescription }
@@ -81,8 +81,8 @@ const mapStateToProps = ({ favorite }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  openModal: () => {
-    dispatch(openModal());
+  openModal: (name) => {
+    dispatch(openModal(name));
   }
 });
 

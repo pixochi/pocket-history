@@ -15,18 +15,13 @@ import TodayInHistory from './screens/TodayInHistory';
 import WhichHappenedSooner from './screens/WhichHappenedSooner';
 
 
-const todayInHistoryScreen = StackNavigator(
-  {
-    todayInHistory: {screen: TodayInHistory },
-    factDetail: { screen: FactDetail }
-  },
-  {
-    navigationOptions: ({ navigation }) => ({
+const todayInHistoryScreen = StackNavigator({
+  todayInHistory: {screen: TodayInHistory },
+  factDetail: { screen: FactDetail }
+},{ navigationOptions: ({navigation}) => ({
       headerRight: <MenuIcon navigation={navigation} />
-    }),
-  }
-);
-
+  })
+});
 
 export default class MainNavigator extends Component {
   render() {
@@ -35,7 +30,11 @@ export default class MainNavigator extends Component {
 		  happenedSooner: { screen: WhichHappenedSooner },
 		  predictions: { screen: FuturePredictions },
 		  diary: { screen: Diary },
-		  favorite: { screen: Favorite },
+		  favorite: { screen: (props) =>  <Favorite {...props} />, 
+        navigationOptions: {
+          drawerLabel: 'Favorite'
+        }
+      },
 		  myAccount: { screen: MyAccount }
 		});
 

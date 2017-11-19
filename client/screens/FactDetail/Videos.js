@@ -5,7 +5,6 @@ import {
   ScrollView,
   Text,
   WebView,
-  Dimensions
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -50,7 +49,7 @@ class Videos extends Component {
 
   _onVideoPress = (videoId) => {
     this.setState({ selectedVideoId: videoId }, () => {
-      this.props.openModal();
+      this.props.openModal('factVideo');
     });
   }
 
@@ -73,7 +72,7 @@ class Videos extends Component {
   render() {
     const { videos, isLoading, isOnline } = this.props;
     const { selectedVideoId } = this.state;
-    const videoUrl = VIDEO_ROOT_URL+id;
+    const videoUrl = VIDEO_ROOT_URL+selectedVideoId;
 
     if (isLoading) {
       return <Loader />;
@@ -94,7 +93,11 @@ class Videos extends Component {
     return (
       <ScrollView>
       	{ this._renderVideos(videos) }
-        <Modal isScrollable={false} modalStyle={styles.modal} >
+        <Modal 
+          isScrollable={false} 
+          modalStyle={styles.modal} 
+          name='factVideo'
+        >
           <View style={gStyles.videoContainer}>
             <WebView
               startInLoadingState
@@ -128,8 +131,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchVideos: (textQuery) => {
     dispatch(fetchVideos(textQuery));
   },
-  openModal: () => {
-    dispatch(openModal());
+  openModal: (name) => {
+    dispatch(openModal(name));
   }
 });
 

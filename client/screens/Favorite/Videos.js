@@ -36,7 +36,7 @@ class FavoriteVideos extends Component {
 
   _onVideoPress = (selectedVideoId) => {
     this.setState({ selectedVideoId }, () => {
-      this.props.openModal();
+      this.props.openModal('favVideo');
     });
   }
 
@@ -62,7 +62,11 @@ class FavoriteVideos extends Component {
           category='videos'
           renderFavorite={this._renderVideo}
         />
-        <Modal isScrollable={false} modalStyle={styles.modal}>
+        <Modal 
+          isScrollable={false} 
+          modalStyle={styles.modal} 
+          name='favVideo'
+        >
           <View style={gStyles.videoContainer}>
             <WebView
               startInLoadingState
@@ -89,8 +93,8 @@ const mapStateToProps = ({ favorite }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  openModal: () => {
-    dispatch(openModal());
+  openModal: (name) => {
+    dispatch(openModal(name));
   }
 });
 

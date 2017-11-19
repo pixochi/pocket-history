@@ -40,12 +40,13 @@ class Books extends Component {
     }
   }
 
-  _cardMenuOptions = ({id, link, title}) => {
+  _cardMenuOptions = (book) => {
+    const { title } = book;
     const { addFavorite } = this.props.screenProps;
     const menuOptions = [
       copy({ content: title }),
       share({ message: title }),
-      save({ onSelect: () => addFavorite({id, link, title}, 'books')})
+      save({ onSelect: () => addFavorite(book, 'books')})
     ]
     return menuOptions;
   }
@@ -56,7 +57,7 @@ class Books extends Component {
   }
 
   _onBookPress = (bookDescription) => {
-    this.setState({ bookDescription }, () => this.props.openModal());
+    this.setState({ bookDescription }, () => this.props.openModal('factBook'));
   }
  
   _renderBooks(books) {
@@ -95,7 +96,7 @@ class Books extends Component {
         <ScrollView style={styles.bookList}>
           { this._renderBooks(books) }
         </ScrollView>
-        <Modal>
+        <Modal name='factBook'>
           <View style={styles.descriptionContainer}>
             <Text style={styles.descriptionText}>
               { bookDescription }
@@ -135,8 +136,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchBooks: (textQuery) => {
     dispatch(fetchBooks(textQuery));
   },
-  openModal: () => {
-    dispatch(openModal());
+  openModal: (name) => {
+    dispatch(openModal(name));
   }
 });
 

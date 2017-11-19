@@ -23,17 +23,13 @@ const FavNavigator = StackNavigator({
 			}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false }
 		)
 	}
-},{ navigationOptions: ({ navigation }) => ({
-      headerRight: <MenuIcon navigation={navigation} />,
-      headerTitle: 'Favorite'
+},{ navigationOptions: (props) => ({
+			headerTitle: 'Favorite',
+      headerRight: <MenuIcon {...props} />
 	})
 }); 
 
 class Favorite extends Component {
-	static navigationOptions = {
-    drawerLabel: 'Favorite'
-	}
-
 	render(){
 		const { removeFavorite, navigation } = this.props;
 		return (

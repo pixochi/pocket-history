@@ -44,9 +44,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#B351E1'
 	},
 	articleTitle: {
+		paddingRight: 15,
+		paddingLeft: 9,
 		fontSize: 20,
-		color: '#fff',
-		textAlign: 'center'
+		color: '#fff'
 	},
 	menu: {
 		justifyContent: 'center',

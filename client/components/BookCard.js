@@ -57,7 +57,7 @@ const BookCard = ({book, onBookPress, menuOptions}) => {
 	      		name='magnifying-glass'
 	      		type='entypo'
 	      		size={50}
-	      		color='#962939'
+	      		color='#f2ff38'
 	      	/>
 	      </View>
       </TouchableOpacity>

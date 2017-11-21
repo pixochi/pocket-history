@@ -48,7 +48,7 @@ const factDetailReducer = (state = defaultState, action) => {
       return {
         ...state,
         isLoading: false,
-        timeline: action.payload.data
+        timeline: action.payload.result.event
       }
     case `${FETCH_FACT_BOOKS}_REJECTED`:
     case `${FETCH_FACT_VIDEOS}_REJECTED`:

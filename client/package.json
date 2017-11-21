@@ -17,6 +17,8 @@
     "react-native-modal": "^4.1.1",
     "react-native-popup-menu": "^0.9.0",
     "react-native-redux-toast": "^1.0.1",
+    "react-native-timeline-listview": "^0.2.2",
+    "react-native-xml2js": "^1.0.3",
     "react-navigation": "^1.0.0-beta.15",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
@@ -24,7 +26,8 @@
     "redux-persist-transform-filter": "0.0.15",
     "redux-promise-middleware": "^4.4.1",
     "redux-thunk": "^2.2.0",
-    "string-hash": "^1.1.3"
+    "string-hash": "^1.1.3",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
     "test": "jest"

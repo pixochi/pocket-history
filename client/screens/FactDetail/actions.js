@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { Clipboard } from 'react-native';
-
 import { ToastActionsCreators } from 'react-native-redux-toast';
 
+import { parseXml } from '../../utils/xmlParser'
 import config from '../../constants/config';
 import { 
 	FETCH_FACT_BOOKS,
@@ -37,22 +37,37 @@ export const fetchVideos = (textQuery) => dispatch => {
 	  .catch(e => console.log(e));
 }
 
+const _fetchTimeline = (range, queryWord) => {
+	return new Promise(async (resolve, reject) => {
+		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
+		const { start, end } = range;
+		console.log('RANGE')
+		console.log(range)
+		const queryParams = {
+			params: { 
+				begin_date: start,
+				end_date: end,
+				granularity: 'all'
+			}
+		}
+		try {
+			const { data } = await axios(TIMELINE_API_ROOT, queryParams);
+			const json = await parseXml(data);
+			if (!json) {
+				reject();
+			}
+			resolve(json);
+		} catch(e) {
+			console.log(e);
+			reject(e);
+		}
+	});
+}
+
 // fetches facts between a specified range of dates
 // @param range obj - { rangeStart: [YYYYMMDD], rangeEnd: [YYYYMMDD] }
-export const fetchTimeline = (range) => dispatch => {
-	const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
-	const { start, end } = range;
-	const queryParams = {
-		params: { 
-			begin_date: start,
-			end_date: end,
-			format: 'json',
-			granularity: 'all'
-		}
-	}
-	const timelinePromise = axios(TIMELINE_API_ROOT, queryParams);
-
-	dispatch({ type: FETCH_TIMELINE_FACTS, payload: timelinePromise })
+export const fetchTimeline = (range, queryWord) => dispatch => {
+	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(range, queryWord) })
 	  .catch(e => console.log(e));
 }
 

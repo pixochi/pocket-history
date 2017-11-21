@@ -1,11 +1,11 @@
 export const removeHtmlTags = (str) => {
-  if ((str == null) || (str === '')) return false;
+  if (typeof str !== 'string' || str === '') return false;
   return str.replace(/<[^>]*>/g, '');
 }
 
 // e.g., &#64; -> @
 export const replaceHtmlChars = (str) => {
-	if (!str) return false;
+	if (typeof str !== 'string' || str === '') return false;
 
   return str.replace(/&[^>]*;/g, (htmlChar) => {
   	const charCode = parseInt(htmlChar.replace( /^\D+/g, ''));

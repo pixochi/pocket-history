@@ -28,7 +28,7 @@ class Books extends Component {
 
   componentDidMount() {
     const { screenProps, fetchBooks } = this.props;
-    fetchBooks(screenProps.navigation.state.params.html);
+    fetchBooks(screenProps.navigation.state.params.text);
   } 
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +36,7 @@ class Books extends Component {
     const connectionChanged = !this.props.isOnline && isOnline;
 
     if (!isLoading && connectionChanged && books.length === 0 ) {
-      fetchBooks(navigation.state.params.html);
+      fetchBooks(navigation.state.params.text);
     }
   }
 

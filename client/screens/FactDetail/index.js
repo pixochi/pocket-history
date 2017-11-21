@@ -6,15 +6,17 @@ import { TabNavigator } from 'react-navigation';
 import Articles from './Articles';
 import Books from './Books';
 import Videos from './Videos';
+import Timeline from './Timeline';
 
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from './actions';
 
 
 const FactDetailNav = TabNavigator({
-  articles: { screen: Articles },
+  articles: {  screen: Articles },
   books: { screen: Books },
   videos: { screen: Videos },
+  timeline: { screen: Timeline }
 }, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false });
 
 class FactDetail extends Component {

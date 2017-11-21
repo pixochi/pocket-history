@@ -19,7 +19,6 @@ const getDateNums = (timestamp) => {
   const month = date.getMonth() 
   const day = date.getDate();
   const year = date.getFullYear();
-  console.log({ day, month, year })
   return { day, month, year };
 }
 
@@ -34,7 +33,7 @@ const isNumber = (val) => {
 const addLeadingChars = (val, minLength, leadingChar) => {
   if (val.length >= minLength) return val;
   let chars = '';
-  for (let i = minLength - 1; i >= 0; i--) {
+  for (let i = minLength - 1; i > 0; i--) {
     chars += leadingChar;
   }
   const result = (chars + (val)).slice(-minLength);
@@ -90,9 +89,17 @@ export const yearsAgo = (year) => {
 // @param year int - year of a birth or death
 // @return object{beginDate, endDate}, both format: [YYYYMMDD]
 export const dateRangeFromString = (str, category, selectedDate, year) => {
+
+  // case when the 'year' contains BC
+  let bc = false; // before Christ
+  if (year.toUpperCase().indexOf('BC') > -1) {
+    bc = true;
+  }
+
+  year = parseNumber(year);
   let yearResult;
-  let rangeStart;
-  let rangeEnd;
+  let start; // range start
+  let end; // range end
   const currentYear = new Date().getFullYear();
   const LIFE_EXPECTANCY = 70;
   const MAX_AGE = 105;
@@ -103,30 +110,60 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
   month = addLeadingChars(month, 2, '0');
   yearText = addLeadingChars(year, 4, '0');
 
-  const matches = str.match(/\([db].\d+\)$/); // finds (d. [YEAR]) or (b. [YEAR])
+  if (bc) {
+    yearText = '-' + yearText;
+    year = -year;
+  }
+
+  // the range is 1 whole year
+  if (category === 'Events') {
+    return {
+      start: yearText + beginDate,
+      end: yearText + endDate
+    }
+  }
+  // finds (d. [YEAR]) or (b. [YEAR]), or with BC after [YEAR]
+  const matches = str.match(/\([db]. \d+( BC)?\)$/);
   if (!matches){
     // person is maybe still alive
     if (category === 'Births' && year > (currentYear - MAX_AGE) ) {
-      rangeEnd = currentYear + endDate;
-      rangeStart = yearText + month + day;
-    } else {
+      end = currentYear + endDate;
+      start = yearText + month + day;
+    } else { // person is probably dead
       if (category === 'Births') {
-        rangeEnd = (year + LIFE_EXPECTANCY) + endDate;
-        rangeStart = yearText + month + day;  
+        end = year + LIFE_EXPECTANCY;
+        isBC = end < 0;
+        end *= isBC ? -1 : 1;
+        end = addLeadingChars(end, 4, '0')
+        end = isBC ? ('-' + end) : end;
+        end += endDate;
+        start = yearText + month + day;  
       } else {
-        rangeEnd = yearText + month + day;
-        rangeStart = (year - LIFE_EXPECTANCY) + beginDate;
+        end = yearText + month + day;
+        start = year + LIFE_EXPECTANCY;
+        isBC = start < 0;
+        start *= isBC ? -1 : 1;
+        start = addLeadingChars(start, 4, '0')
+        start = isBC ? ('-' + start) : start;
+        start += beginDate;
       }   
     }  
   } else {
-    yearResult = parseNumber(matches[0]);
-    if (yearResult > year) { // yearResult is date of death
-      rangeEnd = yearResult + endDate;
-      rangeStart = yearText+month+day;
+    yearResultAsNumber = parseNumber(matches[0]);
+    let yearResultAsString = addLeadingChars(yearResultAsNumber, 4, '0');
+
+    if (matches[1] === ' BC') {
+      yearResultAsNumber = -yearResultAsNumber;
+      yearResultAsString = '-' + yearResultAsString;
+    }
+    
+    if (yearResultAsNumber > year) { // yearResult is date of death
+      end = yearResultAsString + endDate;
+      start = yearText+month+day;
     } else { // yearResult is date of birth
-      rangeEnd = yearText + month + day;
-      rangeStart = yearResult + beginDate;
+      end = yearText + month + day;
+      start = yearResultAsString + beginDate;
     }
   }
-  return { rangeStart, rangeEnd }
+  return { start, end }
 }

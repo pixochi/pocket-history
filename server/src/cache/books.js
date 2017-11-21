@@ -20,7 +20,7 @@ export const getCachedBooks = (req, res, next) => {
       next();
     } 
 
-    if (data != null) {
+    if (data != null && data.length !== 0 ) {
       res.send(data);
     } else {
       next();
@@ -32,9 +32,9 @@ export const cacheBooks = (textQuery, books) => {
   return new Promise((resolve, reject) => {
     const hashedText = hash(textQuery); // long textQuery into a short hash
     const serializedBooks = JSON.stringify(books); // array to string
-    const day = 60*60*24 // day in seconds
+    const expiresIn = 60*60*24 // 24 hours in seconds
     
-    redisClient.setex(hashedText, day, serializedBooks, (err, reply) => {
+    redisClient.setex(hashedText, expiresIn, serializedBooks, (err, reply) => {
       if (err) {
         console.log('ERROR SETTING CACHE:')
         console.log(err)

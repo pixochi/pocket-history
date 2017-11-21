@@ -33,7 +33,7 @@ class Videos extends Component {
 
   componentDidMount() {
     const { screenProps, fetchVideos } = this.props;
-    fetchVideos(screenProps.navigation.state.params.html);
+    fetchVideos(screenProps.navigation.state.params.text);
   }
 
   _cardMenuOptions = ({id, title}) => {

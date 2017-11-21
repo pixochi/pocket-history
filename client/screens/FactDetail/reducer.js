@@ -1,12 +1,14 @@
 import { 
   FETCH_FACT_BOOKS,
-  FETCH_FACT_VIDEOS
+  FETCH_FACT_VIDEOS,
+  FETCH_TIMELINE_FACTS
 } from '../../constants/actionTypes';
 
 
 const defaultState = {
   books: [],
   videos: [],
+  timeline: [],
   isLoading: false,
   error: ''
 }
@@ -28,6 +30,7 @@ const factDetailReducer = (state = defaultState, action) => {
   switch(action.type) {
     case `${FETCH_FACT_BOOKS}_PENDING`:
     case `${FETCH_FACT_VIDEOS}_PENDING`:
+    case `${FETCH_TIMELINE_FACTS}_PENDING`:
       return { ...state, isLoading: true };
     case `${FETCH_FACT_BOOKS}_FULFILLED`: 
       return {
@@ -35,15 +38,23 @@ const factDetailReducer = (state = defaultState, action) => {
         isLoading: false,
         books: action.payload.data
       }
-    case `${FETCH_FACT_BOOKS}_REJECTED`:
-    case `${FETCH_FACT_VIDEOS}_REJECTED`:
-      return { ...state, isLoading: false, error: action.payload.message };
     case `${FETCH_FACT_VIDEOS}_FULFILLED`: 
       return {
         ...state,
         isLoading: false,
         videos: action.payload.data
       }
+    case `${FETCH_TIMELINE_FACTS}_FULFILLED`: 
+      return {
+        ...state,
+        isLoading: false,
+        timeline: action.payload.data
+      }
+    case `${FETCH_FACT_BOOKS}_REJECTED`:
+    case `${FETCH_FACT_VIDEOS}_REJECTED`:
+    case `${FETCH_TIMELINE_FACTS}_REJECTED`:
+      return { ...state, isLoading: false, error: action.payload.message };
+    
     default: 
       return state;
   }

@@ -19,9 +19,10 @@ import gStyles from '../styles';
 
 
 const BookCard = ({book, onBookPress, menuOptions}) => {
+	const message404 = 'Sorry, we could not find a description for the selected book.'
 	const fullScreenBookPreview = `${book.previewLink}#f=true`;
-	let description = book.description || book.textSnippet || '';
-	description = replaceHtmlChars(removeHtmlTags(description));
+	let description = book.description || book.textSnippet;
+	description = replaceHtmlChars(removeHtmlTags(description)) || message404;
 
   return (
     <View style={styles.bookCardContainer}>

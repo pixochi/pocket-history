@@ -13,7 +13,7 @@ export const getCachedNews = (req, res, next) => {
       next();
     } 
 
-    if (data != null) {
+    if (data != null && data.length !== 0 ) {
       res.send(data);
     } else {
       next();

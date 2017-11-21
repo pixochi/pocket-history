@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import hash from 'string-hash';
 
 import { dateRangeFromString } from '../../utils/date';
@@ -13,9 +14,10 @@ import ArticleCard from '../../components/ArticleCard';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 
-const Articles = ({ screenProps }) => {
-
+const Articles = (props) => {
+	const { screenProps, navigation } = props;
 	const { html } =  screenProps.navigation.state.params;
+
 
 	const cardMenuOptions = ({link, title}) => {
 		const { addFavorite, copyToClipboard } = screenProps;

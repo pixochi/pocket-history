@@ -13,7 +13,8 @@ export const optimizeQuery = (queryText) => {
 	let startsWithCapital = [];
 
 	words.forEach((w) => {
-		if(w[0] === w[0].toUpperCase()){
+		const charCode = w.charCodeAt(0);
+		if(charCode > 64 && charCode < 91){
 	  	startsWithCapital.push(w);
 	  }
 	});

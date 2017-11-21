@@ -24,11 +24,11 @@ const offlineConfig = {
     transforms: [
       createFilter('historyOnDay', ['facts']),
       createFilter('news', ['articles', 'lastTimeFetched']),
-      createFilter('factDetail', ['facts', 'articles', 'books', 'videos']),
+      createBlacklistFilter('factDetail', ['books', 'videos', 'timeline', 'error', 'isLoading' ]),
       createBlacklistFilter('account', ['error', 'isLoading']),
       createBlacklistFilter('persist', ['rehydrated']),
       createBlacklistFilter('toast', ['message', 'error', 'warning', 'duration']),
-      createBlacklistFilter('modal', ['isVisible'])
+      createBlacklistFilter('modal', ['isVisible', 'name'])
     ]
   }
 };

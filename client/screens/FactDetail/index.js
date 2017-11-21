@@ -8,6 +8,7 @@ import Books from './Books';
 import Videos from './Videos';
 
 import { addFavorite } from '../Favorite/actions';
+import { copyToClipboard } from './actions';
 
 
 const FactDetailNav = TabNavigator({
@@ -18,9 +19,9 @@ const FactDetailNav = TabNavigator({
 
 class FactDetail extends Component {
 	render() {
-		const { addFavorite, navigation } = this.props;
+		const { addFavorite, copyToClipboard, navigation } = this.props;
 		return (
-			<FactDetailNav screenProps={{addFavorite, navigation}} />
+			<FactDetailNav screenProps={{addFavorite, copyToClipboard, navigation}} />
 		)
 	}
 }
@@ -28,6 +29,9 @@ class FactDetail extends Component {
 const mapDispatchToProps = (dispatch) => ({
   addFavorite: (item, category) => {
     dispatch(addFavorite(item, category));
+  },
+  copyToClipboard: (content) => {
+    dispatch(copyToClipboard(content));
   }
 });
 

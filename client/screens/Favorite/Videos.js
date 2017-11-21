@@ -24,10 +24,10 @@ class FavoriteVideos extends Component {
   state = { selectedVideoId: '' }
 
   _cardMenuOptions = ({id}) => {
-    const { removeFavorite } = this.props.screenProps;
+    const { removeFavorite, copyToClipboard } = this.props.screenProps;
     const videoUrl = VIDEO_ROOT_URL+id;
     const menuOptions = [
-      copy({ content: videoUrl }),
+      copy({ onSelect: () => copyToClipboard(videoUrl)}),
       share({ message: videoUrl }),
       remove({ onSelect: () => removeFavorite(id, 'videos') })
     ]

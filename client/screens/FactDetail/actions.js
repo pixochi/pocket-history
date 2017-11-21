@@ -1,9 +1,13 @@
 import axios from 'axios';
+import { Clipboard } from 'react-native';
+
+import { ToastActionsCreators } from 'react-native-redux-toast';
 
 import config from '../../constants/config';
 import { 
 	FETCH_FACT_BOOKS,
-	FETCH_FACT_VIDEOS
+	FETCH_FACT_VIDEOS,
+	COPY_TO_CLIPBOARD
 } from '../../constants/actionTypes';
 
 
@@ -29,4 +33,9 @@ export const fetchVideos = (textQuery) => dispatch => {
 
 	dispatch({ type: FETCH_FACT_VIDEOS, payload: videosPromise })
 	  .catch(e => console.log(e));
+}
+
+export const copyToClipboard = (content) => dispatch => {
+	Clipboard.setString(content);
+	dispatch(ToastActionsCreators.displayInfo('Copied', 2000));
 }

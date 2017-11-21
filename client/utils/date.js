@@ -60,8 +60,8 @@ export const toApiNewsDate = (timestamp) => {
 // returns the format of the selected date
 // in the state
 // format: October 25
-export const toFactDate = (date) => {
-  const { day, month } = getDateNums(date.getTime());
+export const toFactDate = (timestamp) => {
+  const { day, month } = getDateNums(timestamp);
   const monthText = MONTHS[month];
   return `${monthText} ${day}`; // October 25
 }

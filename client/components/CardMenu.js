@@ -47,8 +47,7 @@ const CardMenu = ({ options }) => {
 	      </MenuOptions>
 	    </Menu>     
 	  </View>
-  );
-  
+  );  
 }
 
 const styles = StyleSheet.create({

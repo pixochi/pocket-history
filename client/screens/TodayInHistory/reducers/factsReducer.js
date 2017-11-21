@@ -10,13 +10,13 @@ import { toFactDate } from '../../../utils/date';
 // saved in AsyncStorage
 const MAX_FACTS = 10;
 
-const today = new Date();
+const currentTimestamp = new Date().getTime();
 
 const defaultState = {
   facts: {},
   selectedDate: {
-    timestamp: today.getTime(),
-    factDate: toFactDate(today)
+    timestamp: currentTimestamp,
+    factDate: toFactDate(currentTimestamp)
   },
   isLoading: false,
   error: false
@@ -56,7 +56,6 @@ const factsReducer = (state = defaultState, action) => {
       return { ...state, isLoading: true };
     case `${FETCH_FACTS}_FULFILLED`: {
       let { data, date } = action.payload.data;
-      deleteProps(data, ['text']);
       let newFacts = {};
       newFacts[date] = {...data};
       return {

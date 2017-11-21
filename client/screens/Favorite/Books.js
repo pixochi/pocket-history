@@ -19,9 +19,9 @@ class FavoriteBooks extends Component {
   }
 
   _cardMenuOptions = ({id, title}) => {
-    const { removeFavorite } = this.props.screenProps;
+    const { removeFavorite, copyToClipboard } = this.props.screenProps;
     const menuOptions = [
-      copy({ content: title }),
+      copy({ onSelect: () => copyToClipboard(title)}),
       share({ message: title }),
       remove({ onSelect: () => removeFavorite(id, 'books') })
     ]

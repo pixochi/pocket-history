@@ -16,9 +16,9 @@ import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 class FavoriteArticles extends Component {
 
   _cardMenuOptions = ({id, link, title}) => {
-    const { removeFavorite } = this.props.screenProps;
+    const { removeFavorite, copyToClipboard } = this.props.screenProps;
     const menuOptions = [
-      copy({ content: link, optionText: 'Copy Link' }),
+      copy({ onSelect: () => copyToClipboard(link), optionText: 'Copy Link' }),
       share({ message: title }),
       remove({ onSelect: () => removeFavorite(id, 'articles') })
     ]
@@ -26,7 +26,6 @@ class FavoriteArticles extends Component {
   }
 
   _renderArticle = ({item}) => {
-    const { addFavorite } = this.props.screenProps;
     return (
       <ArticleCard
         {...item}

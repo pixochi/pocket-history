@@ -1,4 +1,6 @@
 import { Share, Clipboard } from 'react-native';
+import { copyToClipboard } from '../../screens/FactDetail/actions';
+
 
 export const share = (props) => {
   const { 
@@ -17,11 +19,12 @@ export const share = (props) => {
 export const copy = (props) => {
   const { 
     content = '',
+    onSelect = () => Clipboard.setString(props.content),
     optionText = 'Copy',
     iconProps = { name: 'clipboard', type: 'font-awesome' }
   } = props;
   return {
-    onSelect: () => Clipboard.setString(content),
+    onSelect,
     iconProps,
     optionText
   }

@@ -21,7 +21,7 @@ const IMG_SIZE = 'mqdefault.jpg' // medium, 320*180
 class VideoCard extends Component {
 
   render() {
-  	const { id, title, onVideoPress, addToFavorite, menuOptions } = this.props;
+  	const { id, title, onVideoPress, menuOptions } = this.props;
   	const imgUri = `${IMG_ROOT_URL}/${id}/${IMG_SIZE}`;
   	const videoUrl = 'https://www.youtube.com/watch?v='+id;
 

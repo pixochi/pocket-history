@@ -42,9 +42,9 @@ class Books extends Component {
 
   _cardMenuOptions = (book) => {
     const { title } = book;
-    const { addFavorite } = this.props.screenProps;
+    const { addFavorite, copyToClipboard } = this.props.screenProps;
     const menuOptions = [
-      copy({ content: title }),
+      copy({ onSelect: () => copyToClipboard(title) }),
       share({ message: title }),
       save({ onSelect: () => addFavorite(book, 'books')})
     ]

@@ -16,12 +16,12 @@ import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 class FavoriteFacts extends Component {
 
-  _createCardMenuOptions = (fact) => {
-    const { removeFavorite } = this.props.screenProps;
+  _createCardMenuOptions = ({id, text}) => {
+    const { removeFavorite, copyToClipboard } = this.props.screenProps;
     return [
-      copy({ content: fact.text }),
-      share({ message: fact.text }),
-      remove({ onSelect: () => removeFavorite(fact.id, 'facts') })
+      copy({ onSelect: () => copyToClipboard(text)}),
+      share({ message: text }),
+      remove({ onSelect: () => removeFavorite(id, 'facts') })
     ]
   }
 

@@ -16,19 +16,14 @@ import { copy, share, save } from '../../components/utils/cardMenuOptions';
 const Articles = ({ screenProps }) => {
 
 	const { html } =  screenProps.navigation.state.params;
-	console.log('ARTICLES HTML')
-	console.log(html)
-
-	console.log('SCREEN PROPS')
-	console.log(screenProps)
-
 
 	const cardMenuOptions = ({link, title}) => {
+		const { addFavorite, copyToClipboard } = screenProps;
 		const id = hash(link+title);
 		const menuOptions = [
-			copy({ content: link, optionText: 'Copy Link' }),
+			copy({ onSelect: () => copyToClipboard(link), optionText: 'Copy Link' }),
 			share({ message: title }),
-			save({ onSelect: () => screenProps.addFavorite({link, title, id}, 'articles') })
+			save({ onSelect: () => addFavorite({link, title, id}, 'articles') })
 		]
 		return menuOptions;
 	}

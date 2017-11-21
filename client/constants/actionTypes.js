@@ -19,3 +19,6 @@ export const FETCH_FAVORITE = 'FETCH_FAVORITE';
 // MODAL - COMPONENT
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const OPEN_MODAL = 'OPEN_MODAL';
+
+// COMMON
+export const COPY_TO_CLIPBOARD = 'COPY_TO_CLIPBOARD';

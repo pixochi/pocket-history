@@ -37,10 +37,10 @@ class Videos extends Component {
   }
 
   _cardMenuOptions = ({id, title}) => {
-    const { addFavorite } = this.props.screenProps;
+    const { addFavorite, copyToClipboard } = this.props.screenProps;
     const videoUrl = VIDEO_ROOT_URL+id;
     const menuOptions = [
-      copy({ content: videoUrl }),
+      copy({ onSelect: () => copyToClipboard(videoUrl) }),
       share({ message: videoUrl }),
       save({ onSelect: () => addFavorite({id, title}, 'videos') })
     ]

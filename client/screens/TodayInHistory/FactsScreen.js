@@ -49,14 +49,15 @@ class FactsScreen extends Component {
   _addFactToFavorite = (fact) => {
     const { addFavorite, selectedDate } = this.props;
     const id = hash(fact.html+fact.year);
-    let favoriteFact = _.omit(fact, ['links', 'text']);
+    let favoriteFact = _.omit(fact, ['links']);
     favoriteFact = { ...favoriteFact, date: selectedDate.factDate, id }
     addFavorite(favoriteFact, 'facts');
   }
 
   _cardMenuOptions = (item) => {
+  	const { copyToClipboard } = this.props;
     return [
-      copy({ content: item.text }),
+      copy({ onSelect: () => copyToClipboard(item.text)}),
       share({ message: item.text }),
       save({ onSelect: () => this._addFactToFavorite(item) })
     ]

@@ -10,7 +10,8 @@ import FavoriteVideos from './Videos';
 
 import MenuIcon from '../../components/MenuIcon';
 
-import { removeFavorite } from '../Favorite/actions';
+import { removeFavorite } from './actions';
+import { copyToClipboard } from '../FactDetail/actions';
 
 
 const FavNavigator = StackNavigator({
@@ -31,9 +32,9 @@ const FavNavigator = StackNavigator({
 
 class Favorite extends Component {
 	render(){
-		const { removeFavorite, navigation } = this.props;
+		const { removeFavorite, copyToClipboard, navigation } = this.props;
 		return (
-			<FavNavigator screenProps={{removeFavorite, navigation}} />
+			<FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />
 		)
 	}
 }
@@ -41,6 +42,9 @@ class Favorite extends Component {
 const mapDispatchToProps = (dispatch) => ({
   removeFavorite: (item, category) => {
     dispatch(removeFavorite(item, category));
+  },
+  copyToClipboard: (content) => {
+    dispatch(copyToClipboard(content));
   }
 });
 

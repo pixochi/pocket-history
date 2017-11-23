@@ -41,7 +41,7 @@ export const fetchVideos = (textQuery) => dispatch => {
 }
 
 // @param isNew bool - indicates wheter the next timeline facts belong to the same timeline
-const _fetchTimeline = ({ range, limit = 20, isNew = true }) => {
+const _fetchTimeline = ({ range, limit = 20, isNew = true }, currentTimelineFacts) => {
 	return new Promise(async (resolve, reject) => {
 		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
 		const { start, end } = range;
@@ -50,16 +50,24 @@ const _fetchTimeline = ({ range, limit = 20, isNew = true }) => {
 				begin_date: start.api,
 				end_date: end.api,
 				limit,
-				granularity: 'all',
+				granularity: 'year',
 				html: true,
 			}
 		}
 		try {
 			const { data } = await axios(TIMELINE_API_ROOT, queryParams);
 			const { result } = await parseXml(data);
-			const isLastFetched = result.event.length === 0 ? true : false;
+			let facts = result.event;
+			const isLastFetched = facts.length === 0 ? true : false;
 
-			resolve({ facts: result.event, range, isLastFetched, isNew });
+			// removes repeating timeline facts
+			if (currentTimelineFacts && currentTimelineFacts.length) {
+				const lastTimelineFact = currentTimelineFacts[currentTimelineFacts.length-1];
+				const index = facts.findIndex((fact) => fact.description === lastTimelineFact.description);
+				facts = facts.slice(index+1);
+			}
+
+			resolve({ facts, range, isLastFetched, isNew });
 		} catch(e) {
 			console.log(e);
 			reject(e);
@@ -69,8 +77,13 @@ const _fetchTimeline = ({ range, limit = 20, isNew = true }) => {
 
 // fetches facts between a specified range of dates
 // @param range obj - { rangeStart: [YYYYMMDD], rangeEnd: [YYYYMMDD] }
-export const fetchTimeline = (options) => dispatch => {
-	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(options) })
+export const fetchTimeline = (options) => (dispatch, getState) => {
+	const { isNew = true, range } = options;
+	if (isNew) {
+		dispatch({ type: CHANGE_TIMELINE_RANGE, range });
+	}
+	const currentTimelineFacts = getState().factDetail.timeline.data;
+	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(options, currentTimelineFacts) })
 	  .catch(e => console.log(e));
 }
 

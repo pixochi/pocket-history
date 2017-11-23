@@ -1,7 +1,8 @@
 import { 
   FETCH_FACT_BOOKS,
   FETCH_FACT_VIDEOS,
-  FETCH_TIMELINE_FACTS
+  FETCH_TIMELINE_FACTS,
+  CHANGE_TIMELINE_RANGE
 } from '../../constants/actionTypes';
 
 
@@ -90,7 +91,7 @@ const factDetailReducer = (state = defaultState, action) => {
       return { ...state, timeline: {...timeline, isLoading: true }};
     case `${FETCH_TIMELINE_FACTS}_FULFILLED`:
       const { payload } = action;
-      const data = payload.isNew ? payload.facts : [...timeline.data, payload.facts];
+      const data = payload.isNew ? payload.facts : [...timeline.data, ...payload.facts];
       return {
         ...state,
         timeline: {
@@ -107,9 +108,19 @@ const factDetailReducer = (state = defaultState, action) => {
         timeline: {
           ...timeline, 
           isLoading: false,
+          isLastFetched: true,
           error: action.payload.message 
         }
       };
+    case CHANGE_TIMELINE_RANGE:
+      return { 
+        ...state,
+        timeline: {
+          ...timeline,
+          data: [],
+          range: action.range
+        }
+      }
     
     default: 
       return state;

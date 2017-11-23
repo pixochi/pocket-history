@@ -95,8 +95,8 @@ class FactsScreen extends Component {
 	      { _.has(selectedFacts, category) &&
 	        <AnimatedFlatList
 	         	contentContainerStyle={styles.list}
-	          data = {selectedFacts[category].slice(-2)}
-	          extraData = {selectedFacts[category].slice(-2)}
+	          data = {selectedFacts[category]}
+	          extraData = {selectedFacts[category]}
 	          keyExtractor = {(fact) => fact.html}
 	          renderItem = {this._renderFact}
 	          scrollEventThrottle={16}

@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  Linking
+  Linking,
+  ActivityIndicator
 } from 'react-native';
 import TimelineList from 'react-native-timeline-listview'
 import HTMLView from 'react-native-htmlview'; // not same as webview
@@ -45,8 +46,8 @@ class Timeline extends Component {
   }
 
   _onEndReached = () => {
-    const { isLastFetched, timelineFacts, timelineRange } = this.props;
-    if (!isLastFetched) {
+    const { isLastFetched, timelineFacts, timelineRange, isLoading } = this.props;
+    if (!isLoading && !isLastFetched) {
       const lastFactDate = timelineFacts[timelineFacts.length-1].date
       const [ year, month, day ] = lastFactDate.split('/');
       const start = {
@@ -64,9 +65,16 @@ class Timeline extends Component {
   }
 
   _renderFooter = () => {
-    return this.props.isLoading ? <Loader /> : <Text/>;
+    const { isLastFetched, isLoading } = this.props;
+    const isLoadingNext = !isLastFetched && isLoading;
+    const loader = (
+      <View style={styles.footer}>
+        <ActivityIndicator size='large' />
+      </View>  
+    )
+    const footer = isLoadingNext ? loader : <Text/>;
+    return footer;
   }
-
 
   _renderDetail = (rowData, sectionID, rowID) => {
     const { timelineFacts } = this.props;
@@ -164,6 +172,7 @@ class Timeline extends Component {
             renderTime={this._renderTime}
             renderDetail={this._renderDetail}
             options={options}
+            style={styles.timeline}
           />
         </View>      
       );
@@ -209,6 +218,9 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 4
   },
+  timeline: {
+
+  },
   container: {
     flex: 1
   },
@@ -230,7 +242,7 @@ const styles = StyleSheet.create({
   description: {
     // UNCOMMENT LATER
     // fontSize: 14,
-    // marginTop: 10,
+    // marginTop: 4,
   },
   borderItem: {
     // UNCOMMENT LATER
@@ -239,6 +251,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20
+  },
+  footer: {
+    paddingBottom: 10
   }
 });
 

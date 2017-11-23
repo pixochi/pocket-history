@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   factText: {
     // uncomment when finishing
-    // fontSize: 18 
+    // fontSize: 16 
   },
   openDetailIcon: {
     alignSelf: 'flex-end',

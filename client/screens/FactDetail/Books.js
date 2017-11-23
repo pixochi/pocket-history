@@ -125,13 +125,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ factDetail: { books, isLoading }, offline}) => (
-  {
-    books,
+const mapStateToProps = ({ factDetail: { books }, offline}) => {
+  const { data, isLoading } = books;
+  return {
+    books: data,
     isLoading,
     isOnline: offline.online
   }
-)
+}
 
 const mapDispatchToProps = (dispatch) => ({
   fetchBooks: (textQuery) => {

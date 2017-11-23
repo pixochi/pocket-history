@@ -100,6 +100,8 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
   let yearResult;
   let start; // range start
   let end; // range end
+  let isStartApproximate = false;
+  let isEndApproximate = false;
   const currentYear = new Date().getFullYear();
   const LIFE_EXPECTANCY = 70;
   const MAX_AGE = 105;
@@ -118,8 +120,18 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
   // the range is 1 whole year
   if (category === 'Events') {
     return {
-      start: yearText + beginDate,
-      end: yearText + endDate
+      start: {
+        api: yearText + beginDate,
+        year,
+        month: '00',
+        day: '00'
+      },
+      end: {
+        api: yearText + endDate,
+        year,
+        month: '12',
+        day: '31'
+      }
     }
   }
   // finds (d. [YEAR]) or (b. [YEAR]), or with BC after [YEAR]
@@ -129,18 +141,21 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
     if (category === 'Births' && year > (currentYear - MAX_AGE) ) {
       end = currentYear + endDate;
       start = yearText + month + day;
+      isEndApproximate = true;
     } else { // person is probably dead
       if (category === 'Births') {
         end = year + LIFE_EXPECTANCY;
+        isEndApproximate = true;
         isBC = end < 0;
         end *= isBC ? -1 : 1;
         end = addLeadingChars(end, 4, '0')
         end = isBC ? ('-' + end) : end;
         end += endDate;
-        start = yearText + month + day;  
+        start = yearText + month + day;
       } else {
         end = yearText + month + day;
-        start = year + LIFE_EXPECTANCY;
+        isStartApproximate = true;
+        start = year - LIFE_EXPECTANCY;
         isBC = start < 0;
         start *= isBC ? -1 : 1;
         start = addLeadingChars(start, 4, '0')
@@ -165,5 +180,23 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
       start = yearResultAsString + beginDate;
     }
   }
+  start = {
+    ...getDatesFromRangeText(start),
+    api: start,
+    approximate: isStartApproximate,
+  }
+  end = {
+    ...getDatesFromRangeText(end),
+    api: end,
+    approximate: isEndApproximate,  
+  }
   return { start, end }
+}
+
+// -19001231([YYYYMMDD]) to { year: -1900, month: 12, day: 31 }
+const getDatesFromRangeText = (rangeText) => {
+  const year = parseInt(rangeText.split('').reverse().join('').slice(4).split('').reverse().join(''));
+  const month = parseInt(rangeText.slice(-4, -2));
+  const day = parseInt(rangeText.slice(-2));
+  return { year, month, day }
 }

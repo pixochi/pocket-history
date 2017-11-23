@@ -3,11 +3,14 @@ import { Clipboard } from 'react-native';
 import { ToastActionsCreators } from 'react-native-redux-toast';
 
 import { parseXml } from '../../utils/xmlParser'
+
 import config from '../../constants/config';
+
 import { 
 	FETCH_FACT_BOOKS,
 	FETCH_FACT_VIDEOS,
 	FETCH_TIMELINE_FACTS,
+	CHANGE_TIMELINE_RANGE,
 	COPY_TO_CLIPBOARD
 } from '../../constants/actionTypes';
 
@@ -37,26 +40,26 @@ export const fetchVideos = (textQuery) => dispatch => {
 	  .catch(e => console.log(e));
 }
 
-const _fetchTimeline = (range, queryWord) => {
+// @param isNew bool - indicates wheter the next timeline facts belong to the same timeline
+const _fetchTimeline = ({ range, limit = 20, isNew = true }) => {
 	return new Promise(async (resolve, reject) => {
 		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
 		const { start, end } = range;
-		console.log('RANGE')
-		console.log(range)
 		const queryParams = {
 			params: { 
-				begin_date: start,
-				end_date: end,
-				granularity: 'all'
+				begin_date: start.api,
+				end_date: end.api,
+				limit,
+				granularity: 'all',
+				html: true,
 			}
 		}
 		try {
 			const { data } = await axios(TIMELINE_API_ROOT, queryParams);
-			const json = await parseXml(data);
-			if (!json) {
-				reject();
-			}
-			resolve(json);
+			const { result } = await parseXml(data);
+			const isLastFetched = result.event.length === 0 ? true : false;
+
+			resolve({ facts: result.event, range, isLastFetched, isNew });
 		} catch(e) {
 			console.log(e);
 			reject(e);
@@ -66,8 +69,8 @@ const _fetchTimeline = (range, queryWord) => {
 
 // fetches facts between a specified range of dates
 // @param range obj - { rangeStart: [YYYYMMDD], rangeEnd: [YYYYMMDD] }
-export const fetchTimeline = (range, queryWord) => dispatch => {
-	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(range, queryWord) })
+export const fetchTimeline = (options) => dispatch => {
+	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(options) })
 	  .catch(e => console.log(e));
 }
 

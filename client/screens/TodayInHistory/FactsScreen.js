@@ -14,11 +14,14 @@ import hash from 'string-hash';
 // COMPONENTS
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
+import MenuIcon from '../../components/MenuIcon';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 import { HEADER_HEIGHT } from '../../constants/components';
+
+import gStyles from '../../styles';
 
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -77,11 +80,11 @@ class FactsScreen extends Component {
   }
 
   render() {
-	  const { selectedFacts, renderFact, category, isReady, onScroll,
+	  const { facts, filter, renderFact, category, isReady, onScroll,
 	  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
-	  if(isReady && _.isEmpty(selectedFacts)){
+	  if(isReady && _.isEmpty(facts)){
 	    return <NetworkProblem solveConnection={this._refetchFacts} />
 	  }
 
@@ -89,14 +92,22 @@ class FactsScreen extends Component {
 	  	return <View />
 	  }
 
+	  if (_.has(facts, category) && !facts[category].length) {
+	  	return (
+	  		<View style={gStyles.screenMiddle}>
+	  			<Text>No facts containing { filter.search } were found.</Text>
+	  		</View>
+	  	)
+	  }
+
 	  return (
 	    <View style={styles.listContainer}>
 	      <Loader animating={!isReady} />
-	      { _.has(selectedFacts, category) &&
+	      { _.has(facts, category) &&
 	        <AnimatedFlatList
 	         	contentContainerStyle={styles.list}
-	          data = {selectedFacts[category]}
-	          extraData = {selectedFacts[category]}
+	          data = {facts[category]}
+	          extraData = {facts[category]}
 	          keyExtractor = {(fact) => fact.html}
 	          renderItem = {this._renderFact}
 	          scrollEventThrottle={16}

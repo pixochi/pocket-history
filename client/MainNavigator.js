@@ -1,6 +1,8 @@
 // REACT
 import React, { Component } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { StackNavigator, DrawerNavigator, TabNavigator } from 'react-navigation';
+import { Constants } from 'expo';
 
 // COMPONENTS
 import MenuIcon from './components/MenuIcon';
@@ -19,7 +21,7 @@ const todayInHistoryScreen = StackNavigator({
   todayInHistory: {screen: TodayInHistory },
   factDetail: { screen: FactDetail }
 },{ navigationOptions: ({navigation}) => ({
-      headerRight: <MenuIcon navigation={navigation} />
+      header: null
   })
 });
 
@@ -38,6 +40,16 @@ export default class MainNavigator extends Component {
 		  myAccount: { screen: MyAccount }
 		});
 
-    return <MainNavigator />
+    return (
+      <View style={styles.appContainer}>
+        <MainNavigator />
+      </View>
+    ) 
   }
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+  }
+})

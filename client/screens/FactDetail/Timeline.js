@@ -6,16 +6,22 @@ import {
   Linking,
   ActivityIndicator
 } from 'react-native';
+import { Icon, SearchBar } from 'react-native-elements';
 import TimelineList from 'react-native-timeline-listview'
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import { connect } from 'react-redux';
 
+import FilterIcon from '../../components/FilterIcon';
+import Header from '../../components/Header';
 import Loader from '../../components/Loader';
+import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
 
-import { dateRangeFromString } from '../../utils/date';
+import { dateRangeFromString, addLeadingChars } from '../../utils/date';
+import { filterBySearch } from '../../utils/filters';
 
-import { fetchTimeline } from './actions';
+import { fetchTimeline, changeTimelineFilter } from './actions';
+import { openModal } from '../../components/Modal/actions';
 
 import gStyles from '../../styles';
 
@@ -49,7 +55,15 @@ class Timeline extends Component {
     const { isLastFetched, timelineFacts, timelineRange, isLoading } = this.props;
     if (!isLoading && !isLastFetched) {
       const lastFactDate = timelineFacts[timelineFacts.length-1].date
-      const [ year, month, day ] = lastFactDate.split('/');
+
+      let [ year, month = 0, day = 0 ] = lastFactDate.split('/').map(d => parseInt(d));
+      if (day+1 > 31) {
+        month += 1;
+        year += month > 12 ? 1 : 0;
+      } else {
+        day += 1;
+      }
+      [month, day ] = [month, day ].map(d => addLeadingChars(d, 2, '0'));
       const start = {
         api: year + month + day,
         year,
@@ -66,7 +80,7 @@ class Timeline extends Component {
 
   _renderFooter = () => {
     const { isLastFetched, isLoading } = this.props;
-    const isLoadingNext = !isLastFetched && isLoading;
+    const isLoadingNext = (!isLastFetched && isLoading);
     const loader = (
       <View style={styles.footer}>
         <ActivityIndicator size='large' />
@@ -148,58 +162,77 @@ class Timeline extends Component {
     return { start: timelineStart, end: timelineEnd }
   }
 
+  _openFilter = () => {
+    const { openModal } = this.props;
+    openModal('timelineFilter');
+  }
+
   render() {
-    const { timelineFacts, isLoading, isOnline } = this.props;
+    const { timelineFacts, changeFilter, filter, isLoading, isOnline } = this.props;
+    let Main;
 
     if (!isOnline && !timelineFacts.length) {
-      return <NetworkProblem />
-    }
-
-    if (isLoading && !timelineFacts.length) {
-      return <Loader />
-    }
-
-    if (timelineFacts && timelineFacts.length) {
+      Main = <NetworkProblem />
+    } else if (isLoading && !timelineFacts.length) {
+      Main = <Loader />
+    } else if (timelineFacts.length) {
       const { start, end } = this._timelineBorders();
-      const options = {
-        renderFooter: this._renderFooter,
-        onEndReached: this._onEndReached
-      }
-      return (
+      Main = (
         <View style={styles.listContainer}>
           <TimelineList 
             data={[start, ...timelineFacts, end]}
             renderTime={this._renderTime}
             renderDetail={this._renderDetail}
-            options={options}
+            options={{
+              renderFooter: this._renderFooter,
+              onEndReached: this._onEndReached
+            }}
             style={styles.timeline}
           />
         </View>      
       );
-    }
-
-    if (!timelineFacts.length) {
-      return (
+    } else {
+      Main = (
         <View style={gStyles.screenMiddle}>
           <Text style={styles.text}>
             No events were found 
-          </Text>
+          </Text> 
         </View>
       )
     }
 
     return (
-      <View />
+      <View style={{flex:1}}>
+        <Header 
+          title='Library'
+          navigation={this.props.screenProps.navigation}
+          rightComponent={<FilterIcon onPress={this._openFilter} />}
+        />
+        <View style={gStyles.screenBody}>
+          { Main }
+          <Modal name='timelineFilter' modalStyle={{flex:1}}>
+            <View style={styles.filterContainer}>
+               <SearchBar
+                  value={filter.search}
+                  onChangeText={(text) => changeFilter({ search: text })}
+                  onClearText={() => changeFilter({ search: '' })}
+                  placeholder='Type Here...' 
+                />
+            </View>
+          </Modal>
+        </View>
+      </View>
     );
   }
 }
 
 const mapStateToProps = ({ historyOnDay, factDetail, offline }) => {
   const { timeline } = factDetail;
-  const { data, range, isLoading, isLastFetched } = timeline;
+  const { data, range, filter, isLoading, isLastFetched } = timeline;
   return {
-    timelineFacts: data,
+    timelineFacts: filterBySearch(data, filter.search, ['description']),
     timelineRange: range,
+    filter: timeline.filter,
     isLastFetched,
     isLoading,
     selectedTimestamp: historyOnDay.selectedDate.timestamp,
@@ -210,6 +243,12 @@ const mapStateToProps = ({ historyOnDay, factDetail, offline }) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchTimeline: (options) => {
     dispatch(fetchTimeline(options));
+  },
+  openModal: (name) => {
+    dispatch(openModal(name))
+  },
+  changeFilter: (filter) => {
+    dispatch(changeTimelineFilter(filter));
   }
 });
 
@@ -253,7 +292,14 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   footer: {
-    paddingBottom: 10
+    flex: 1,
+    height: 20,
+    paddingBottom: 10,
+    marginBottom: 10
+  },
+  filterContainer: {
+    flex: 1,
+    backgroundColor: '#fff'
   }
 });
 

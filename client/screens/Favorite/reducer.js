@@ -3,7 +3,8 @@ import _ from 'lodash';
 import { 
   ADD_FAVORITE,
   REMOVE_FAVORITE,
-  FETCH_FAVORITE
+  FETCH_FAVORITE,
+  CHANGE_FAVORITES_FILTER
 } from '../../constants/actionTypes';
 
 
@@ -11,7 +12,10 @@ const defaultState = {
   facts: [],
   articles: [],
   books: [],
-  videos: []
+  videos: [],
+  filter: {
+    search: ''
+  }
 }
 
 
@@ -29,6 +33,11 @@ const favoriteReducer = (state = defaultState, action) => {
       return { 
         ...state,
         ...tmp
+      }
+    case CHANGE_FAVORITES_FILTER: 
+      return {
+        ...state,
+        filter: { ...state.filter, ...action.filter }
       }
     default: 
       return state;

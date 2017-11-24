@@ -5,6 +5,7 @@ import {
 	FETCH_FACTS,
 	FETCH_NEWS,
 	CHANGE_DATE,
+	CHANGE_FACTS_FILTER
 } from '../../constants/actionTypes';
 import { toApiFactDate, toFactDate } from '../../utils/date';
 import config from '../../constants/config';
@@ -57,6 +58,13 @@ export const changeDate = (timestamp) => {
 			timestamp,
 			factDate: toFactDate(timestamp)
 		}
+	}
+}
+
+export const changeFactsFilter = (filter) => {
+	return {
+		type: CHANGE_FACTS_FILTER,
+		filter
 	}
 }
 

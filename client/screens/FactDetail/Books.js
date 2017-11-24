@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 // COMPONENTS
 import BookCard from '../../components/BookCard';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
+import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
@@ -72,39 +73,50 @@ class Books extends Component {
   }
 
   render() {
-    const { books, isLoading, isOnline } = this.props;
+    const { books, isLoading, isOnline, screenProps } = this.props;
     const { bookDescription = "Sorry, we couldn't find a description for the selected book." 
      } = this.state;
+    let Main;
 
     if (isLoading) {
-      return <Loader />;
+      Main = <Loader />;
+    } else if (!isOnline && books.length === 0) {
+      Main = <NetworkProblem solveConnection={this._refetchBooks} />;
+    } else if (books.length === 0) {
+      Main = (
+        <View style={gStyles.screenMiddle}>
+          <Text>
+            No books found.
+          </Text>
+        </View>
+      )
+    } else {
+      Main = (
+        <View style={{flex:1}}>
+          <ScrollView style={styles.bookList}>
+          { this._renderBooks(books) }
+          </ScrollView>
+          <Modal name='factBook'>
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.descriptionText}>
+                { bookDescription }
+              </Text>
+            </View> 
+          </Modal>
+        </View> 
+      )
     }
-
-    if (!isOnline && books.length === 0) {
-      return <NetworkProblem solveConnection={this._refetchBooks} />
-    }
-
-    if (books.length === 0) {
-      <View style={gStyles.screenMiddle}>
-        <Text>
-          No books found.
-        </Text>
-      </View>
-    } 
 
     return (
-      <View>
-        <ScrollView style={styles.bookList}>
-          { this._renderBooks(books) }
-        </ScrollView>
-        <Modal name='factBook'>
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.descriptionText}>
-              { bookDescription }
-            </Text>
-          </View> 
-        </Modal>
+     <View style={{flex:1}}>
+      <Header 
+        title='Library'
+        navigation={screenProps.navigation}
+      />
+      <View style={gStyles.screenBody}>
+        { Main }
       </View>
+    </View>
     );
   }
 }

@@ -41,4 +41,12 @@ export default StyleSheet.create({
     flex: 1,
     height: SCREEN_HEIGHT - 80
   },
+  filterContainer: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
+  screenBody: {
+    flex: 1,
+    marginTop: 70
+  }
 });

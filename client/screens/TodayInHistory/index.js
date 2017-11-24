@@ -7,17 +7,19 @@ import {
   AsyncStorage
 } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
-import { Button, Icon } from 'react-native-elements';
+import { Button, Icon, SearchBar } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { toCalendarDate } from '../../utils/date';
+import { filterBySearch } from '../../utils/filters';
 
 // ACTIONS
-import { fetchFacts, changeDate } from './actions';
+import { fetchFacts, changeDate, changeFactsFilter } from './actions';
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
+import { openModal } from '../../components/Modal/actions';
 
 // SCREENS
 import Events from './Events';
@@ -28,10 +30,15 @@ import FactDetail from '../FactDetail';
 
 // COMPONENTS
 import CalendarModal from '../../components/CalendarModal';
+import FilterIcon from '../../components/FilterIcon';
 import DateHeader from '../../components/DateHeader';
+import Modal from '../../components/Modal';
+import Header from '../../components/Header';
 
 //CONSTANTS
 import { HEADER_HEIGHT } from '../../constants/components';
+
+import gStyles from '../../styles';
 
 const FactsCategories = TabNavigator({
   events: { screen: Events },
@@ -66,10 +73,9 @@ class TodayInHistory extends Component {
     const { facts, rehydrated, isLoading, 
       isOnline, selectedDate, fetchFacts } = nextProps;
 
-    const selectedFacts = facts[selectedDate.factDate];
     const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
 
-    if (this.canFetch(nextProps) && _.isEmpty(selectedFacts) ) {
+    if (this.canFetch(nextProps) && _.isEmpty(facts) ) {
       fetchFacts(nextProps.selectedDate.timestamp);
     }
   }  
@@ -136,6 +142,10 @@ class TodayInHistory extends Component {
     this.setState({ isModalVisible: true });
   }
 
+  _openFilter = () => {
+    this.props.openModal('factsFilter');
+  }
+
   translateY = Animated.add(this.state.scrollAnim, this.state.offsetAnim).interpolate({
     inputRange: [0, HEADER_HEIGHT],
     outputRange: [0, -HEADER_HEIGHT],
@@ -143,14 +153,13 @@ class TodayInHistory extends Component {
   });
 
   render() {
-    const { facts, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
-       changeDate, fetchFacts, navigation } = this.props;
-
-    const selectedFacts = facts[selectedDate.factDate];
+    const { facts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
+       changeDate, fetchFacts, changeFilter, navigation } = this.props;
 
     const screenProps = {
       navigation,
-      selectedFacts,
+      facts,
+      filter,
       selectedDate,
       addFavorite,
       copyToClipboard,
@@ -169,46 +178,79 @@ class TodayInHistory extends Component {
     const translateY = this.translateY;
 
     return (
-      <View style={styles.factsContainer}>
-        <CalendarModal 
-          isVisible={this.state.isModalVisible}
-          currentDate={toCalendarDate(selectedDate.timestamp)} 
-          changeDate={changeDate}
-          closeModal={this.closeModal}
-        />
+      <View style={styles.container}>
+      <Header 
+        title='Today In History' 
+        navigation={navigation}
+        rightComponent={<FilterIcon onPress={this._openFilter} />}
+      />
+      <View style={styles.container}>   
+        <View style={styles.screenBody}>
+          <CalendarModal 
+            isVisible={this.state.isModalVisible}
+            currentDate={toCalendarDate(selectedDate.timestamp)} 
+            changeDate={changeDate}
+            closeModal={this.closeModal}
+          />
 
-        <DateHeader 
-          headerStyle={{ transform: [{translateY}] }}
-          selectedDate={selectedDate}
-          changeDate={changeDate}
-          openModal={this.openModal}
-        />
+          <DateHeader 
+            headerStyle={{ transform: [{translateY}] }}
+            selectedDate={selectedDate}
+            changeDate={changeDate}
+            openModal={this.openModal}
+          />
 
-        <FactsCategories
-          onNavigationStateChange={this._showDate}
-          screenProps={screenProps} 
-        />
+          <Modal name='factsFilter' modalStyle={{flex:1}}>
+            <View style={gStyles.filterContainer}>
+               <SearchBar
+                  value={filter.search}
+                  onChangeText={(text) => changeFilter({ search: text })}
+                  onClearText={() => changeFilter({ search: '' })}
+                  placeholder='Type Here...' 
+                />
+            </View>
+          </Modal>
+
+          <FactsCategories
+            onNavigationStateChange={this._showDate}
+            screenProps={screenProps} 
+          />
+        </View>
+      </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  factsContainer: {
+  container: {
     flex: 1
   },
+  screenBody: {
+    flex: 1,
+    marginTop: 70
+  }
 });
 
-const mapStateToProps =
-  ({ historyOnDay: { facts, selectedDate, isLoading }, offline, persist}) => (
-    {
-      facts,
-      selectedDate,
-      isLoading,
-      isOnline: offline.online,
-      rehydrated: persist.rehydrated
-    }
-)
+const filterFacts = (facts = {}, searchValue) => {
+  let filteredFacts = {};
+  Object.keys(facts).forEach(category => {
+    filteredFacts[category] = filterBySearch(facts[category], searchValue, ['text'])
+  });
+  return filteredFacts;  
+}
+
+const mapStateToProps = ({ historyOnDay, offline, persist }) => {
+  const { facts, filter, selectedDate, isLoading } = historyOnDay;
+  return {
+    facts: filterFacts(facts[selectedDate.factDate], filter.search),
+    filter,
+    selectedDate,
+    isLoading,
+    isOnline: offline.online,
+    rehydrated: persist.rehydrated
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (timestamp) => {
@@ -222,6 +264,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   copyToClipboard: (content) => {
     dispatch(copyToClipboard(content));
+  },
+  changeFilter: (filter) => {
+    dispatch(changeFactsFilter(filter));
+  },
+  openModal: (name) => {
+    dispatch(openModal(name));
   }
 });
 

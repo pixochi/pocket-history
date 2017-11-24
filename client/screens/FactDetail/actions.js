@@ -6,11 +6,13 @@ import { parseXml } from '../../utils/xmlParser'
 
 import config from '../../constants/config';
 
+import { DEFAULT_TIMELINE_FILTER } from './constants';
 import { 
 	FETCH_FACT_BOOKS,
 	FETCH_FACT_VIDEOS,
 	FETCH_TIMELINE_FACTS,
 	CHANGE_TIMELINE_RANGE,
+	CHANGE_TIMELINE_FILTER,
 	COPY_TO_CLIPBOARD
 } from '../../constants/actionTypes';
 
@@ -41,7 +43,7 @@ export const fetchVideos = (textQuery) => dispatch => {
 }
 
 // @param isNew bool - indicates wheter the next timeline facts belong to the same timeline
-const _fetchTimeline = ({ range, limit = 20, isNew = true }, currentTimelineFacts) => {
+const _fetchTimeline = ({ range, limit = 200, isNew = true }, currentTimelineFacts) => {
 	return new Promise(async (resolve, reject) => {
 		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
 		const { start, end } = range;
@@ -58,7 +60,7 @@ const _fetchTimeline = ({ range, limit = 20, isNew = true }, currentTimelineFact
 			const { data } = await axios(TIMELINE_API_ROOT, queryParams);
 			const { result } = await parseXml(data);
 			let facts = result.event;
-			const isLastFetched = facts.length === 0 ? true : false;
+			const isLastFetched = (facts.length < limit);
 
 			// removes repeating timeline facts
 			if (currentTimelineFacts && currentTimelineFacts.length) {
@@ -81,10 +83,18 @@ export const fetchTimeline = (options) => (dispatch, getState) => {
 	const { isNew = true, range } = options;
 	if (isNew) {
 		dispatch({ type: CHANGE_TIMELINE_RANGE, range });
+		dispatch({ type: CHANGE_TIMELINE_FILTER, filter: DEFAULT_TIMELINE_FILTER });
 	}
 	const currentTimelineFacts = getState().factDetail.timeline.data;
 	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(options, currentTimelineFacts) })
 	  .catch(e => console.log(e));
+}
+
+export const changeTimelineFilter = (filter) => {
+	return {
+		type: CHANGE_TIMELINE_FILTER,
+		filter
+	}
 }
 
 export const copyToClipboard = (content) => dispatch => {

@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux';
 
 // COMPONENTS
+import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import VideoCard from '../../components/VideoCard';
 import Modal from '../../components/Modal';
@@ -71,46 +72,55 @@ class Videos extends Component {
   }
 
   render() {
-    const { videos, isLoading, isOnline } = this.props;
+    const { videos, isLoading, isOnline, screenProps } = this.props;
     const { selectedVideoId } = this.state;
     const videoUrl = VIDEO_ROOT_URL+selectedVideoId;
+    let Main;
 
     if (isLoading) {
-      return <Loader />;
-    }
-
-    if (!isOnline && videos.length === 0) {
-      return <NetworkProblem solveConnection={this._refetchVideos} />
-    }
-
-    if (!videos || videos.length === 0) {
-      return (
+      Main = <Loader />;
+    } else if (!isOnline && videos.length === 0) {
+      Main = <NetworkProblem solveConnection={this._refetchVideos} />
+    } else if (!videos || videos.length === 0) {
+      Main = (
         <View style={gStyles.screenMiddle}>
           <Text style={styles.screenMessage}>
             No videos found.
           </Text>
         </View>
       );
+    } else {
+      Main = (
+        <ScrollView>
+          { this._renderVideos(videos) }
+          <Modal 
+            isScrollable={false} 
+            modalStyle={styles.modal} 
+            name='factVideo'
+          >
+            <View style={gStyles.videoContainer}>
+              <WebView
+                startInLoadingState
+                renderLoading={() => <Loader />}
+                source={{uri: videoUrl}}
+                style={gStyles.videoPlayer}
+              />
+            </View>
+          </Modal>
+        </ScrollView>
+      )
     }
 
     return (
-      <ScrollView>
-      	{ this._renderVideos(videos) }
-        <Modal 
-          isScrollable={false} 
-          modalStyle={styles.modal} 
-          name='factVideo'
-        >
-          <View style={gStyles.videoContainer}>
-            <WebView
-              startInLoadingState
-              renderLoading={() => <Loader />}
-              source={{uri: videoUrl}}
-              style={gStyles.videoPlayer}
-            />
-          </View>
-        </Modal>
-      </ScrollView>
+      <View style={{flex:1}}>
+      <Header 
+        title='Library'
+        navigation={screenProps.navigation}
+      />
+      <View style={gStyles.screenBody}>
+        { Main }
+      </View>
+    </View>  
     );
   }
 }

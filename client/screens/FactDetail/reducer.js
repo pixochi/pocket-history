@@ -2,8 +2,11 @@ import {
   FETCH_FACT_BOOKS,
   FETCH_FACT_VIDEOS,
   FETCH_TIMELINE_FACTS,
-  CHANGE_TIMELINE_RANGE
+  CHANGE_TIMELINE_RANGE,
+  CHANGE_TIMELINE_FILTER
 } from '../../constants/actionTypes';
+
+import { DEFAULT_TIMELINE_FILTER } from './constants';
 
 
 const defaultState = {
@@ -20,6 +23,7 @@ const defaultState = {
   timeline: {
     data: [],
     range: {},
+    filter: DEFAULT_TIMELINE_FILTER,
     isLoading: false,
     error: null
   }
@@ -88,10 +92,19 @@ const factDetailReducer = (state = defaultState, action) => {
 
     // TIMELINE
     case `${FETCH_TIMELINE_FACTS}_PENDING`:
-      return { ...state, timeline: {...timeline, isLoading: true }};
+      return { 
+        ...state, 
+        timeline: {
+          ...timeline,
+          isLoading: true 
+        }
+      };
     case `${FETCH_TIMELINE_FACTS}_FULFILLED`:
       const { payload } = action;
-      const data = payload.isNew ? payload.facts : [...timeline.data, ...payload.facts];
+      let data = payload.facts;
+      if (!payload.isNew) {
+        data =  [...timeline.data, ...payload.facts];
+      }
       return {
         ...state,
         timeline: {
@@ -119,6 +132,14 @@ const factDetailReducer = (state = defaultState, action) => {
           ...timeline,
           data: [],
           range: action.range
+        }
+      }
+    case CHANGE_TIMELINE_FILTER:
+      return { 
+        ...state,
+        timeline: {
+          ...timeline,
+          filter: {...timeline.filter, ...action.filter}
         }
       }
     

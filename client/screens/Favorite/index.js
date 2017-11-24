@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 
@@ -8,10 +10,17 @@ import FavoriteArticles from './Articles';
 import FavoriteBooks from './Books';
 import FavoriteVideos from './Videos';
 
+import FilterIcon from '../../components/FilterIcon';
+import Header from '../../components/Header';
 import MenuIcon from '../../components/MenuIcon';
+import Modal from '../../components/Modal';
 
-import { removeFavorite } from './actions';
+
+import { removeFavorite, changeFavoritesFilter } from './actions';
 import { copyToClipboard } from '../FactDetail/actions';
+import { openModal } from '../../components/Modal/actions';
+
+import gStyles from '../../styles';
 
 
 const FavNavigator = StackNavigator({
@@ -25,17 +34,52 @@ const FavNavigator = StackNavigator({
 		)
 	}
 },{ navigationOptions: (props) => ({
-			headerTitle: 'Favorite',
-      headerRight: <MenuIcon {...props} />
+			header: null
 	})
 }); 
 
 class Favorite extends Component {
+
+	_openFilter = () => {
+		this.props.openModal('favoritesFilter');
+	}
+
 	render(){
-		const { removeFavorite, copyToClipboard, navigation } = this.props;
+		const { removeFavorite, changeFilter, filter, copyToClipboard, navigation } = this.props;
 		return (
-			<FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />
+
+			 <View style={{flex:1}}>
+        <Header 
+          title='Favorite'
+          navigation={navigation}
+          rightComponent={<FilterIcon onPress={this._openFilter} />}
+        />
+        <View style={gStyles.screenBody}>
+         <FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />
+
+         <Modal name='favoritesFilter' modalStyle={{flex:1}}>
+            <View style={{flex:1}}>
+               <SearchBar
+                  value={filter.search}
+                  onChangeText={(text) => changeFilter({ search: text })}
+                  onClearText={() => changeFilter({ search: '' })}
+                  placeholder='Type Here...' 
+                />
+            </View>
+          </Modal>
+        </View>
+      </View>
+
+
+			
 		)
+	}
+}
+
+const mapStateToProps = ({favorite}) => {
+	const { facts, articles, books, videos, filter } = favorite;
+	return {
+		filter
 	}
 }
 
@@ -45,8 +89,14 @@ const mapDispatchToProps = (dispatch) => ({
   },
   copyToClipboard: (content) => {
     dispatch(copyToClipboard(content));
+  },
+  openModal: (name) => {
+  	dispatch(openModal(name))
+  },
+  changeFilter: (filter) => {
+  	dispatch(changeFavoritesFilter(filter));
   }
 });
 
 
-export default connect(null, mapDispatchToProps)(Favorite);
+export default connect(mapStateToProps, mapDispatchToProps)(Favorite);

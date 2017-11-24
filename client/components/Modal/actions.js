@@ -4,6 +4,6 @@ export const openModal = (name) => {
 	return { type: OPEN_MODAL, currentName: name }
 }
 
-export const closeModal = (name) => {
+export const closeModal = () => {
 	return { type: CLOSE_MODAL }
 }

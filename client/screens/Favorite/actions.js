@@ -6,7 +6,8 @@ import { ToastActionsCreators } from 'react-native-redux-toast';
 import { 
   ADD_FAVORITE,
   REMOVE_FAVORITE,
-  FETCH_FAVORITE
+  FETCH_FAVORITE,
+  CHANGE_FAVORITES_FILTER
 } from '../../constants/actionTypes';
 
 
@@ -49,3 +50,9 @@ export const removeFavorite = (itemId, category) => (dispatch, getState) => {
 	dispatch(ToastActionsCreators.displayInfo('Removed', 2000));
 }
 
+export const changeFavoritesFilter = (filter) => {
+	return {
+		type: CHANGE_FAVORITES_FILTER,
+		filter
+	}
+}

@@ -11,7 +11,10 @@ import hash from 'string-hash';
 import { dateRangeFromString } from '../../utils/date';
 
 import ArticleCard from '../../components/ArticleCard';
+import Header from '../../components/Header';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
+
+import gStyles from '../../styles';
 
 
 const Articles = (props) => {
@@ -43,9 +46,17 @@ const Articles = (props) => {
   const { links } = screenProps.navigation.state.params;
 
   return (
-  	<ScrollView style={styles.articlesContainer}>
-    	{ renderArticles(links) }
-    </ScrollView>
+    <View style={{flex:1}}>
+      <Header 
+        title='Library'
+        navigation={props.screenProps.navigation}
+      />
+      <View style={gStyles.screenBody}>
+        <ScrollView style={styles.articlesContainer}>
+		    	{ renderArticles(links) }
+		    </ScrollView>
+      </View>
+    </View>
   ); 
 }
 

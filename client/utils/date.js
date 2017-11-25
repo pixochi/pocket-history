@@ -4,7 +4,7 @@ const MONTHS =  [
 ];
 
 //remove strings from the beginning and end of string
-const parseNumber = (str) => {
+export const parseNumber = (str) => {
   if (typeof str !== 'string' || !str) return false;
 
   const number = parseInt(str.replace( /^\D+/g, ''));

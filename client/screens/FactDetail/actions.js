@@ -42,11 +42,12 @@ export const fetchVideos = (textQuery) => dispatch => {
 	  .catch(e => console.log(e));
 }
 
-// @param isNew bool - indicates wheter the next timeline facts belong to the same timeline
-const _fetchTimeline = ({ range, limit = 200, isNew = true }, currentTimelineFacts) => {
+// @param isNew bool - indicates whether the next timeline facts belong to the same timeline
+const _fetchTimeline = ({ range, limit = 1000, isNew = true }, currentTimelineFacts) => {
 	return new Promise(async (resolve, reject) => {
 		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
 		const { start, end } = range;
+		limit = currentTimelineFacts.length > 0 ? 2500 : limit;
 		const queryParams = {
 			params: { 
 				begin_date: start.api,
@@ -83,7 +84,6 @@ export const fetchTimeline = (options) => (dispatch, getState) => {
 	const { isNew = true, range } = options;
 	if (isNew) {
 		dispatch({ type: CHANGE_TIMELINE_RANGE, range });
-		dispatch({ type: CHANGE_TIMELINE_FILTER, filter: DEFAULT_TIMELINE_FILTER });
 	}
 	const currentTimelineFacts = getState().factDetail.timeline.data;
 	dispatch({ type: FETCH_TIMELINE_FACTS, payload: _fetchTimeline(options, currentTimelineFacts) })

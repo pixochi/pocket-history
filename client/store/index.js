@@ -25,6 +25,7 @@ const offlineConfig = {
       createFilter('historyOnDay', ['facts']),
       createFilter('news', ['articles', 'lastTimeFetched']),
       createBlacklistFilter('factDetail', ['books', 'videos', 'timeline', 'error', 'isLoading' ]),
+      createBlacklistFilter('favorite', ['filter']),
       createBlacklistFilter('account', ['error', 'isLoading']),
       createBlacklistFilter('persist', ['rehydrated']),
       createBlacklistFilter('toast', ['message', 'error', 'warning', 'duration']),

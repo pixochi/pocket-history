@@ -38,11 +38,6 @@ class Loader extends Component {
 		const indicatorSize = Platform.OS === 'android' ? 70 : 'large';
 		return (
 			<View style={styles.spinner}>
-				{ canShowMessage && 
-					<Text style={styles.message}>
-					  Connection: OK 
-					</Text> 
-				}
 				<ActivityIndicator 
 					size={indicatorSize}
 					animating={this.props.animating}

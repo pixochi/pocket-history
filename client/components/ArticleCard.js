@@ -38,7 +38,7 @@ const ArticleCard = ({ link, title, menuOptions }) => {
 
 const styles = StyleSheet.create({
 	articleContainer: {
-		marginBottom: 8,
+		marginVertical: 4,
 		padding: 12,
 		paddingRight: 20,
 		paddingLeft: 4,
@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
 	menu: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		bottom: 8,
+		bottom: 4,
+		top: 4,
 		backgroundColor: '#fff'
 	},
 });

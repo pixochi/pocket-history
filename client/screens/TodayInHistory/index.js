@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import { toCalendarDate } from '../../utils/date';
-import { filterBySearch } from '../../utils/filters';
+import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // ACTIONS
 import { fetchFacts, changeDate, changeFactsFilter } from './actions';
@@ -30,9 +30,8 @@ import FactDetail from '../FactDetail';
 
 // COMPONENTS
 import CalendarModal from '../../components/CalendarModal';
-import FilterIcon from '../../components/FilterIcon';
+import Options from '../../components/Options';
 import DateHeader from '../../components/DateHeader';
-import Modal from '../../components/Modal';
 import Header from '../../components/Header';
 
 //CONSTANTS
@@ -70,12 +69,12 @@ class TodayInHistory extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { facts, rehydrated, isLoading, 
+    const { allFacts, rehydrated, isLoading, 
       isOnline, selectedDate, fetchFacts } = nextProps;
 
     const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
 
-    if (this.canFetch(nextProps) && _.isEmpty(facts) ) {
+    if (this.canFetch(nextProps) && _.isEmpty(allFacts) ) {
       fetchFacts(nextProps.selectedDate.timestamp);
     }
   }  
@@ -153,12 +152,13 @@ class TodayInHistory extends Component {
   });
 
   render() {
-    const { facts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
+    const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
        changeDate, fetchFacts, changeFilter, navigation } = this.props;
 
     const screenProps = {
       navigation,
-      facts,
+      allFacts,
+      filteredFacts,
       filter,
       selectedDate,
       addFavorite,
@@ -166,7 +166,7 @@ class TodayInHistory extends Component {
       renderFact: this.renderFact,
       isReady: (!isLoading && rehydrated),
       canFetch: this.canFetch(this.props),
-      fetchFacts: this.fetchFacts,
+      fetchFacts: fetchFacts,
       onScroll: Animated.event(
         [ { nativeEvent: { contentOffset: { y: this.state.scrollAnim } } } ],
       ),
@@ -182,7 +182,7 @@ class TodayInHistory extends Component {
       <Header 
         title='Today In History' 
         navigation={navigation}
-        rightComponent={<FilterIcon onPress={this._openFilter} />}
+        rightComponent={<Options changeFilter={changeFilter} />}
       />
       <View style={styles.container}>   
         <View style={styles.screenBody}>
@@ -199,17 +199,6 @@ class TodayInHistory extends Component {
             changeDate={changeDate}
             openModal={this.openModal}
           />
-
-          <Modal name='factsFilter' modalStyle={{flex:1}}>
-            <View style={gStyles.filterContainer}>
-               <SearchBar
-                  value={filter.search}
-                  onChangeText={(text) => changeFilter({ search: text })}
-                  onClearText={() => changeFilter({ search: '' })}
-                  placeholder='Type Here...' 
-                />
-            </View>
-          </Modal>
 
           <FactsCategories
             onNavigationStateChange={this._showDate}
@@ -232,18 +221,26 @@ const styles = StyleSheet.create({
   }
 });
 
-const filterFacts = (facts = {}, searchValue) => {
-  let filteredFacts = {};
+const filterFacts = (facts = {}, { search, sort }) => {
+  let filteredFacts = {...facts};
+
   Object.keys(facts).forEach(category => {
-    filteredFacts[category] = filterBySearch(facts[category], searchValue, ['text'])
+    if (search) {
+      filteredFacts[category] = filterBySearch(facts[category], searchValue, ['text']);
+    }
+    if (sort) {
+      filteredFacts[category] = sortByDate(filteredFacts[category], sort, 'year');
+    }
   });
+  console.log(filteredFacts)
   return filteredFacts;  
 }
 
 const mapStateToProps = ({ historyOnDay, offline, persist }) => {
   const { facts, filter, selectedDate, isLoading } = historyOnDay;
   return {
-    facts: filterFacts(facts[selectedDate.factDate], filter.search),
+    allFacts: facts,
+    filteredFacts:  filterFacts(facts[selectedDate.factDate], filter),
     filter,
     selectedDate,
     isLoading,

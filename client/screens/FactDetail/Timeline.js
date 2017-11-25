@@ -10,18 +10,17 @@ import { Icon, SearchBar } from 'react-native-elements';
 import TimelineList from 'react-native-timeline-listview'
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
-import FilterIcon from '../../components/FilterIcon';
+import Options from '../../components/Options';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
-import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { dateRangeFromString, addLeadingChars } from '../../utils/date';
-import { filterBySearch } from '../../utils/filters';
+import { filterBySearch, sortByDate } from '../../utils/filters';
 
 import { fetchTimeline, changeTimelineFilter } from './actions';
-import { openModal } from '../../components/Modal/actions';
 
 import gStyles from '../../styles';
 
@@ -33,14 +32,31 @@ class Timeline extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const gotConnected = !this.props.isOnline && nextProps.isOnline;
+    const { isOnline, allTimelineFacts, filter } = this.props;
+    const currentSort = filter.sort;
+    const nextSort = nextProps.filter.sort;
+    const gotConnected = !isOnline && nextProps.isOnline;
+    const receivedNewTimeline = !allTimelineFacts.length && nextProps.allTimelineFacts.length >= 0;
+
+    if (receivedNewTimeline) {
+      const { start, end} = this._timelineBorders();
+      this._timelineStart = start;
+      this._timelineEnd = end;
+    }
+
+    if (currentSort !== nextSort) {
+      const tmp = this._timelineStart;
+      this._timelineStart = this._timelineEnd;
+      this._timelineEnd = tmp;
+    }
+
     if (gotConnected) {
       this._fetchTimeline();
     }
   }
 
   _fetchTimeline = (options = {}) => {
-    const { limit, isNew } = options;
+    const { isNew } = options;
     let { range } = options;
     const { screenProps, fetchTimeline, selectedTimestamp } = this.props;
     const { category, year, text } = screenProps.navigation.state.params;
@@ -48,18 +64,18 @@ class Timeline extends Component {
     if (!range || !range.start || !range.end ) {    
       range = dateRangeFromString(text, category, selectedTimestamp, year);
     } 
-    fetchTimeline({range, limit, isNew});
+    fetchTimeline({range, isNew});
   }
 
   _onEndReached = () => {
-    const { isLastFetched, timelineFacts, timelineRange, isLoading } = this.props;
+    const { isLastFetched, allTimelineFacts, timelineRange, isLoading } = this.props;
     if (!isLoading && !isLastFetched) {
-      const lastFactDate = timelineFacts[timelineFacts.length-1].date
+      const lastFactDate = allTimelineFacts[allTimelineFacts.length-1].date
 
       let [ year, month = 0, day = 0 ] = lastFactDate.split('/').map(d => parseInt(d));
-      if (day+1 > 31) {
+      if (day+1 > 30) {
         month += 1;
-        year += month > 12 ? 1 : 0;
+        year += month > 11 ? 1 : 0;
       } else {
         day += 1;
       }
@@ -83,7 +99,12 @@ class Timeline extends Component {
     const isLoadingNext = (!isLastFetched && isLoading);
     const loader = (
       <View style={styles.footer}>
-        <ActivityIndicator size='large' />
+        <ActivityIndicator size='large' /> 
+        <View style={styles.loadingMsgContainer}>
+          <Text>
+            Loading...
+          </Text>
+        </View>
       </View>  
     )
     const footer = isLoadingNext ? loader : <Text/>;
@@ -91,6 +112,7 @@ class Timeline extends Component {
   }
 
   _renderDetail = (rowData, sectionID, rowID) => {
+    if (!rowData) { return <View/> }
     const { timelineFacts } = this.props;
     const isBorderItem = rowID === '0' || rowID === ''+(timelineFacts.length+1);
     const borderItemStyle = isBorderItem ? styles.borderItem : null;
@@ -108,6 +130,7 @@ class Timeline extends Component {
   }
 
   _renderTime = (rowData, sectionID, rowID) => {
+    if (!rowData) { return <View/> }
     return (
       <View style={styles.timeWrapper}>
         <View style={styles.timeContainer}>
@@ -123,6 +146,10 @@ class Timeline extends Component {
     const { screenProps, timelineRange } = this.props;
     const { start, end } = timelineRange;
     const { text, category } = screenProps.navigation.state.params;
+
+    if (_.isEmpty(timelineRange)) {
+      return {};
+    }
 
     if (category === 'Events') {
       timelineStart = {
@@ -162,64 +189,53 @@ class Timeline extends Component {
     return { start: timelineStart, end: timelineEnd }
   }
 
-  _openFilter = () => {
-    const { openModal } = this.props;
-    openModal('timelineFilter');
-  }
 
   render() {
-    const { timelineFacts, changeFilter, filter, isLoading, isOnline } = this.props;
+    const { timelineFacts, allTimelineFacts, changeFilter, filter, isLoading, isOnline } = this.props;
     let Main;
+    let facts = timelineFacts;
+
+    if (!timelineFacts.length) {
+      const searchMessage = filter.search ? `containing - ${filter.search} -` : '';
+      facts = [{description: `<b>No events ${searchMessage} were found.</b>`}];
+    } 
 
     if (!isOnline && !timelineFacts.length) {
       Main = <NetworkProblem />
-    } else if (isLoading && !timelineFacts.length) {
+    } else if (isLoading && !allTimelineFacts.length) {
       Main = <Loader />
-    } else if (timelineFacts.length) {
-      const { start, end } = this._timelineBorders();
+    } else {
+      const { _timelineStart = {}, _timelineEnd = {} } = this;
       Main = (
         <View style={styles.listContainer}>
           <TimelineList 
-            data={[start, ...timelineFacts, end]}
+            data={[_timelineStart, ...facts, _timelineEnd]}
             renderTime={this._renderTime}
             renderDetail={this._renderDetail}
             options={{
               renderFooter: this._renderFooter,
               onEndReached: this._onEndReached
             }}
+            lineWidth={1}
             style={styles.timeline}
           />
         </View>      
       );
-    } else {
-      Main = (
-        <View style={gStyles.screenMiddle}>
-          <Text style={styles.text}>
-            No events were found 
-          </Text> 
-        </View>
-      )
     }
 
     return (
       <View style={{flex:1}}>
-        <Header 
-          title='Library'
+        <Header
+          search={{
+            value:filter.search,
+            onChangeText: (text) => changeFilter({ search: text }),
+            placeholder: 'Search in Timeline'
+          }}
           navigation={this.props.screenProps.navigation}
-          rightComponent={<FilterIcon onPress={this._openFilter} />}
+          rightComponent={<Options changeFilter={changeFilter} />}
         />
         <View style={gStyles.screenBody}>
           { Main }
-          <Modal name='timelineFilter' modalStyle={{flex:1}}>
-            <View style={styles.filterContainer}>
-               <SearchBar
-                  value={filter.search}
-                  onChangeText={(text) => changeFilter({ search: text })}
-                  onClearText={() => changeFilter({ search: '' })}
-                  placeholder='Type Here...' 
-                />
-            </View>
-          </Modal>
         </View>
       </View>
     );
@@ -228,9 +244,10 @@ class Timeline extends Component {
 
 const mapStateToProps = ({ historyOnDay, factDetail, offline }) => {
   const { timeline } = factDetail;
-  const { data, range, filter, isLoading, isLastFetched } = timeline;
+  const { data, range, filter, prevFilter, isLoading, isLastFetched } = timeline;
   return {
-    timelineFacts: filterBySearch(data, filter.search, ['description']),
+    allTimelineFacts: data,
+    timelineFacts: sortByDate(filterBySearch(data, filter.search, ['description']), filter.sort, 'date'),
     timelineRange: range,
     filter: timeline.filter,
     isLastFetched,
@@ -243,9 +260,6 @@ const mapStateToProps = ({ historyOnDay, factDetail, offline }) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchTimeline: (options) => {
     dispatch(fetchTimeline(options));
-  },
-  openModal: (name) => {
-    dispatch(openModal(name))
   },
   changeFilter: (filter) => {
     dispatch(changeTimelineFilter(filter));
@@ -293,9 +307,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    height: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingBottom: 10,
     marginBottom: 10
+  },
+  loadingMsgContainer: {
+    marginHorizontal: 5
   },
   filterContainer: {
     flex: 1,

@@ -10,7 +10,7 @@ import FavoriteArticles from './Articles';
 import FavoriteBooks from './Books';
 import FavoriteVideos from './Videos';
 
-import FilterIcon from '../../components/FilterIcon';
+import Options from '../../components/Options';
 import Header from '../../components/Header';
 import MenuIcon from '../../components/MenuIcon';
 import Modal from '../../components/Modal';
@@ -52,7 +52,7 @@ class Favorite extends Component {
         <Header 
           title='Favorite'
           navigation={navigation}
-          rightComponent={<FilterIcon onPress={this._openFilter} />}
+          rightComponent={<Options onPress={this._openFilter} />}
         />
         <View style={gStyles.screenBody}>
          <FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />

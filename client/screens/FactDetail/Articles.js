@@ -62,7 +62,7 @@ const Articles = (props) => {
 
 const styles = StyleSheet.create({
 	articlesContainer: {
-		margin: 20
+		marginHorizontal: 15,
 	}
 });
 

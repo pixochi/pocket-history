@@ -139,7 +139,7 @@ const factDetailReducer = (state = defaultState, action) => {
         ...state,
         timeline: {
           ...timeline,
-          filter: {...timeline.filter, ...action.filter}
+          filter: {...timeline.filter, ...action.filter},
         }
       }
     

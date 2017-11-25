@@ -29,7 +29,7 @@ export default class App extends Component {
   	if (store) {
   		return (
 	      <Provider store={store}>
-	      	<MenuContext>
+	      	<MenuContext backHandler={true}>
 	      		<Toast messageStyle={{ color: 'white' }} />
 	        	<MainNavigator />
 	        </MenuContext>

@@ -80,11 +80,11 @@ class FactsScreen extends Component {
   }
 
   render() {
-	  const { facts, filter, renderFact, category, isReady, onScroll,
+	  const { allFacts, filteredFacts, filter, renderFact, category, isReady, onScroll,
 	  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
-	  if(isReady && _.isEmpty(facts)){
+	  if(isReady && _.isEmpty(allFacts)){
 	    return <NetworkProblem solveConnection={this._refetchFacts} />
 	  }
 
@@ -92,10 +92,10 @@ class FactsScreen extends Component {
 	  	return <View />
 	  }
 
-	  if (_.has(facts, category) && !facts[category].length) {
+	  if (_.has(filteredFacts, category) && !filteredFacts[category].length) {
 	  	return (
-	  		<View style={gStyles.screenMiddle}>
-	  			<Text>No facts containing { filter.search } were found.</Text>
+	  		<View style={gStyles.screenMiddle}>		
+	  			<Text>Your search - { filter.search }  - did not match any { category }.</Text>
 	  		</View>
 	  	)
 	  }
@@ -103,11 +103,11 @@ class FactsScreen extends Component {
 	  return (
 	    <View style={styles.listContainer}>
 	      <Loader animating={!isReady} />
-	      { _.has(facts, category) &&
+	      { _.has(filteredFacts, category) &&
 	        <AnimatedFlatList
 	         	contentContainerStyle={styles.list}
-	          data = {facts[category]}
-	          extraData = {facts[category]}
+	          data = {filteredFacts[category]}
+	          extraData = {filteredFacts[category]}
 	          keyExtractor = {(fact) => fact.html}
 	          renderItem = {this._renderFact}
 	          scrollEventThrottle={16}

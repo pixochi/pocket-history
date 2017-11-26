@@ -105,11 +105,11 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
   const currentYear = new Date().getFullYear();
   const LIFE_EXPECTANCY = 70;
   const MAX_AGE = 105;
-  const beginDate = '0000'; // 1st day of the year
+  const beginDate = '0101'; // 1st day of the year
   const endDate = '1231' // last day of the year
   let { day, month } = getDateNums(selectedDate);
   day = addLeadingChars(day, 2, '0');
-  month = addLeadingChars(month, 2, '0');
+  month = addLeadingChars(month+1, 2, '0');
   yearText = addLeadingChars(year, 4, '0');
 
   if (bc) {
@@ -123,8 +123,8 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
       start: {
         api: yearText + beginDate,
         year,
-        month: '00',
-        day: '00'
+        month: '01',
+        day: '01'
       },
       end: {
         api: yearText + endDate,

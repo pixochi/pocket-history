@@ -68,9 +68,15 @@ const _fetchTimeline = ({ range, limit = 1000, isNew = true }, currentTimelineFa
 				const lastTimelineFact = currentTimelineFacts[currentTimelineFacts.length-1];
 				const index = facts.findIndex((fact) => fact.description === lastTimelineFact.description);
 				facts = facts.slice(index+1);
+				facts = [...currentTimelineFacts, ...facts];
 			}
 
-			resolve({ facts, range, isLastFetched, isNew });
+			facts.forEach((fact) => {
+				fact.description = fact.description.replace(/{{.*(<a href=.*<\/a>).*}}/, ' $1')
+				fact.description = fact.description.replace(/amp|quot(?:.*quot)?|nbsp|ndash|ref\sname=\w*/g, '');
+			});
+
+			resolve({ facts, isLastFetched });
 		} catch(e) {
 			console.log(e);
 			reject(e);

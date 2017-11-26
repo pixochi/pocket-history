@@ -37,13 +37,13 @@ class Timeline extends PureComponent {
     const nextSort = nextProps.filter.sort;
     const gotConnected = !isOnline && nextProps.isOnline;
 
-    if (!this._timelineStart || !this._timelineEnd) {
+    if (allTimelineFacts !== nextProps.allTimelineFacts) {
       const { start, end} = this._timelineBorders();
       this._timelineStart = start;
       this._timelineEnd = end;
     }
 
-    if (currentSort !== nextSort) {
+    if (allTimelineFacts.length && currentSort !== nextSort) {
       const tmp = this._timelineStart;
       this._timelineStart = this._timelineEnd;
       this._timelineEnd = tmp;
@@ -60,7 +60,7 @@ class Timeline extends PureComponent {
     const { screenProps, fetchTimeline, selectedTimestamp } = this.props;
     const { category, year, text } = screenProps.navigation.state.params;
 
-    if (!range || !range.start || !range.end ) {    
+    if (!this._timelineStart || !this._timelineEnd ) {    
       range = dateRangeFromString(text, category, selectedTimestamp, year);
     } 
     fetchTimeline({range, isNew});
@@ -71,12 +71,13 @@ class Timeline extends PureComponent {
     if (!isLoading && !isLastFetched) {
       const lastFactDate = allTimelineFacts[allTimelineFacts.length-1].date
 
-      let [ year, month = 0, day = 0 ] = lastFactDate.split('/').map(d => parseInt(d));
-      if (day+1 > 30) {
+      // dates of timeline facts are from range 01/01/[YEAR] - 31/12/[YEAR]
+      let [ year, month = 1, day = 1 ] = lastFactDate.split('/').map(d => parseInt(d));
+      day += 1;
+      if (day > 31) {
+        day = 1;
         month += 1;
-        year += month > 11 ? 1 : 0;
-      } else {
-        day += 1;
+        year += month > 12 ? 1 : 0;
       }
       [month, day ] = [month, day ].map(d => addLeadingChars(d, 2, '0'));
       const start = {

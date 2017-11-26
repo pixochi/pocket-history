@@ -101,19 +101,13 @@ const factDetailReducer = (state = defaultState, action) => {
       };
     case `${FETCH_TIMELINE_FACTS}_FULFILLED`:
       const { payload } = action;
-      let data = payload.facts;
-      if (!payload.isNew) {
-        data =  [...timeline.data, ...payload.facts];
-      }
       return {
         ...state,
         timeline: {
           ...timeline,
-          data,
+          data: payload.facts,
           isLoading: false,
-          range: payload.range,
           isLastFetched: payload.isLastFetched,
-          filter: { ...timeline.filter, sort: 'oldest' }
         }
       }
     case `${FETCH_TIMELINE_FACTS}_REJECTED`:
@@ -132,7 +126,8 @@ const factDetailReducer = (state = defaultState, action) => {
         timeline: {
           ...timeline,
           data: [],
-          range: action.range
+          range: action.range,
+          filter: { sort: 'oldest' }
         }
       }
     case CHANGE_TIMELINE_FILTER:

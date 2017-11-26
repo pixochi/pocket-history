@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { TabNavigator } from 'react-navigation';
@@ -15,12 +15,12 @@ import { copyToClipboard } from './actions';
 
 const FactDetailNav = TabNavigator({
   articles: {  screen: Articles },
-  books: { screen: Books },
   videos: { screen: Videos },
+  books: { screen: Books },
   timeline: { screen: Timeline }
 }, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false });
 
-class FactDetail extends Component {
+class FactDetail extends PureComponent {
 	render() {
 		const { addFavorite, copyToClipboard, navigation } = this.props;
 		return (

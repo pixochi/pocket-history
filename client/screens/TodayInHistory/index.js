@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -46,7 +46,7 @@ const FactsCategories = TabNavigator({
   news: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
 
-class TodayInHistory extends Component {
+class TodayInHistory extends PureComponent {
   static navigationOptions = {
     headerTitle: 'Today In History',
     drawerLabel: 'Today In History'
@@ -74,7 +74,7 @@ class TodayInHistory extends Component {
 
     const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
 
-    if (this.canFetch(nextProps) && _.isEmpty(allFacts) ) {
+    if (this.canFetch(nextProps) && _.isEmpty(allFacts[selectedDate.factDate]) ) {
       fetchFacts(nextProps.selectedDate.timestamp);
     }
   }  
@@ -221,18 +221,18 @@ const styles = StyleSheet.create({
   }
 });
 
-const filterFacts = (facts = {}, { search, sort }) => {
+const filterFacts = (facts = {}, { search = '', sort }) => {
+  if (_.isEmpty(facts)) { return facts; }
   let filteredFacts = {...facts};
-
   Object.keys(facts).forEach(category => {
     if (search) {
-      filteredFacts[category] = filterBySearch(facts[category], searchValue, ['text']);
+      filteredFacts[category] = filterBySearch(facts[category], search, ['text']);
     }
     if (sort) {
       filteredFacts[category] = sortByDate(filteredFacts[category], sort, 'year');
     }
   });
-  console.log(filteredFacts)
+
   return filteredFacts;  
 }
 
@@ -240,7 +240,7 @@ const mapStateToProps = ({ historyOnDay, offline, persist }) => {
   const { facts, filter, selectedDate, isLoading } = historyOnDay;
   return {
     allFacts: facts,
-    filteredFacts:  filterFacts(facts[selectedDate.factDate], filter),
+    filteredFacts: filterFacts(facts[selectedDate.factDate], filter),
     filter,
     selectedDate,
     isLoading,

@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import FactsScreen from './FactsScreen';
 
 
-class Births extends Component {
+class Births extends PureComponent {
   render() {
     const { screenProps } = this.props;
     

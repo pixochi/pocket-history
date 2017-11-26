@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -22,7 +22,7 @@ import { openModal } from '../../components/Modal/actions';
 import gStyles from '../../styles';
 
 
-class Books extends Component {
+class Books extends PureComponent {
   state = { 
     bookDescription: "Sorry, we couldn't find a description for the selected book." 
   }
@@ -33,11 +33,11 @@ class Books extends Component {
   } 
 
   componentWillReceiveProps(nextProps) {
-    const { books, isLoading, isOnline, navigation, fetchBooks } = nextProps;
-    const connectionChanged = !this.props.isOnline && isOnline;
+    const { books, isLoading, isOnline, screenProps, fetchBooks } = nextProps;
+    const gotConnected = !this.props.isOnline && isOnline;
 
-    if (!isLoading && connectionChanged && books.length === 0 ) {
-      fetchBooks(navigation.state.params.text);
+    if (!isLoading && gotConnected) {
+      fetchBooks(screenProps.navigation.state.params.text);
     }
   }
 
@@ -80,8 +80,8 @@ class Books extends Component {
 
     if (isLoading) {
       Main = <Loader />;
-    } else if (!isOnline && books.length === 0) {
-      Main = <NetworkProblem solveConnection={this._refetchBooks} />;
+    } else if (!isOnline && !books.length) {
+      Main = <NetworkProblem />;
     } else if (books.length === 0) {
       Main = (
         <View style={gStyles.screenMiddle}>

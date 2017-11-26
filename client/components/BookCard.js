@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -18,55 +18,60 @@ import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
 import gStyles from '../styles';
 
 
-const BookCard = ({book, onBookPress, menuOptions}) => {
-	const message404 = 'Sorry, we could not find a description for the selected book.'
-	const fullScreenBookPreview = `${book.previewLink}#f=true`;
-	let description = book.description || book.textSnippet;
-	description = replaceHtmlChars(removeHtmlTags(description)) || message404;
+class BookCard extends PureComponent {
 
-  return (
-    <View style={styles.bookCardContainer}>
-    	<View style={styles.bookInfo}>
-    		<Text style={styles.title}>
-      	{ book.title }
-	    	</Text>
+	_message404 = 'Sorry, we could not find a description for the selected book.'
+	
+	render() {
+		const {book, onBookPress, menuOptions} = this.props;
+		const fullScreenBookPreview = `${book.previewLink}#f=true`;
+		let description = book.description || book.textSnippet;
+		description = replaceHtmlChars(removeHtmlTags(description)) || this._message404;
 
-	    	<Button 
-	    		title='Read'
-	    		onPress={() => Linking.openURL(fullScreenBookPreview)}
-	    		buttonStyle={styles.btn}
-	    		textStyle={styles.btnText}
-	    	/>
-	    	<Button 
-	    		title='Buy'
-	    		onPress={() => Linking.openURL(book.infoLink)}
-	    		buttonStyle={styles.btn}
-	    		textStyle={styles.btnText}
-	    	/>
-    	</View>
+		 return (
+	    <View style={styles.bookCardContainer}>
+	    	<View style={styles.bookInfo}>
+	    		<Text style={styles.title}>
+	      	{ book.title }
+		    	</Text>
 
-    	<TouchableOpacity 
-    		style={styles.imgContainer}
-    		onPress={() => onBookPress(description)}
-    	>
-	    	<Image
-	    		style={styles.img}
-	        source={{uri: book.image}}
-	      />
-	      <View style={gStyles.overlay}>
-	      	<Icon
-	      		name='magnifying-glass'
-	      		type='entypo'
-	      		size={50}
-	      		color='#f2ff38'
-	      	/>
-	      </View>
-      </TouchableOpacity>
-	    <View style={gStyles.cardMenu}>
-	    	<CardMenu options={menuOptions} />
+		    	<Button 
+		    		title='Read'
+		    		onPress={() => Linking.openURL(fullScreenBookPreview)}
+		    		buttonStyle={styles.btn}
+		    		textStyle={styles.btnText}
+		    	/>
+		    	<Button 
+		    		title='Buy'
+		    		onPress={() => Linking.openURL(book.infoLink)}
+		    		buttonStyle={styles.btn}
+		    		textStyle={styles.btnText}
+		    	/>
+	    	</View>
+
+	    	<TouchableOpacity 
+	    		style={styles.imgContainer}
+	    		onPress={() => onBookPress(description)}
+	    	>
+		    	<Image
+		    		style={styles.img}
+		        source={{uri: book.image}}
+		      />
+		      <View style={gStyles.overlay}>
+		      	<Icon
+		      		name='magnifying-glass'
+		      		type='entypo'
+		      		size={50}
+		      		color='#f2ff38'
+		      	/>
+		      </View>
+	      </TouchableOpacity>
+		    <View style={gStyles.cardMenu}>
+		    	<CardMenu options={menuOptions} />
+		    </View>
 	    </View>
-    </View>
-  );
+	  );
+	}
 }
 
 const styles = StyleSheet.create({

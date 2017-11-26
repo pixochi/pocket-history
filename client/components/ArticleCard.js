@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -16,24 +16,27 @@ import { fixWikiLink } from '../utils/link';
 import gStyles from '../styles';
 
 
-const ArticleCard = ({ link, title, menuOptions }) => {
+class ArticleCard extends PureComponent {
 
-  return (
-  	<View>
-			<TouchableHighlight
-			  onPress={() => Linking.openURL(fixWikiLink(link))}
-			>
-			  <View style={styles.articleContainer}>
-					<Text style={styles.articleTitle}>
-					  { title }
-					</Text>
+	render() {
+		const { link, title, menuOptions } = this.props;
+		return (
+	  	<View>
+				<TouchableHighlight
+				  onPress={() => Linking.openURL(fixWikiLink(link))}
+				>
+				  <View style={styles.articleContainer}>
+						<Text style={styles.articleTitle}>
+						  { title }
+						</Text>
+					</View>
+				</TouchableHighlight>
+				<View style={[gStyles.cardMenu,styles.menu]}>
+					<CardMenu options={menuOptions}/>
 				</View>
-			</TouchableHighlight>
-			<View style={[gStyles.cardMenu,styles.menu]}>
-				<CardMenu options={menuOptions}/>
 			</View>
-		</View>
-  );
+	  );
+	}
 }
 
 const styles = StyleSheet.create({

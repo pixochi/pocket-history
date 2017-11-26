@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -14,7 +14,7 @@ import FactCard from '../../components/FactCard';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 
-class FavoriteFacts extends Component {
+class FavoriteFacts extends PureComponent {
 
   _createCardMenuOptions = ({id, text}) => {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;

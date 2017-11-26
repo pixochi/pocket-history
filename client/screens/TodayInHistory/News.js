@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
-import { fetchNews } from './actions';
+import { fetchNews, changeFactsFilter } from './actions';
+
+import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // COMPONENTS
 import NewsCard from '../../components/NewsCard';
@@ -21,7 +23,7 @@ import { HEADER_HEIGHT } from '../../constants/components';
 import gStyles from '../../styles';
 
 
-class News extends Component {
+class News extends PureComponent {
   static defaultProps = {
     lastTimeFetched: 0,
     isOnline: false,
@@ -60,17 +62,17 @@ class News extends Component {
   }
 
   render() {
-    const { articles, isLoading, isOnline } = this.props;
+    const { filteredArticles, allArticles, isLoading, isOnline } = this.props;
 
     if (isLoading) {
       return <Loader />;
     }
 
-    if (articles.length === 0 && !isOnline) {
+    if (allArticles.length === 0 && !isOnline) {
       return <NetworkProblem />;
     }
 
-    if (articles.length === 0) {
+    if (filteredArticles.length === 0) {
       return (
         <View style={gStyles.screenMiddle}>
           <Text>
@@ -92,7 +94,7 @@ class News extends Component {
             Latest news
           </Text>
         </View>
-      	{ this._renderNews(articles) }
+      	{ this._renderNews(filteredArticles) }
       </ScrollView>
     );
   }
@@ -122,10 +124,24 @@ const styles = StyleSheet.create({
   },
 });
 
+const filterNews = (news, { search, sort }) => {
+  let filteredNews = {...news};
+
+  if (search) {
+    filteredNews = filterBySearch(filteredNews, search, ['title', 'description']);
+  }
+  if (sort) {
+    filteredNews = sortByDate(news, sort, 'link');
+  }
+
+  return filteredNews;  
+}
+
 const mapStateToProps = (
   { news: { isLoading, lastTimeFetched, articles }, offline, historyOnDay}) => (
     {
-      articles,
+      allArticles: articles,
+      filteredArticles: filterNews(articles, historyOnDay.filter),
       isLoading,
       lastTimeFetched,
       isOnline: offline.online,

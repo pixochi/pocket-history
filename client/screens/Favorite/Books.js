@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,7 +13,7 @@ import Modal from '../../components/Modal';
 import BookCard from '../../components/BookCard';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
-class FavoriteBooks extends Component {
+class FavoriteBooks extends PureComponent {
   state = { 
     bookDescription: "Sorry, we couldn't find a description for the selected book." 
   }

@@ -84,7 +84,7 @@ const factDetailReducer = (state = defaultState, action) => {
       return { 
         ...state,
         videos: {
-          ...videos, 
+          ...videos,
           isLoading: false,
           error: action.payload.message 
         }
@@ -112,7 +112,8 @@ const factDetailReducer = (state = defaultState, action) => {
           data,
           isLoading: false,
           range: payload.range,
-          isLastFetched: payload.isLastFetched
+          isLastFetched: payload.isLastFetched,
+          filter: { ...timeline.filter, sort: 'oldest' }
         }
       }
     case `${FETCH_TIMELINE_FACTS}_REJECTED`:

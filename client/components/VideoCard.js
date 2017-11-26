@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -18,7 +18,7 @@ import gStyles from '../styles';
 const IMG_ROOT_URL = 'https://i.ytimg.com/vi';
 const IMG_SIZE = 'mqdefault.jpg' // medium, 320*180
 
-class VideoCard extends Component {
+class VideoCard extends PureComponent {
 
   render() {
   	const { id, title, onVideoPress, menuOptions } = this.props;

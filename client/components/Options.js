@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -12,40 +12,44 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-const Options = ({ changeFilter }) => {
-  return (
-    <Menu> 
-      <MenuTrigger>
-        <Icon 
-          name='options-vertical' 
-          type='simple-line-icon'
-          color='#fff'
-        />
-      </MenuTrigger>
+class Options extends PureComponent {
+  render() {
+    const { changeFilter } = this.props;
+    
+    return (
+      <Menu> 
+        <MenuTrigger>
+          <Icon 
+            name='options-vertical' 
+            type='simple-line-icon'
+            color='#fff'
+          />
+        </MenuTrigger>
 
-      <MenuOptions>
+        <MenuOptions>
 
-        <MenuOption disabled>
-           <Text>
-             Sort
-           </Text>
-        </MenuOption>
+          <MenuOption disabled>
+             <Text>
+               Sort
+             </Text>
+          </MenuOption>
 
-        <MenuOption onSelect={() => changeFilter({ sort: 'latest' })} >
-          <Text>
-            Latest first
-          </Text>
-        </MenuOption>
-        
-        <MenuOption onSelect={() => changeFilter({ sort: 'oldest' })}>
-          <Text>
-            Oldest first
-          </Text>
-        </MenuOption>
+          <MenuOption onSelect={() => changeFilter({ sort: 'latest' })} >
+            <Text>
+              Latest first
+            </Text>
+          </MenuOption>
+          
+          <MenuOption onSelect={() => changeFilter({ sort: 'oldest' })}>
+            <Text>
+              Oldest first
+            </Text>
+          </MenuOption>
 
-      </MenuOptions>
-    </Menu>     
-  ); 
+        </MenuOptions>
+      </Menu>     
+    );
+  } 
 }
 
 const styles = StyleSheet.create({

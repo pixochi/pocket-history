@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,14 +7,18 @@ import {
 
 import gStyles from '../styles';
 
-const EmptyFavorites = ({ message }) => {
-  return (
-    <View style={gStyles.screenMiddle}>
-      <Text style={styles.message}>
-        { message }
-      </Text> 	
-    </View>
-  );
+class EmptyFavorites extends PureComponent {
+  render() {
+    const { message } = this.props;
+    
+    return (
+      <View style={gStyles.screenMiddle}>
+        <Text style={styles.message}>
+          { message }
+        </Text>   
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

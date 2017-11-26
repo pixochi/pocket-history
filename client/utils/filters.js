@@ -24,13 +24,17 @@ export const filterBySearch = (data, searchValue, searchIn) => {
 // @param dateKey string - key of an object property to sort by
 // 	e.g. 'date', 'year'
 export const sortByDate = (data, sortOrder, dateKey) => {
-	if (!data.length) { return [] }
+	if (!data.length) { return data }
 	// first checks if data is already in the correct order
-	const firstDate = parseNumber(data[0][dateKey]);
-	const lastDate = parseNumber(data[data.length-1][dateKey]);
+	let firstDate = parseNumber(data[0][dateKey]);
+	let lastDate = parseNumber(data[data.length-1][dateKey]);
+
+	firstDate *= firstDate < 10000 ? 10000 : 1;
+	lastDate *= lastDate < 10000 ? 10000 : 1;
+
 	const currentSortOrder = (firstDate > lastDate) ? 'latest' : 'oldest';
 
-	if (sortOrder === currentSortOrder || firstDate === lastDate) {
+	if (sortOrder === currentSortOrder) {
 		return data;
 	}
 	return data.reverse();

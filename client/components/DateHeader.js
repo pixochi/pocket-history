@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,40 +9,42 @@ import { Button, Icon } from 'react-native-elements';
 import { HEADER_HEIGHT } from '../constants/components';
 
 
-const DateHeader = (props) => {
+class DateHeader extends PureComponent {
 
-  const { headerStyle, selectedDate, changeDate, openModal } = props;
-  const day = 1000*60*60*24 // miliseconds to 1 day
+  render() {
+    const { headerStyle, selectedDate, changeDate, openModal } = this.props;
+    const day = 1000*60*60*24 // miliseconds to 1 day
 
-  return (
-   	<Animated.View style={[styles.header, headerStyle]}>
-      <Icon 
-        raised
-        name='keyboard-arrow-left'
-        color='#fff'
-        underlayColor='#1d70b1'
-        size={44}
-        style={styles.arrow} 
-        onPress={() => changeDate(selectedDate.timestamp - day)} 
-      />
-      <Button
-      	raised
-        title={selectedDate.factDate} 
-        textStyle={styles.headerText} 
-        backgroundColor='#2196f3'
-        onPress={openModal} 
-      />
-      <Icon 
-        raised
-        name='keyboard-arrow-right'
-        color='#fff'
-        underlayColor='#1d70b1'
-        size={44}
-        style={styles.arrow}
-        onPress={() => changeDate(selectedDate.timestamp + day)} 
-      />
-    </Animated.View>
-  );
+    return (
+      <Animated.View style={[styles.header, headerStyle]}>
+        <Icon 
+          raised
+          name='keyboard-arrow-left'
+          color='#fff'
+          underlayColor='#1d70b1'
+          size={44}
+          style={styles.arrow} 
+          onPress={() => changeDate(selectedDate.timestamp - day)} 
+        />
+        <Button
+          raised
+          title={selectedDate.factDate} 
+          textStyle={styles.headerText} 
+          backgroundColor='#2196f3'
+          onPress={openModal} 
+        />
+        <Icon 
+          raised
+          name='keyboard-arrow-right'
+          color='#fff'
+          underlayColor='#1d70b1'
+          size={44}
+          style={styles.arrow}
+          onPress={() => changeDate(selectedDate.timestamp + day)} 
+        />
+      </Animated.View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  ScrollView
+  FlatList
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import hash from 'string-hash';
@@ -17,13 +17,10 @@ import { copy, share, save } from '../../components/utils/cardMenuOptions';
 import gStyles from '../../styles';
 
 
-const Articles = (props) => {
-	const { screenProps, navigation } = props;
-	const { html } =  screenProps.navigation.state.params;
+class Articles extends PureComponent {
 
-
-	const cardMenuOptions = ({link, title}) => {
-		const { addFavorite, copyToClipboard } = screenProps;
+	_cardMenuOptions = ({link, title}) => {
+		const { addFavorite, copyToClipboard } = this.props.screenProps;
 		const id = hash(link+title);
 		const menuOptions = [
 			copy({ onSelect: () => copyToClipboard(link), optionText: 'Copy Link' }),
@@ -33,31 +30,37 @@ const Articles = (props) => {
 		return menuOptions;
 	}
 
-	const renderArticles = (links) => {
-		return links.map((link,i) => (
+	_renderArticle = ({item}) => {
+		return (
 			<ArticleCard 
-				key= {i}
-				menuOptions={cardMenuOptions(link)}
-				{...link}
+				menuOptions={this._cardMenuOptions(item)}
+				{...item}
 			/>
-		));
+		);
 	}
 
-  const { links } = screenProps.navigation.state.params;
+  render() {
+  	const { navigation } = this.props.screenProps;
+  	const { links } = navigation.state.params;
 
-  return (
-    <View style={{flex:1}}>
-      <Header 
-        title='Library'
-        navigation={props.screenProps.navigation}
-      />
-      <View style={gStyles.screenBody}>
-        <ScrollView style={styles.articlesContainer}>
-		    	{ renderArticles(links) }
-		    </ScrollView>
-      </View>
-    </View>
-  ); 
+  	return (
+	    <View style={{flex:1}}>
+	      <Header 
+	        title='Library'
+	        navigation={navigation}
+	      />
+	      <View style={gStyles.screenBody}>
+			    <FlatList 
+			    	contentContainerStyle={styles.articlesContainer}
+	          data = {links}
+	          extraData = {links}
+	          keyExtractor = {(article) => article.title}
+	          renderItem = {this._renderArticle}
+			    />
+	      </View>
+	    </View>
+	  ); 
+  }
 }
 
 const styles = StyleSheet.create({

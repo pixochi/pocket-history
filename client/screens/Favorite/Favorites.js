@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import EmptyFavorites from '../../components/EmptyFavorites';
 
 
-class Favorites extends Component {
+class Favorites extends PureComponent {
 
   render() {
     const { data, user, renderFavorite } = this.props;

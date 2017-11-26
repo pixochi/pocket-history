@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,7 +10,7 @@ import { Header, SearchBar } from 'react-native-elements';
 import MenuIcon from './MenuIcon';
 
 
-class AppHeader extends Component {
+class AppHeader extends PureComponent {
 
   _renderSearch = () => {
     const { search } = this.props;

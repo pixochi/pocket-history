@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -20,7 +20,7 @@ import gStyles from '../../styles';
 
 const VIDEO_ROOT_URL = 'https://www.youtube.com/watch?v=';
 
-class FavoriteVideos extends Component {
+class FavoriteVideos extends PureComponent {
   state = { selectedVideoId: '' }
 
   _cardMenuOptions = ({id}) => {

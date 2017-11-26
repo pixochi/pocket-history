@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 
-class Loader extends Component {
+class Loader extends PureComponent {
 	static defaultProps = {
 	  animating: true
 	}

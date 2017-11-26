@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -13,7 +13,7 @@ import ArticleCard from '../../components/ArticleCard';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 
-class FavoriteArticles extends Component {
+class FavoriteArticles extends PureComponent {
 
   _cardMenuOptions = ({id, link, title}) => {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;

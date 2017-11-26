@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { TabNavigator, StackNavigator } from 'react-navigation';
@@ -28,8 +28,8 @@ const FavNavigator = StackNavigator({
 		screen: TabNavigator({
 			  facts: { screen: FavoriteFacts },
 			  articles: { screen: FavoriteArticles },
-			  books: { screen: FavoriteBooks },
-			  videos: { screen: FavoriteVideos }
+        videos: { screen: FavoriteVideos },
+			  books: { screen: FavoriteBooks }, 
 			}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false }
 		)
 	}
@@ -38,7 +38,7 @@ const FavNavigator = StackNavigator({
 	})
 }); 
 
-class Favorite extends Component {
+class Favorite extends PureComponent {
 
 	_openFilter = () => {
 		this.props.openModal('favoritesFilter');

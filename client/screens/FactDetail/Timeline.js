@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -25,7 +25,7 @@ import { fetchTimeline, changeTimelineFilter } from './actions';
 import gStyles from '../../styles';
 
 
-class Timeline extends Component {
+class Timeline extends PureComponent {
 
   componentDidMount() {
     this._fetchTimeline();
@@ -36,9 +36,8 @@ class Timeline extends Component {
     const currentSort = filter.sort;
     const nextSort = nextProps.filter.sort;
     const gotConnected = !isOnline && nextProps.isOnline;
-    const receivedNewTimeline = !allTimelineFacts.length && nextProps.allTimelineFacts.length >= 0;
 
-    if (receivedNewTimeline) {
+    if (!this._timelineStart || !this._timelineEnd) {
       const { start, end} = this._timelineBorders();
       this._timelineStart = start;
       this._timelineEnd = end;
@@ -155,7 +154,7 @@ class Timeline extends Component {
       timelineStart = {
         date: `${start.year}/01/01`,
         description: `What else happened in ${start.year}?`
-      },
+      }
       timelineEnd = {
         date: `${end.year}/12/31`,
         description: 'End of the year'

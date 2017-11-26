@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -16,20 +16,21 @@ import { copy, share, save } from './utils/cardMenuOptions';
 import gStyles from '../styles';
 
 
-const NewsCard = (props) => {
+class NewsCard extends PureComponent {
 
-	const openArticle = (link) => {
+	_openArticle = (link) => {
 		Linking.openURL(link);
 	}
 
-	const { title, description, img, link } = props;
-	const menuOptions = [
-  	copy({ content: `${title}. ${description}` }),
-		share({ message: `${title}. ${description}` })
-	]
-
-  return (
-	  	<TouchableHighlight onPress={() => openArticle(link)}>
+	render() {
+		const { title, description, img, link } = this.props;
+		const menuOptions = [
+	  	copy({ content: `${title}. ${description}` }),
+			share({ message: `${title}. ${description}` })
+		]
+		
+	  return (
+	  	<TouchableHighlight onPress={() => this.openArticle(link)}>
 	  		<View>
 		  		<View style={[gStyles.cardMenu, styles.menu]}>
 	  				<CardMenu options={menuOptions}/>
@@ -57,8 +58,8 @@ const NewsCard = (props) => {
 		    	</View>
 		    </View>
 		  </TouchableHighlight>
-  );
-
+  	);
+	}
 }
 
 const SCREEN_DIMENSIONS = Dimensions.get('screen');

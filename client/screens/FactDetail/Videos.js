@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -24,7 +24,7 @@ import gStyles from '../../styles';
 
 const VIDEO_ROOT_URL = 'https://www.youtube.com/watch?v=';
 
-class Videos extends Component {
+class Videos extends PureComponent {
   static defaultProps = {
     videos: [],
     isLoading: true,
@@ -33,6 +33,18 @@ class Videos extends Component {
   state = { selectedVideoId: '' }
 
   componentDidMount() {
+    this._fetchVideos();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const gotConnected = !this.props.isOnline && nextProps.isOnline;
+
+    if (gotConnected) {
+      this._fetchVideos();
+    }
+  }
+
+  _fetchVideos = () => {
     const { screenProps, fetchVideos } = this.props;
     fetchVideos(screenProps.navigation.state.params.text);
   }
@@ -48,16 +60,10 @@ class Videos extends Component {
     return menuOptions;
   }
 
-
   _onVideoPress = (videoId) => {
     this.setState({ selectedVideoId: videoId }, () => {
       this.props.openModal('factVideo');
     });
-  }
-
-  _refetchVideos = () => {
-    const { navigation, fetchVideos } = this.props;
-    fetchVideos(navigation.state.params.html);
   }
 
   _renderVideos(videos) {
@@ -80,8 +86,8 @@ class Videos extends Component {
     if (isLoading) {
       Main = <Loader />;
     } else if (!isOnline && videos.length === 0) {
-      Main = <NetworkProblem solveConnection={this._refetchVideos} />
-    } else if (!videos || videos.length === 0) {
+      Main = <NetworkProblem />
+    } else if (!videos.length) {
       Main = (
         <View style={gStyles.screenMiddle}>
           <Text style={styles.screenMessage}>

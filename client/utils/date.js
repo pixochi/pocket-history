@@ -7,7 +7,7 @@ const MONTHS =  [
 export const parseNumber = (str) => {
   if (typeof str !== 'string' || !str) return false;
 
-  const number = parseInt(str.replace( /^\D+/g, ''));
+  const number = parseInt(str.replace(/[^\d]+/g, ''));
   return number;
 }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   Text
 } from 'react-native';
 
-class WhichHappenedSooner extends Component {
+class WhichHappenedSooner extends PureComponent {
   static navigationOptions = {
     drawerLabel: 'Which Happened Sooner'
   }

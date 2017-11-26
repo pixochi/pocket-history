@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -26,7 +26,7 @@ import gStyles from '../../styles';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
-class FactsScreen extends Component {
+class FactsScreen extends PureComponent {
 
 	// used to make the screen change faster
 	// first empty View is rendered instead of FlatList
@@ -80,11 +80,13 @@ class FactsScreen extends Component {
   }
 
   render() {
-	  const { allFacts, filteredFacts, filter, renderFact, category, isReady, onScroll,
-	  	 onMomentumScrollBegin, onMomentumScrollEnd, onScrollEndDrag } = this.props;
+	  const { allFacts, filteredFacts, selectedDate, filter,
+	   renderFact, category, isReady, onScroll,onMomentumScrollBegin, 
+	   onMomentumScrollEnd, onScrollEndDrag } = this.props;
+	   
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
-	  if(isReady && _.isEmpty(allFacts)){
+	  if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
 	    return <NetworkProblem solveConnection={this._refetchFacts} />
 	  }
 

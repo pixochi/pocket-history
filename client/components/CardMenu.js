@@ -17,9 +17,9 @@ import {
 // @param optionProps obj - properties for the default options
 // @param options array - any custom options
 
-const CardMenu = ({ options }) => {
+class CardMenu extends PureComponent {
 
-	const renderMenuOptions = (options) => {
+	_renderMenuOptions = (options) => {
     return options.map(({onSelect, iconProps, optionText}) => (
       <MenuOption key={optionText} onSelect={onSelect} >
         <View style={styles.optionContainer}>
@@ -32,22 +32,25 @@ const CardMenu = ({ options }) => {
     ));
   }
 
-  return (
-    <View style={styles.menuContainer}>
-	    <Menu>
-	      <MenuTrigger>
-	        <Icon 
-	          name='options-vertical' 
-	          type='simple-line-icon'
-	          color='#517fa4' 
-	        />
-	      </MenuTrigger>
-	      <MenuOptions>
-	        { renderMenuOptions(options) }
-	      </MenuOptions>
-	    </Menu>     
-	  </View>
-  );  
+  render() {
+    const { options } = this.props;
+    return (
+      <View style={styles.menuContainer}>
+        <Menu>
+          <MenuTrigger>
+            <Icon 
+              name='options-vertical' 
+              type='simple-line-icon'
+              color='#517fa4' 
+            />
+          </MenuTrigger>
+          <MenuOptions>
+            { this._renderMenuOptions(options) }
+          </MenuOptions>
+        </Menu>     
+      </View>
+    );  
+  }
 }
 
 const styles = StyleSheet.create({

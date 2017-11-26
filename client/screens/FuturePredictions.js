@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import {
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   Text
 } from 'react-native';
 
-class FuturePredictions extends Component {
+class FuturePredictions extends PureComponent {
   static navigationOptions = {
     drawerLabel: 'Future Predictions'
   }

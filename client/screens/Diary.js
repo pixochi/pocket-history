@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 
-class Diary extends Component {
+class Diary extends PureComponent {
   static navigationOptions = {
     drawerLabel: 'Diary',
     title: 'Diary'

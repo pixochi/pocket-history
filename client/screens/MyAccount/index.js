@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,7 +15,7 @@ import NetworkProblem from '../../components/NetworkProblem';
 import { fbLogIn, logout } from './actions';
 
 
-class MyAccount extends Component {
+class MyAccount extends PureComponent {
   static navigationOptions = {
     drawerLabel: 'My Account',
     headerTitle: 'My Account'

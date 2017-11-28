@@ -26,6 +26,20 @@ const _fetchFacts = (timestamp, dispatch, factsState) => {
 			// facts - events, births, deaths
 			const response = await axios.get(`http://history.muffinlabs.com/date/${factApiDate}`);
 			const { data, date } = response.data;
+
+			let titles = '';
+			data['Births'].forEach((fact,i) => {
+
+				titles += fact.links[0].title + '|';
+
+				if (i === 49) {
+					console.log(fact)
+				}
+				
+			})
+			console.log(titles)
+
+
 			let newFacts = {};
 			newFacts[date] = data;
 			newFacts = await saveFactsSubset({...facts, ...newFacts }, MAX_FACTS, selectedDate);

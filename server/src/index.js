@@ -9,6 +9,7 @@ import booksRoute from './api/routes/books';
 import videosRoute from './api/routes/videos';
 import authRoute from './api/routes/auth';
 import newsRoute from './api/routes/news';
+import wikiImagesRoute from './api/routes/wikiImages';
 
 
 const { PORT = 8800 } = process.env;
@@ -37,6 +38,8 @@ app.use(authRoute);
 app.use(booksRoute);
 app.use(videosRoute);
 app.use(newsRoute);
+app.use(wikiImagesRoute);
+
 
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 

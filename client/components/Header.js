@@ -47,7 +47,7 @@ class AppHeader extends PureComponent {
       <Header
         outerContainerStyles={styles.outerHeaderStyles}
         innerContainerStyles={styles.innerHeaderStyles}
-        backgroundColor='red'
+        backgroundColor='#ff0000'
       >
         <View style={styles.innerHeaderStyles}>
           <View style={{flex:1}}><MenuIcon navigation={navigation}/></View>

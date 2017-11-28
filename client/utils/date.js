@@ -1,3 +1,6 @@
+import { addLeadingChars } from './string';
+
+
 const MONTHS =  [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -25,19 +28,6 @@ const getDateNums = (timestamp) => {
 const isNumber = (val) => {
   if (!val || typeof val !== 'number' ) return false;
   return true;
-}
-
-// @param val string/number - initial value
-// @param minLength int - minimal length of the final string
-// @param leadingChar string - leading character if val is shorther than minLength
-export const addLeadingChars = (val, minLength, leadingChar) => {
-  if (val.length >= minLength) return val;
-  let chars = '';
-  for (let i = minLength - 1; i > 0; i--) {
-    chars += leadingChar;
-  }
-  const result = (chars + (val)).slice(-minLength);
-  return result;
 }
 
 // converts a date from the state ("October 25")
@@ -103,7 +93,7 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
   let isStartApproximate = false;
   let isEndApproximate = false;
   const currentYear = new Date().getFullYear();
-  const LIFE_EXPECTANCY = 70;
+  const LIFE_EXPECTANCY = 65;
   const MAX_AGE = 105;
   const beginDate = '0101'; // 1st day of the year
   const endDate = '1231' // last day of the year
@@ -123,14 +113,14 @@ export const dateRangeFromString = (str, category, selectedDate, year) => {
       start: {
         api: yearText + beginDate,
         year,
-        month: '01',
-        day: '01'
+        month: 1,
+        day: 1
       },
       end: {
         api: yearText + endDate,
         year,
-        month: '12',
-        day: '31'
+        month: 12,
+        day: 31
       }
     }
   }

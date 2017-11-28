@@ -65,6 +65,7 @@ class Articles extends PureComponent {
 
 const styles = StyleSheet.create({
 	articlesContainer: {
+		paddingTop: 10,
 		marginHorizontal: 15,
 	}
 });

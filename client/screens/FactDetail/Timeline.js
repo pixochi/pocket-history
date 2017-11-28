@@ -7,18 +7,23 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { Icon, SearchBar } from 'react-native-elements';
-import TimelineList from 'react-native-timeline-listview'
 import HTMLView from 'react-native-htmlview'; // not same as webview
+import TimelineList from 'react-native-timeline-listview'
+
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
+import DateRangeFilter from '../../components/DateRangeFilter';
 import Options from '../../components/Options';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { dateRangeFromString, addLeadingChars } from '../../utils/date';
-import { filterBySearch, sortByDate } from '../../utils/filters';
+import { filterBySearch, filterTimelineByDate, sortByDate } from '../../utils/filters';
+
+import { buildTimelineBorders, renderTimelineFact,
+  getTimeRange, getRangeFilterProps } from './helpers/timeline';
 
 import { fetchTimeline, changeTimelineFilter } from './actions';
 
@@ -27,20 +32,25 @@ import gStyles from '../../styles';
 
 class Timeline extends PureComponent {
 
+  _rangeFilterProps = {}
   componentDidMount() {
     this._fetchTimeline();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { isOnline, allTimelineFacts, filter } = this.props;
+    const { screenProps, allTimelineFacts, timelineRange, filter, isOnline } = this.props;
+    const category = screenProps.navigation.state.params.category;
     const currentSort = filter.sort;
     const nextSort = nextProps.filter.sort;
     const gotConnected = !isOnline && nextProps.isOnline;
 
-    if (allTimelineFacts !== nextProps.allTimelineFacts) {
-      const { start, end} = this._timelineBorders();
+    if (allTimelineFacts[0] !== nextProps.allTimelineFacts[0] || _.isEmpty(nextProps.allTimelineFacts)) {
+      const { text, category } = screenProps.navigation.state.params;
+      const { timelineRange } = nextProps;
+      const { start, end} = buildTimelineBorders(timelineRange, text, category);
       this._timelineStart = start;
       this._timelineEnd = end;
+      this._rangeFilterProps = getRangeFilterProps(category, timelineRange, filter.range);
     }
 
     if (allTimelineFacts.length && currentSort !== nextSort) {
@@ -60,7 +70,7 @@ class Timeline extends PureComponent {
     const { screenProps, fetchTimeline, selectedTimestamp } = this.props;
     const { category, year, text } = screenProps.navigation.state.params;
 
-    if (!this._timelineStart || !this._timelineEnd ) {    
+    if (!this._timelineStart || !this._timelineEnd) {    
       range = dateRangeFromString(text, category, selectedTimestamp, year);
     } 
     fetchTimeline({range, isNew});
@@ -70,27 +80,8 @@ class Timeline extends PureComponent {
     const { isLastFetched, allTimelineFacts, timelineRange, isLoading } = this.props;
     if (!isLoading && !isLastFetched) {
       const lastFactDate = allTimelineFacts[allTimelineFacts.length-1].date
-
-      // dates of timeline facts are from range 01/01/[YEAR] - 31/12/[YEAR]
-      let [ year, month = 1, day = 1 ] = lastFactDate.split('/').map(d => parseInt(d));
-      day += 1;
-      if (day > 31) {
-        day = 1;
-        month += 1;
-        year += month > 12 ? 1 : 0;
-      }
-      [month, day ] = [month, day ].map(d => addLeadingChars(d, 2, '0'));
-      const start = {
-        api: year + month + day,
-        year,
-        month,
-        day
-      }
-      const range = {
-        start,
-        end: timelineRange.end
-      }
-      this._fetchTimeline({ range, isNew: false});
+      const nextRange = getTimeRange(lastFactDate, timelineRange.end);
+      this._fetchTimeline({ range: nextRange, isNew: false});
     }
   }
 
@@ -111,26 +102,8 @@ class Timeline extends PureComponent {
     return footer;
   }
 
-  _renderDetail = (rowData, sectionID, rowID) => {
-    if (!rowData) { return <View/> }
-    const { timelineFacts } = this.props;
-    const isBorderItem = rowID === '0' || rowID === ''+(timelineFacts.length+1);
-    const borderItemStyle = isBorderItem ? styles.borderItem : null;
-
-    return (
-      <View style={styles.container}>
-        <HTMLView 
-          value={rowData.description}
-          RootComponent={Text}
-          style={[styles.description, borderItemStyle]}
-          onLinkPress={(url) => Linking.openURL(url)}
-        />
-      </View>
-    )
-  }
-
   _renderTime = (rowData, sectionID, rowID) => {
-    if (!rowData) { return <View/> }
+    if (_.isEmpty(rowData)) { return <View/> }
     return (
       <View style={styles.timeWrapper}>
         <View style={styles.timeContainer}>
@@ -140,58 +113,38 @@ class Timeline extends PureComponent {
     );
   }
 
-  _timelineBorders = () => {
-    let timelineStart;
-    let timelineEnd;
-    const { screenProps, timelineRange } = this.props;
-    const { start, end } = timelineRange;
-    const { text, category } = screenProps.navigation.state.params;
+  _renderTimelineFact = (rowData, sectionID, rowID) => {
+    if (_.isEmpty(rowData)) { return <View/> }
 
-    if (_.isEmpty(timelineRange)) {
-      return {};
-    }
+    const borderItemStyle = rowData.isBorder ? styles.borderItem : null;
 
-    if (category === 'Events') {
-      timelineStart = {
-        date: `${start.year}/01/01`,
-        description: `What else happened in ${start.year}?`
-      }
-      timelineEnd = {
-        date: `${end.year}/12/31`,
-        description: 'End of the year'
-      }
-    } else if (category === 'Births') {
-      const { year, month, day } = start;
-      let note = end.approximate ? ' * The date of death is approximate.' : '';
-      timelineStart = {
-        date: `${year}/${month}/${day}`,
-        description: `Birth: ${text}`,
-      }
-      const isAlive = end.approximate && end.year === new Date().getFullYear();
-      const description = isAlive ? 'TODAY' : `Death: ${text} ${note}`;
-      timelineEnd = {
-        date: end.year,
-        description
-      }
-    } else {
-      const { year, month, day } = end;
-      let note = start.approximate ? ' * The date of birth is approximate.' : '';
-      timelineStart = {
-        date: start.year,
-        description:`Birth: ${text} ${note}`,
-      }
-      timelineEnd = {
-        date: `${year}/${month}/${day}`,
-        description: `Death: ${text}`,
-      }
-    }
+    return (
+      <View style={styles.container}>
+        <HTMLView 
+          value={rowData.description}
+          RootComponent={Text}
+          style={[styles.description, borderItemStyle]}
+          onLinkPress={(url) => Linking.openURL(url)}
+          stylesheet={htmlViewStyles}
+        />
+      </View>
+    )
+  }
 
-    return { start: timelineStart, end: timelineEnd }
+  _onRangeFilterChanged = (values, rangeKey) => {
+    const { changeFilter } = this.props;
+    let rangeFilter = { start: {}, end: {} }
+
+    rangeFilter.start[rangeKey] = values[0];
+    rangeFilter.end[rangeKey] = values[1];
+    changeFilter({ range: rangeFilter });
   }
 
 
   render() {
-    const { timelineFacts, allTimelineFacts, changeFilter, filter, isLoading, isOnline } = this.props;
+    const { screenProps, timelineFacts, allTimelineFacts, timelineRange, 
+      changeFilter, filter, isLoading, isOnline } = this.props;
+    const { category } = screenProps.navigation.state.params;
     let Main;
     let facts = timelineFacts;
 
@@ -211,18 +164,23 @@ class Timeline extends PureComponent {
           <TimelineList 
             data={[_timelineStart, ...facts, _timelineEnd]}
             renderTime={this._renderTime}
-            renderDetail={this._renderDetail}
+            renderDetail={this._renderTimelineFact}
             options={{
               renderFooter: this._renderFooter,
               onEndReached: this._onEndReached
             }}
             lineWidth={1}
+            lineColor='#fff'
+            circleColor='#fff'
+            innerCircle='dot'
+            dotColor='#94269d'
             style={styles.timeline}
           />
         </View>      
       );
     }
 
+    const { min, max, labelMin, labelMax, rangeKey } = this._rangeFilterProps;
     return (
       <View style={{flex:1}}>
         <Header
@@ -235,6 +193,15 @@ class Timeline extends PureComponent {
           rightComponent={<Options changeFilter={changeFilter} />}
         />
         <View style={gStyles.screenBody}>
+          <DateRangeFilter
+            values={filter.range.start[rangeKey], filter.range.end[rangeKey]}
+            min={min}
+            max={max}
+            labelMin={labelMin}
+            labelMax={labelMax}
+            rangeKey={rangeKey}
+            onValuesChanged={this._onRangeFilterChanged} 
+           />
           { Main }
         </View>
       </View>
@@ -242,12 +209,19 @@ class Timeline extends PureComponent {
   }
 }
 
+const filterTimeline = (data, searchValue, dateRange, sortOrder) => {
+  data = filterBySearch(data, searchValue, ['description']);
+  data = filterTimelineByDate(data, dateRange);
+  data = sortByDate(data, sortOrder, 'date');
+  return data;
+}
+
 const mapStateToProps = ({ historyOnDay, factDetail, offline }) => {
   const { timeline } = factDetail;
   const { data, range, filter, prevFilter, isLoading, isLastFetched } = timeline;
   return {
     allTimelineFacts: data,
-    timelineFacts: sortByDate(filterBySearch(data, filter.search, ['description']), filter.sort, 'date'),
+    timelineFacts: filterTimeline(data, filter.search, filter.range, filter.sort),
     timelineRange: range,
     filter: timeline.filter,
     isLastFetched,
@@ -266,16 +240,32 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    margin: 4
-  },
-  timeline: {
+const htmlViewStyles = {
+  a: {
+      color: '#c136cc',
+  }
+}
 
-  },
+const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  borderItem: {
+    // UNCOMMENT LATER
+    // fontSize: 18,
+    // fontWeight: 'bold'
+  },
+  description: {
+    color: '#fff'
+    // UNCOMMENT LATER
+    // fontSize: 14,
+    // marginTop: 4,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  timeline: {
+    paddingHorizontal: 4
   },
   timelineTitle: {
     fontSize: 15,
@@ -290,20 +280,10 @@ const styles = StyleSheet.create({
   time: {
     textAlign: 'right',
     fontSize: 14,
-    color: '#000',
-  },
-  description: {
-    // UNCOMMENT LATER
-    // fontSize: 14,
-    // marginTop: 4,
-  },
-  borderItem: {
-    // UNCOMMENT LATER
-    // fontSize: 18,
-    // fontWeight: 'bold'
+    color: '#fff',
   },
   text: {
-    fontSize: 20
+    fontSize: 20,
   },
   footer: {
     flex: 1,
@@ -314,11 +294,18 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   loadingMsgContainer: {
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    color: '#fff'
   },
   filterContainer: {
     flex: 1,
     backgroundColor: '#fff'
+  },
+  htmlView: {
+    // a: {
+    //   color: '#94269d',
+    //   fontWeight: 400
+    // }
   }
 });
 

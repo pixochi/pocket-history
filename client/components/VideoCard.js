@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 		borderWidth: 1
 	},
 	titleContainer: {
-		backgroundColor: '#B351E1'
+		backgroundColor: '#333'
 	},
 	title: {
 		padding: 10,

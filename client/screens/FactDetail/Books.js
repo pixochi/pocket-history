@@ -123,8 +123,9 @@ class Books extends PureComponent {
 
 const styles = StyleSheet.create({
   bookList: {
-    paddingLeft: 16,
-    paddingRight: 16
+    paddingTop: 8,
+    paddingBottom: 16,
+    paddingHorizontal: 10
   },
   descriptionContainer: {
     flex: 1,

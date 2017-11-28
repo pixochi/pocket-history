@@ -18,7 +18,17 @@ const FactDetailNav = TabNavigator({
   videos: { screen: Videos },
   books: { screen: Books },
   timeline: { screen: Timeline }
-}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false });
+}, { 
+  tabBarPosition: 'bottom', 
+  tabBarOptions: {
+    activeTintColor: '#fff',
+    style: {backgroundColor: '#313131'},
+    indicatorStyle: { backgroundColor: '#fff' }
+  },
+  lazy: true, 
+  animationEnabled: false,
+  }
+);
 
 class FactDetail extends PureComponent {
 	render() {

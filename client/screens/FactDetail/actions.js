@@ -72,7 +72,7 @@ const _fetchTimeline = ({ range, limit = 1000, isNew = true }, currentTimelineFa
 			}
 
 			facts.forEach((fact) => {
-				fact.description = fact.description.replace(/{{.*(<a href=.*<\/a>).*}}/, ' $1')
+				fact.description = fact.description.replace(/{{.*(<a href=.*<\/a>).*}}/g, ' $1')
 				fact.description = fact.description.replace(/amp|quot(?:.*quot)?|nbsp|ndash|ref\sname=\w*/g, '');
 			});
 

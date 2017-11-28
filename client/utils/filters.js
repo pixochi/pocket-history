@@ -1,5 +1,5 @@
+import _ from 'lodash';
 import { parseNumber } from './date';
-
 
 // @param data obj[] - data for filtering
 // @param searchValue string - text which must be found in searchIn
@@ -17,6 +17,25 @@ export const filterBySearch = (data, searchValue, searchIn) => {
   });
   
   return filteredData;
+}
+
+
+export const filterTimelineByDate = (data, range) => {
+	if (_.isEmpty(range)) { return data; }
+
+	let { start, end } = range;
+
+	const filteredData = data.filter(d => {
+		const	[year, month, day] = d.date.split('/').map(val => parseInt(val));
+		if (start.month && month >= start.month && month <= end.month) {
+			return d;
+		}
+		if (start.year && year >= start.year && year <= end.year) {
+			return d;
+		}
+	});
+
+	return filteredData;
 }
 
 // @param data obj[] - data for sorting

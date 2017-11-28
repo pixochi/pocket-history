@@ -81,17 +81,19 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around',
 		alignItems: 'center',
 		minHeight: 190,
-		backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#B351E1',
+		backgroundColor: '#333',
+    borderWidth: 0,
+    borderColor: '#fff',
     borderRadius: 3,
     margin: 4,
+    marginVertical: 8,
     padding: 4
 	},
 	bookInfo: {
 		flex: .65,
 	},
 	title: {
+		color: '#fff',
 		fontSize: 20,
 		fontWeight: 'bold',
 		textAlign: 'center',
@@ -114,10 +116,12 @@ const styles = StyleSheet.create({
 	},
 	btn: {
 		marginBottom: 10,
-		backgroundColor: '#B351E1'
+		backgroundColor: '#94269d'
 	},
 	btnText: {
-		fontSize: 16
+		color: '#fff',
+		fontSize: 20,
+		fontWeight: 'bold'
 	}
 });
 

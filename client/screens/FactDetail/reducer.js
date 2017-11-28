@@ -22,7 +22,7 @@ const defaultState = {
   },
   timeline: {
     data: [],
-    range: {},
+    range: { start: {}, end: {}},
     filter: DEFAULT_TIMELINE_FILTER,
     isLoading: false,
     error: null
@@ -127,7 +127,7 @@ const factDetailReducer = (state = defaultState, action) => {
           ...timeline,
           data: [],
           range: action.range,
-          filter: { sort: 'oldest' }
+          filter: { ...DEFAULT_TIMELINE_FILTER, search: timeline.filter.search }
         }
       }
     case CHANGE_TIMELINE_FILTER:

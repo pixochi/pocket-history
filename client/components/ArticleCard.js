@@ -41,12 +41,14 @@ class ArticleCard extends PureComponent {
 
 const styles = StyleSheet.create({
 	articleContainer: {
-		marginVertical: 4,
+		marginVertical: 8,
 		padding: 12,
 		paddingRight: 20,
 		paddingLeft: 4,
 		borderRadius: 4,
-		backgroundColor: '#B351E1'
+		borderWidth: 1,
+		borderColor: '#454545',
+		backgroundColor: '#333'
 	},
 	articleTitle: {
 		paddingRight: 15,
@@ -57,8 +59,8 @@ const styles = StyleSheet.create({
 	menu: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		bottom: 4,
-		top: 4,
+		bottom: 8,
+		top: 8,
 		backgroundColor: '#fff'
 	},
 });

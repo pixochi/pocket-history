@@ -6,7 +6,7 @@ import { isString, addLeadingChars } from '../../../utils/string';
 export const buildTimelineBorders = (timelineRange, factText, factCategory) => {
 
   if (_.isEmpty(timelineRange) || !isString(factText) || !isString(factCategory) ) {
-    return null;
+    return {};
   }
 
   const { start, end } = timelineRange;
@@ -78,7 +78,11 @@ export const getTimeRange = (lastFactDate, timelineEnd) => {
   return range;
 }
 
-export const getRangeFilterProps = (category, timelineRange, filterRange) => {
+export const getRangeFilterProps = (category, timelineRange) => {
+
+  if (!category || _.isEmpty(timelineRange)) {
+    return {}
+  }
 
   let rangeKey = 'month';
   let labelMin = 'January';

@@ -32,6 +32,7 @@ class FactsScreen extends PureComponent {
 	// first empty View is rendered instead of FlatList
 	state = { fakeLoading: false }
 
+
 	componentWillReceiveProps(nextProps) {
 		const { selectedDate } = this.props;
 		const dateChanged = (selectedDate.factDate !== nextProps.selectedDate.factDate);
@@ -39,7 +40,9 @@ class FactsScreen extends PureComponent {
 	}
 
 	componentDidUpdate() {
-		if (this.state.fakeLoading) this.setState({ fakeLoading: false });
+		if (this.state.fakeLoading) {
+			this.setState({ fakeLoading: false });
+		} 
 	}
 
   _refetchFacts = () => {
@@ -48,6 +51,7 @@ class FactsScreen extends PureComponent {
   		fetchFacts(selectedDate.timestamp);
   	}
   }
+
 
   _addFactToFavorite = (fact) => {
     const { addFavorite, selectedDate } = this.props;
@@ -66,6 +70,12 @@ class FactsScreen extends PureComponent {
     ]
   }
 
+  _handleScroll = () => {
+  	console.log('handling')
+  	const { onScroll } = this.props;
+  	// onScroll();
+  }
+
   _renderFact = ({ item }) => {
   	const { navigation, category } = this.props;
   	return (
@@ -79,10 +89,12 @@ class FactsScreen extends PureComponent {
   	);
   }
 
+
+
   render() {
 	  const { allFacts, filteredFacts, selectedDate, filter,
-	   renderFact, category, isReady, onScroll,onMomentumScrollBegin, 
-	   onMomentumScrollEnd, onScrollEndDrag } = this.props;
+	   renderFact, category, isReady,onMomentumScrollBegin, 
+	   onMomentumScrollEnd, onScroll, onScrollEndDrag } = this.props;
 	   
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API

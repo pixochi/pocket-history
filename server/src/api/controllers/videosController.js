@@ -46,9 +46,9 @@ export const getVideos = async (req, res) => {
 				}
 			));
 
-			cacheVideos(textQuery, videos).then(() => {
-				res.send(videos);
-			}).catch(e => console.log(e));
+			res.send(videos);
+			cacheVideos(textQuery, videos);
+
 		}	
 	} catch(err) {
 		console.log('GET VIDEOS FROM API ERROR:')

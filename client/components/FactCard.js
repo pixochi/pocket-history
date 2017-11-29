@@ -1,23 +1,27 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  Linking
+  Linking,
+  Dimensions
 } from 'react-native';
-import HTMLView from 'react-native-htmlview'; // not same as webview
 import { Icon } from 'react-native-elements';
+import HTMLView from 'react-native-htmlview'; // not same as webview
+import Image from 'react-native-scalable-image';
 
 import CardMenu from './CardMenu';
 
 import { yearsAgo } from '../utils/date';
 import { fixWikiLink } from '../utils/link';
 
+const SCREEN_WIDTH = Dimensions.get('screen').width;
+const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
-class FactCard extends PureComponent {
+class FactCard extends Component {
 
   render() {
-    const { year, html, text, links, category, isFavorite, menuOptions } = this.props;
+    const { year, html, text, img, links, category, isFavorite, menuOptions } = this.props;
 
     return (
       <View style={styles.factCard}>
@@ -35,6 +39,18 @@ class FactCard extends PureComponent {
           </View> 
           <CardMenu options={menuOptions} />
         </View>
+
+        {
+          img && 
+          <View style={styles.imgContainer}>
+            <Image
+              style={styles.img}
+              source={{uri: img}}
+              width={SCREEN_WIDTH - 70}
+              maxHeight={SCREEN_HEIGHT/2 - 30}
+            />  
+          </View>
+        }
           
         <HTMLView 
           value={html}
@@ -62,6 +78,7 @@ class FactCard extends PureComponent {
 
 const styles = StyleSheet.create({
   factCard: {
+    flex: 1,
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#B351E1',
@@ -80,6 +97,15 @@ const styles = StyleSheet.create({
   },
   year: {
     fontSize: 21,  
+  },
+  imgContainer: {
+    flex: 1,
+    marginHorizontal: 40,
+    marginVertical: 8,
+    alignSelf: 'center'
+  },
+  img: {
+    flex: 1,
   },
   factText: {
     // uncomment when finishing

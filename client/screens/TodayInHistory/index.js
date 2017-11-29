@@ -16,7 +16,7 @@ import { toCalendarDate } from '../../utils/date';
 import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // ACTIONS
-import { fetchFacts, changeDate, changeFactsFilter } from './actions';
+import { fetchFacts, fetchFactsImages, changeDate, changeFactsFilter, changeCategory } from './actions';
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
@@ -40,11 +40,13 @@ import { HEADER_HEIGHT } from '../../constants/components';
 import gStyles from '../../styles';
 
 const FactsCategories = TabNavigator({
-  events: { screen: Events },
-  births: { screen: Births },
-  deaths: { screen: Deaths },
-  news: { screen: News }
+  Events: { screen: Events },
+  Births: { screen: Births },
+  Deaths: { screen: Deaths },
+  News: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
+
+const APPROXIMATE_FACT_CARD_HEIGHT = 150;
 
 class TodayInHistory extends PureComponent {
   static navigationOptions = {
@@ -56,30 +58,34 @@ class TodayInHistory extends PureComponent {
   state = {
     scrollAnim: new Animated.Value(0),
     offsetAnim: new Animated.Value(0),
-    isModalVisible: false
+    isModalVisible: false,
+    a: false
   };
 
   componentDidMount() {
-    // AsyncStorage.clear();
-     this.state.scrollAnim.addListener(this._handleScroll);
+    this.state.scrollAnim.addListener(this._handleScroll);
   }
 
   componentWillUnMount() {
-     this.state.scrollAnim.removeListener(this._handleScroll);
+    this.state.scrollAnim.removeListener(this._handleScroll);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { allFacts, rehydrated, isLoading, 
-      isOnline, selectedDate, fetchFacts } = nextProps;
-
-    const dateChanged = selectedDate.factDate !== this.props.selectedDate.factDate;
+    const { allFacts, selectedDate, 
+      selectedCategory, fetchFacts, fetchFactsImages, filter } = nextProps;
 
     if (this.canFetch(nextProps) && _.isEmpty(allFacts[selectedDate.factDate]) ) {
       fetchFacts(nextProps.selectedDate.timestamp);
     }
+
+    if (this.canFetch(nextProps) && !this.state.a) {
+      fetchFactsImages(selectedDate.factDate, selectedCategory, allFacts, filter.sort );
+      this.setState({ a: true })
+    }
   }  
 
   _handleScroll = ({ value }) => {
+    console.log(Math.floor(value/APPROXIMATE_FACT_CARD_HEIGHT) )
     this._previousScrollvalue = this._currentScrollValue;
     this._currentScrollValue = value;
   };
@@ -109,8 +115,15 @@ class TodayInHistory extends PureComponent {
       this.diff = previous - current;
     }  
   }
+
+  _onNavigationStateChange = (prevState, nextState, action) => {
+    const { changeCategory } = this.props;
+    this._showDate();
+    changeCategory(action.routeName);
+  }
   
   _handleMomentumScrollEnd = () => {
+
     const previous = this._previousScrollvalue;
     const current = this._currentScrollValue;
     
@@ -155,6 +168,10 @@ class TodayInHistory extends PureComponent {
     const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
        changeDate, fetchFacts, changeFilter, navigation } = this.props;
 
+    const handleScroll = Animated.event(
+      [{ nativeEvent: { contentOffset: { y: this.state.scrollAnim }}}]
+    );
+
     const screenProps = {
       navigation,
       allFacts,
@@ -167,9 +184,7 @@ class TodayInHistory extends PureComponent {
       isReady: (!isLoading && rehydrated),
       canFetch: this.canFetch(this.props),
       fetchFacts: fetchFacts,
-      onScroll: Animated.event(
-        [ { nativeEvent: { contentOffset: { y: this.state.scrollAnim } } } ],
-      ),
+      onScroll: handleScroll,
       onMomentumScrollBegin: this._handleMomentumScrollBegin,
       onMomentumScrollEnd: this._handleMomentumScrollEnd,
       onScrollEndDrag: this._handleScrollEndDrag
@@ -201,7 +216,7 @@ class TodayInHistory extends PureComponent {
           />
 
           <FactsCategories
-            onNavigationStateChange={this._showDate}
+            onNavigationStateChange={this._onNavigationStateChange}
             screenProps={screenProps} 
           />
         </View>
@@ -237,12 +252,13 @@ const filterFacts = (facts = {}, { search = '', sort }) => {
 }
 
 const mapStateToProps = ({ historyOnDay, offline, persist }) => {
-  const { facts, filter, selectedDate, isLoading } = historyOnDay;
+  const { facts, filter, selectedDate, selectedCategory, isLoading } = historyOnDay;
   return {
     allFacts: facts,
     filteredFacts: filterFacts(facts[selectedDate.factDate], filter),
     filter,
     selectedDate,
+    selectedCategory,
     isLoading,
     isOnline: offline.online,
     rehydrated: persist.rehydrated
@@ -253,8 +269,14 @@ const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (timestamp) => {
     dispatch(fetchFacts(timestamp));
   },
+  fetchFactsImages: (date, category, facts, filterSort) => {
+    dispatch(fetchFactsImages(date, category, facts, filterSort));
+  },
   changeDate: (date) => {
     dispatch(changeDate(date));
+  },
+  changeCategory: (category) => {
+    dispatch(changeCategory(category));
   },
   addFavorite: (item, category) => {
     dispatch(addFavorite(item, category));

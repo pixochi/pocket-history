@@ -8,7 +8,7 @@ const router = express.Router();
 
 // getCachedWikiImages - add this middleware
 // GET: books for the selected fact
-router.get('/api/wikiImages', wikiImagesController.getWikiImages);
+router.get('/api/wikiImages', getCachedWikiImages, wikiImagesController.getWikiImages);
 
 
 export default router;

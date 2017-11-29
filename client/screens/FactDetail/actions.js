@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Clipboard } from 'react-native';
 import { ToastActionsCreators } from 'react-native-redux-toast';
+import _ from 'lodash';
 
 import { parseXml } from '../../utils/xmlParser'
 
@@ -45,6 +46,11 @@ export const fetchVideos = (textQuery) => dispatch => {
 // @param isNew bool - indicates whether the next timeline facts belong to the same timeline
 const _fetchTimeline = ({ range, limit = 1000, isNew = true }, currentTimelineFacts) => {
 	return new Promise(async (resolve, reject) => {
+
+		if (_.isEmpty(range)) {
+			reject('Range does not contain either start or end date.');
+		}
+
 		const TIMELINE_API_ROOT = 'http://www.vizgr.org/historical-events/search.php';
 		const { start, end } = range;
 		limit = currentTimelineFacts.length > 0 ? 2500 : limit;

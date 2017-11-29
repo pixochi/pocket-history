@@ -66,7 +66,7 @@ export const toCalendarDate = (timestamp) => {
 export const yearsAgo = (year) => {
   const currentYear = new Date().getFullYear();
   const yearNumber = parseNumber(year);
-  if (year.indexOf('BC') > -1) {
+  if ( year && year.indexOf('BC') > -1) {
     return (currentYear + yearNumber);
   } 
   return currentYear - yearNumber;
@@ -79,6 +79,10 @@ export const yearsAgo = (year) => {
 // @param year int - year of a birth or death
 // @return object{beginDate, endDate}, both format: [YYYYMMDD]
 export const dateRangeFromString = (str, category, selectedDate, year) => {
+
+  if (!str || !category || !selectedDate || !year) {
+    return false;
+  }
 
   // case when the 'year' contains BC
   let bc = false; // before Christ

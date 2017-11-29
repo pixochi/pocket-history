@@ -50,7 +50,7 @@ class Timeline extends PureComponent {
       const { start, end} = buildTimelineBorders(timelineRange, text, category);
       this._timelineStart = start;
       this._timelineEnd = end;
-      this._rangeFilterProps = getRangeFilterProps(category, timelineRange, filter.range);
+      this._rangeFilterProps = getRangeFilterProps(category, timelineRange);
     }
 
     if (allTimelineFacts.length && currentSort !== nextSort) {
@@ -92,7 +92,7 @@ class Timeline extends PureComponent {
       <View style={styles.footer}>
         <ActivityIndicator size='large' /> 
         <View style={styles.loadingMsgContainer}>
-          <Text>
+          <Text style={styles.textLoading} >
             Loading...
           </Text>
         </View>
@@ -296,6 +296,10 @@ const styles = StyleSheet.create({
   loadingMsgContainer: {
     marginHorizontal: 5,
     color: '#fff'
+  },
+  textLoading: {
+    color: '#fff',
+    fontSize: 18
   },
   filterContainer: {
     flex: 1,

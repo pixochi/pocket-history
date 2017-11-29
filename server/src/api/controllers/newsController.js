@@ -33,8 +33,9 @@ export const getNews = async (req, res) => {
 					img
 				}
 			});
-			await cacheNews(optimizedArticles);
+
 			res.status(200).send(optimizedArticles);
+			cacheNews(optimizedArticles);
 		});
 	} catch(e) {
 		console.log(e);

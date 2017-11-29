@@ -3,9 +3,11 @@ import _ from 'lodash';
 
 import { 
 	FETCH_FACTS,
+	FETCH_FACTS_IMAGES,
 	FETCH_NEWS,
 	CHANGE_DATE,
-	CHANGE_FACTS_FILTER
+	CHANGE_FACTS_CATEGORY,
+	CHANGE_FACTS_FILTER,
 } from '../../constants/actionTypes';
 import { toApiFactDate, toFactDate } from '../../utils/date';
 import config from '../../constants/config';
@@ -17,7 +19,12 @@ const API_ROOT_URL = config[ENV].apiRootUrl;
 // saved in AsyncStorage
 const MAX_FACTS = 10;
 
-const _fetchFacts = (timestamp, dispatch, factsState) => {
+const _fetchFacts = (timestamp, factsState) => {
+
+	if (isNaN(timestamp) || _.isEmpty(factsState)) {
+		reject('One of the parameters is not valid.');
+	}
+
 	return new Promise(async (resolve, reject) => {	
 		try {
 			const { facts, selectedDate } = factsState;
@@ -26,19 +33,6 @@ const _fetchFacts = (timestamp, dispatch, factsState) => {
 			// facts - events, births, deaths
 			const response = await axios.get(`http://history.muffinlabs.com/date/${factApiDate}`);
 			const { data, date } = response.data;
-
-			let titles = '';
-			data['Births'].forEach((fact,i) => {
-
-				titles += fact.links[0].title + '|';
-
-				if (i === 49) {
-					console.log(fact)
-				}
-				
-			})
-			console.log(titles)
-
 
 			let newFacts = {};
 			newFacts[date] = data;
@@ -55,6 +49,62 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 	const { historyOnDay } = getState();
 	dispatch({ type: FETCH_FACTS, payload: _fetchFacts(timestamp, dispatch, historyOnDay) })
 	  .catch(e => console.log(e));
+}
+
+export const fetchFactsImages = (date, category, facts, filterSort) => async dispatch => {
+	
+	if (!date || !category || !filterSort) return;
+
+	let selectedFacts = facts[date][category];
+
+	if (_.isEmpty(selectedFacts)) return; 
+
+	const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
+
+	const factsTitles = selectedFacts.map(fact => fact.links[0].title);
+	if (!factsTitles.length) return; 
+
+	const pageTitlesQuery = factsTitles.join('|');
+
+	try {
+		const { data } = await axios.get(imagesUrl+pageTitlesQuery);	
+		selectedFacts = selectedFacts.map((fact, i) => ({ ...fact, img: data[i].src }));
+
+		let factsWithImages = {};
+		factsWithImages[category] = selectedFacts;
+
+		console.log('F:')
+		console.log(factsWithImages)
+
+		// get a new index of the last fact with an image
+		let metaImgIndexes = _.get(facts[date], `meta.images[${category}]`, {});
+		if (filterSort === 'latest') {
+			const prevLastFromLatest = metaImgIndexes.lastFromLatest || 0;
+			metaImgIndexes.lastFromLatest = data.length + prevLastFromLatest;
+		} else {
+			const prevLastFromOldest = metaImgIndexes.lastFromOldest || 0;
+			metaImgIndexes.lastFromOldest = data.length + prevLastFromOldest;
+		}
+
+		let meta = {};
+		meta.images = metaImgIndexes;
+
+		let factsForDay = {};
+		factsForDay[date] = { ...facts[date], ...factsWithImages, meta }
+
+		console.log('factsForDay:')
+		console.log(factsForDay)
+
+		facts = { ...facts, ...factsForDay }
+		console.log(facts)
+		dispatch({
+			type: FETCH_FACTS_IMAGES,
+			facts
+		});
+	} catch(e) {
+		// statements
+		console.log(e);
+	}
 }
 
 export const fetchNews = () => dispatch => {
@@ -79,6 +129,13 @@ export const changeFactsFilter = (filter) => {
 	return {
 		type: CHANGE_FACTS_FILTER,
 		filter
+	}
+}
+
+export const changeCategory = (category) => {
+	return {
+		type: CHANGE_FACTS_CATEGORY,
+		category
 	}
 }
 

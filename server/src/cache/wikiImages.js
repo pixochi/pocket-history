@@ -1,6 +1,8 @@
 import hash from 'string-hash';
+import _ from 'lodash';
 
 import redisClient from './';
+import { optimizeImageSource, getFullImageSource } from '../utils/images';
 
 
 export const getCachedWikiImages = (req, res, next) => {
@@ -19,9 +21,21 @@ export const getCachedWikiImages = (req, res, next) => {
     if (err){
       console.log(err);
       next();
-    } 
+    }
+
+    data = JSON.parse(data) 
 
     if (data != null && data.length !== 0 ) {
+
+      data = Object.keys(data).map(key => {
+        let imageInfo = data[key];
+
+        if (!imageInfo.src) { return imageInfo; }
+
+        imageInfo.src = getFullImageSource(imageInfo.src);
+        return imageInfo;
+      });
+
       res.send(data);
     } else {
       next();
@@ -34,8 +48,24 @@ export const getCachedWikiImages = (req, res, next) => {
 // @param images obj[] - { title: '', src: '' }
 export const cacheWikiImages = (titlesString, images) => {
   return new Promise((resolve, reject) => {
+
+    if (!titlesString || images == null) { 
+      reject('Titles or images are empty.'); 
+    }
+
     const hashedText = hash(titlesString); // long textQuery into a short hash
-    const serializedImages = JSON.stringify(images); // array to string
+
+    images = _.mapValues(images, imageInfo => {
+      if (!imageInfo.src) { return imageInfo; }
+
+      imageInfo.src = optimizeImageSource(imageInfo.src);
+      return imageInfo;
+    });
+
+    console.log('IMAGES AFTER OPTIMIZING')
+    console.log(images)
+
+    const serializedImages = JSON.stringify(images);
     const expiresIn = 60*60*6 // 6 hours in seconds
     
     redisClient.setex(hashedText, expiresIn, serializedImages, (err, reply) => {

@@ -30,7 +30,7 @@ class NewsCard extends PureComponent {
 		]
 		
 	  return (
-	  	<TouchableHighlight onPress={() => this.openArticle(link)}>
+	  	<TouchableHighlight onPress={() => this._openArticle(link)}>
 	  		<View>
 		  		<View style={[gStyles.cardMenu, styles.menu]}>
 	  				<CardMenu options={menuOptions}/>

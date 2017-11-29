@@ -54,8 +54,8 @@ export const getBooks = async (req, res) => {
 				}
 			});
 
-			await cacheBooks(textQuery, books);
 			res.send(books);
+			cacheBooks(textQuery, books);
 		}	
 	} catch(err) {
 		console.log('GET BOOKS FROM API ERROR:')

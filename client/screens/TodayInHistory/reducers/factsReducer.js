@@ -55,10 +55,14 @@ const factsReducer = (state = defaultState, action) => {
     case CHANGE_FACTS_FILTER: {
       return {...state, filter: action.filter}
     }
+    // case SCROLL_CHANGED:
+    //   return {...state, state[selectedDate].meta.images[selectedCategory]}
     default:
       return state;
   }
 }
+
+
 
 
 export default factsReducer;

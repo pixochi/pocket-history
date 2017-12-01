@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
@@ -18,10 +18,21 @@ import { fixWikiLink } from '../utils/link';
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
 
-class FactCard extends Component {
+class FactCard extends PureComponent {
+
+  state = {
+    isImageLoaded: false
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.state.isImageLoaded && nextProps.isImgShown) {
+      this.setState({ isImageLoaded: true });
+    }
+  }
 
   render() {
-    const { year, html, text, img, links, category, isFavorite, menuOptions } = this.props;
+    const { year, html, text, img, isImgShown, links,
+      category, isFavorite, menuOptions } = this.props;
 
     return (
       <View style={styles.factCard}>
@@ -41,7 +52,7 @@ class FactCard extends Component {
         </View>
 
         {
-          img && 
+          (img && isImgShown) &&
           <View style={styles.imgContainer}>
             <Image
               style={styles.img}

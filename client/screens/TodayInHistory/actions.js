@@ -51,22 +51,15 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 	  .catch(e => console.log(e));
 }
 
-export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex = 0) => async dispatch => {
+export const fetchFactsImages = (date, category, facts) => async dispatch => {
 	
-	if (!date || !category || !filterSort || _.isEmpty(facts[date])) return;
+	if (!date || !category || _.isEmpty(facts[date])) return;
 
 	let selectedFacts = facts[date][category];
-
-	const firstAwaitingIndex = lastImgIndex === 0 ? 0 : lastImgIndex+1;
-	// facts which will receive images
-	let factsAwaitingImgs = selectedFacts.slice(firstAwaitingIndex, firstAwaitingIndex+1+IMAGES_PER_LOAD);
-
-	if (_.isEmpty(factsAwaitingImgs)) return; 
-
 	const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
+	const factsTitles = selectedFacts.map(fact => fact.links[0].title);
 
-	const factsTitles = factsAwaitingImgs.map(fact => fact.links[0].title);
-	if (!factsTitles.length) return; 
+	if (!factsTitles.length) return;
 
 	const pageTitlesQuery = factsTitles.join('|');
 
@@ -74,48 +67,27 @@ export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex
 		const { data } = await axios.get(imagesUrl+pageTitlesQuery);	
 
 		// add img urls to facts
-		factsAwaitingImgs = factsAwaitingImgs.map((fact, i) => {
+		selectedFacts = selectedFacts.map((fact, i) => {
 			if (!data[i] || !data[i].src) {
 				return fact;
 			}
-
 			fact.img = data[i].src;
 
 			return fact;
 		});
 
-		// all currently selected facts after images were added
 		let factsWithImages = {};
-		factsWithImages[category] = [
-			...selectedFacts.slice(0, firstAwaitingIndex),
-			...factsAwaitingImgs,
-			...selectedFacts.slice(firstAwaitingIndex+factsAwaitingImgs.length)
-		];
+		factsWithImages[category] = selectedFacts;
 
-		// get a new index of the last fact with an image
-		let metaImgIndexes = _.get(facts[date], `meta.images[${category}]`, {});
-
-		if (filterSort === 'latest') {
-			const prevLastFromLatest = metaImgIndexes.lastFromLatest || -1;
-			metaImgIndexes.lastFromLatest = data.length + prevLastFromLatest;
-		} else {
-			const prevLastFromOldest = metaImgIndexes.lastFromOldest || -1;
-			metaImgIndexes.lastFromOldest = data.length + prevLastFromOldest;
-		}
-
-		
 		let updatedMeta = facts[date].meta || {};
 		updatedMeta.images = updatedMeta.images || {};
-		updatedMeta.images[category] = metaImgIndexes;
-		
+		updatedMeta.images[category] = true;
 
 		let factsForDay = {};
 		factsForDay[date] = { 
 			...facts[date],
-			...factsWithImages, 
-			meta: { 
-				...updatedMeta
-			}
+			...factsWithImages,
+			meta: { ...updatedMeta }
 		}
 
 		facts = { ...facts, ...factsForDay }

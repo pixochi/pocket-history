@@ -23,7 +23,7 @@ import { HEADER_HEIGHT } from '../../constants/components';
 
 import gStyles from '../../styles';
 
-
+const IMAGES_ON_LOAD = 3;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends PureComponent {
@@ -32,11 +32,12 @@ class FactsScreen extends PureComponent {
 	// first empty View is rendered instead of FlatList
 	state = { fakeLoading: false }
 
-
 	componentWillReceiveProps(nextProps) {
 		const { selectedDate } = this.props;
 		const dateChanged = (selectedDate.factDate !== nextProps.selectedDate.factDate);
-	  if (!this.state.fakeLoading && dateChanged) this.setState({ fakeLoading: true });
+	  if (!this.state.fakeLoading && dateChanged) {
+	  	this.setState({ fakeLoading: true });
+	  }
 	}
 
 	componentDidUpdate() {
@@ -69,12 +70,23 @@ class FactsScreen extends PureComponent {
     ]
   }
 
+  _isImgShown = (factIndex) => {
+
+  	const { category, itemsScrolled } = this.props;
+  	const currentScroll = itemsScrolled[category] || 0;
+
+  	return (factIndex < (currentScroll + IMAGES_ON_LOAD));
+  }
+  
+
   _renderFact = (fact) => {
   	const { item, index } = fact;
   	const { navigation, category } = this.props;
+
   	return (
   		<FactCard
 		  	{...item}
+		  	isImgShown={this._isImgShown(index)}
 		  	category={category}
 		  	isFavorite={false}
 		  	navigation={navigation}

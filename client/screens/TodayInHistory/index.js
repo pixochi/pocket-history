@@ -46,7 +46,7 @@ const FactsCategories = TabNavigator({
   News: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
 
-const APPROXIMATE_FACT_CARD_HEIGHT = 300;
+const APPROXIMATE_FACT_CARD_HEIGHT = 250;
 
 class TodayInHistory extends PureComponent {
   static navigationOptions = {
@@ -59,7 +59,7 @@ class TodayInHistory extends PureComponent {
     scrollAnim: new Animated.Value(0),
     offsetAnim: new Animated.Value(0),
     isModalVisible: false,
-    itemsScrolled: 0
+    itemsScrolled: {}
   };
 
   componentDidMount() {
@@ -71,8 +71,8 @@ class TodayInHistory extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { allFacts, selectedDate, 
-      selectedCategory, fetchFacts, fetchFactsImages, filter } = nextProps;
+    const { allFacts, selectedDate, selectedCategory, 
+      fetchFacts, fetchFactsImages, isOnline, filter } = nextProps;
 
     if (this.canFetch(nextProps) && _.isEmpty(allFacts[selectedDate.factDate]) ) {
       fetchFacts(nextProps.selectedDate.timestamp);
@@ -80,10 +80,15 @@ class TodayInHistory extends PureComponent {
 
     const dateChanged = this.props.selectedDate.factDate !== selectedDate.factDate;
     const categoryChanged = this.props.selectedCategory !== selectedCategory;
-    const receivedFacts = !this.props.allFacts[selectedDate.factDate] && nextProps.allFacts[selectedDate.factDate]
+    const receivedFacts = !this.props.allFacts[selectedDate.factDate] && nextProps.allFacts[selectedDate.factDate];
+    const hasImages = _.get(allFacts,`[${selectedDate.factDate}]meta.images[${selectedCategory}]`, false);
 
-    if (categoryChanged || dateChanged || receivedFacts) {
-      this._fetchImages(1, nextProps);
+    if (dateChanged) {
+      this.setState({ itemsScrolled: {} });
+    }
+
+    if ( isOnline && !hasImages && (categoryChanged || dateChanged || receivedFacts)) {
+      fetchFactsImages(selectedDate.factDate, selectedCategory, allFacts);
     }
   }
 
@@ -123,30 +128,25 @@ class TodayInHistory extends PureComponent {
     this._showDate();
     changeCategory(action.routeName);
   }
-
-  _fetchImages = (itemsScrolled, props) => {
-    console.log('fetching')
-    if (!props.isOnline) { return; }
-
-    const { allFacts, selectedCategory,
-      selectedDate, filter, fetchFactsImages } = props;
-
-    const lastImgOrder = filter.sort === 'latest' ? 'lastFromLatest' : 'lastFromOldest';
-    const lastImgIndex =  _.get(allFacts, `[${selectedDate.factDate}].meta.images[${selectedCategory}][${lastImgOrder}]`, 0);
-
-    if (lastImgIndex < itemsScrolled) {
-      fetchFactsImages(selectedDate.factDate, selectedCategory, allFacts, filter.sort, lastImgIndex);
-    }
-  }
   
   _handleMomentumScrollEnd = (evt) => {
 
+    const { selectedCategory } = this.props;
     const horizontalOffset = _.get(evt, 'nativeEvent.contentOffset.y', 0);
     const itemsScrolled = Math.floor(horizontalOffset/APPROXIMATE_FACT_CARD_HEIGHT);
+    const currentScroll = this.state.itemsScrolled[selectedCategory] || 0;
 
-    // this._fetchImages(itemsScrolled, this.props);
-
-    this.setState({ itemsScrolled });
+    if (itemsScrolled > currentScroll) {
+      let newScroll = {};
+      newScroll[selectedCategory] = itemsScrolled
+      this.setState({ 
+        itemsScrolled: {
+          ...this.state.itemsScrolled,
+          ...newScroll
+        } 
+      });
+    }
+    
 
     const previous = this._previousScrollvalue;
     const current = this._currentScrollValue;
@@ -192,6 +192,8 @@ class TodayInHistory extends PureComponent {
     const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
        changeDate, fetchFacts, changeFilter, navigation } = this.props;
 
+    const { itemsScrolled } = this.state;
+
     const handleScroll = Animated.event(
       [{ nativeEvent: { contentOffset: { y: this.state.scrollAnim }}}]
     );
@@ -202,6 +204,7 @@ class TodayInHistory extends PureComponent {
       filteredFacts,
       filter,
       selectedDate,
+      itemsScrolled,
       addFavorite,
       copyToClipboard,
       renderFact: this.renderFact,
@@ -293,8 +296,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (timestamp) => {
     dispatch(fetchFacts(timestamp));
   },
-  fetchFactsImages: (date, category, facts, filterSort, lastImgIndex) => {
-    dispatch(fetchFactsImages(date, category, facts, filterSort, lastImgIndex));
+  fetchFactsImages: (date, category, facts) => {
+    dispatch(fetchFactsImages(date, category, facts));
   },
   changeDate: (date) => {
     dispatch(changeDate(date));

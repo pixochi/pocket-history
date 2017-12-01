@@ -20,59 +20,66 @@ export const getWikiImages = async (req, res) => {
 		res.status(400).send('Missing parameter: pageTitles');
 	}
 
-	const queryParams = {
+	let queryParams = {
 		action: 'query',
 		prop: 'pageimages',
 		format: 'json',
-		titles: pageTitles
 	}
-	const query = qs.stringify(queryParams);
-	const apiUrl = `${WIKI_API_ROOT_URL}${query}`;
 
-	try {
+	let images = {};
+	const titles = pageTitles.split('|');
 
-		const { data } = await axios(apiUrl);
-		const { pages } = data.query;
+	while (Object.keys(images).length < titles.length) {
+		const imagesLength = Object.keys(images).length;
+		const pageTitlesParam = titles.slice(imagesLength, imagesLength + 50).join('|');
 
-		// console.log('PAGES:')
-		// console.log(pages)
-		if (!_.isEmpty(pages['-1'])){
-			res.send([]);
-		} else {
+		queryParams.titles = pageTitlesParam;
+		const query = qs.stringify(queryParams);
+		const apiUrl = `${WIKI_API_ROOT_URL}${query}`;
 
-			// return only info about images
-			let imagesData = Object.keys(pages).map(pageId => {
-				const { title, thumbnail } = pages[pageId];
-				
-				let imgInfo = {};
-				imgInfo.title = title;
+		try {
+			const { data } = await axios(apiUrl);
+			const { pages } = data.query;
 
-				if (thumbnail && thumbnail.source) {
-					const { source } = thumbnail;
-					
-					// change size of the requested image
-					const pattern = new RegExp(`.(${IMG_FORMATS.join('|')})\/(\\d+)`);
-					imgInfo.src = source.replace(pattern, '.$1/'+IMG_SIZE);
+			if (!_.isEmpty(pages['-1'])) {
+				res.send([]);
+				break;
+			} else {
+				images = { ...images, ...pages }
+			}	
+		} catch(err) {
+				console.log('GET WIKI IMAGES FROM API ERROR:')
+				console.log(err)
+				const error = {
+					err,
+					message: 'Failed to load the images. Please try again later.'
 				}
 
-				return imgInfo;
-			});
-
-			// sort imagesData in the same order as they were requested
-			const titles = pageTitles.split('|');
-			imagesData = sortByTitles(imagesData, titles);
-
-			res.send(imagesData);
-			cacheWikiImages(pageTitles, imagesData);
-			
-		}	
-	} catch(err) {
-		console.log('GET WIKI IMAGES FROM API ERROR:')
-		console.log(err)
-		const error = {
-			err,
-			message: 'Failed to load the images. Please try again later.'
+				res.status(400).send(error);
 		}
-		res.status(400).send(error);
 	}
+
+	// return only basic info about images
+		let imagesData = Object.keys(images).map(pageId => {
+			const { title, thumbnail } = images[pageId];
+			
+			let imgInfo = {};
+			imgInfo.title = title;
+
+			if (thumbnail && thumbnail.source) {
+				const { source } = thumbnail;
+				
+				// change size of the requested image
+				const pattern = new RegExp(`.(${IMG_FORMATS.join('|')})\/(\\d+)`);
+				imgInfo.src = source.replace(pattern, '.$1/'+IMG_SIZE);
+			}
+
+			return imgInfo;
+		});
+
+		// sort imagesData in the same order as they were requested
+		imagesData = sortByTitles(imagesData, titles);
+
+		res.send(imagesData);
+		cacheWikiImages(pageTitles, imagesData);
 }

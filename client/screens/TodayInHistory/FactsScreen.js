@@ -70,12 +70,6 @@ class FactsScreen extends PureComponent {
     ]
   }
 
-  _handleScroll = () => {
-  	console.log('handling')
-  	const { onScroll } = this.props;
-  	// onScroll();
-  }
-
   _renderFact = ({ item }) => {
   	const { navigation, category } = this.props;
   	return (
@@ -88,8 +82,6 @@ class FactsScreen extends PureComponent {
 	  	/>
   	);
   }
-
-
 
   render() {
 	  const { allFacts, filteredFacts, selectedDate, filter,

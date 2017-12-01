@@ -30,7 +30,7 @@ export const getCachedWikiImages = (req, res, next) => {
       data = Object.keys(data).map(key => {
         let imageInfo = data[key];
 
-        if (!imageInfo.src) { return imageInfo; }
+        if (!imageInfo) { return {}; }
 
         imageInfo.src = getFullImageSource(imageInfo.src);
         return imageInfo;

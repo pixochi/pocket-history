@@ -9,7 +9,8 @@ import { sortByTitles } from '../../utils/images';
 
 
 const WIKI_API_ROOT_URL = 'https://en.wikipedia.org/w/api.php?';
-const IMG_SIZE = '130';
+const IMG_SIZE = '160';
+const IMG_FORMATS = ['jpg', 'png', 'jpeg', 'svg', 'gif', 'JPG', 'PNG', 'JPEG', 'SVG', 'GIF', 'tif'];
 
 export const getWikiImages = async (req, res) => {
 	console.log('GETTING WIKI IMAGES FROM API');
@@ -33,6 +34,8 @@ export const getWikiImages = async (req, res) => {
 		const { data } = await axios(apiUrl);
 		const { pages } = data.query;
 
+		// console.log('PAGES:')
+		// console.log(pages)
 		if (!_.isEmpty(pages['-1'])){
 			res.send([]);
 		} else {
@@ -41,13 +44,15 @@ export const getWikiImages = async (req, res) => {
 			let imagesData = Object.keys(pages).map(pageId => {
 				const { title, thumbnail } = pages[pageId];
 				
-				let imgInfo = { title }
+				let imgInfo = {};
+				imgInfo.title = title;
 
-				if (thumbnail) {
+				if (thumbnail && thumbnail.source) {
 					const { source } = thumbnail;
-
+					
 					// change size of the requested image
-					imgInfo.src = source.replace(/(.jpg|.jpeg|.png|.gif|.svg)\/(\d+)/, '$1/'+IMG_SIZE);
+					const pattern = new RegExp(`.(${IMG_FORMATS.join('|')})\/(\\d+)`);
+					imgInfo.src = source.replace(pattern, '.$1/'+IMG_SIZE);
 				}
 
 				return imgInfo;

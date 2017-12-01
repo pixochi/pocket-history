@@ -46,7 +46,7 @@ const FactsCategories = TabNavigator({
   News: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
 
-const APPROXIMATE_FACT_CARD_HEIGHT = 150;
+const APPROXIMATE_FACT_CARD_HEIGHT = 260;
 
 class TodayInHistory extends PureComponent {
   static navigationOptions = {
@@ -58,8 +58,7 @@ class TodayInHistory extends PureComponent {
   state = {
     scrollAnim: new Animated.Value(0),
     offsetAnim: new Animated.Value(0),
-    isModalVisible: false,
-    a: false
+    isModalVisible: false
   };
 
   componentDidMount() {
@@ -78,14 +77,15 @@ class TodayInHistory extends PureComponent {
       fetchFacts(nextProps.selectedDate.timestamp);
     }
 
-    if (this.canFetch(nextProps) && !this.state.a) {
-      fetchFactsImages(selectedDate.factDate, selectedCategory, allFacts, filter.sort );
-      this.setState({ a: true })
+    const dateChanged = this.props.selectedDate.factDate !== selectedDate.factDate;
+    const categoryChanged = this.props.selectedCategory !== selectedCategory;
+
+    if (categoryChanged || dateChanged) {
+      this._fetchImages(1);
     }
-  }  
+  }
 
   _handleScroll = ({ value }) => {
-    console.log(Math.floor(value/APPROXIMATE_FACT_CARD_HEIGHT) )
     this._previousScrollvalue = this._currentScrollValue;
     this._currentScrollValue = value;
   };
@@ -121,8 +121,28 @@ class TodayInHistory extends PureComponent {
     this._showDate();
     changeCategory(action.routeName);
   }
+
+  _fetchImages = (itemsScrolled) => {
+    console.log('fetching')
+    if (!this.props.isOnline) { return; }
+
+    const { allFacts, selectedCategory,
+      selectedDate, filter, fetchFactsImages } = this.props;
+
+    const lastImgOrder = filter.sort === 'latest' ? 'lastFromLatest' : 'lastFromOldest';
+    const lastImgIndex =  _.get(allFacts, `[${selectedDate.factDate}].meta.images[${selectedCategory}][${lastImgOrder}]`, 0);
+
+    if (lastImgIndex < itemsScrolled) {
+      fetchFactsImages(selectedDate.factDate, selectedCategory, allFacts, filter.sort, lastImgIndex);
+    }
+  }
   
-  _handleMomentumScrollEnd = () => {
+  _handleMomentumScrollEnd = (evt) => {
+
+    const horizontalOffset = _.get(evt, 'nativeEvent.contentOffset.y', 0);
+    const itemsScrolled = Math.floor(horizontalOffset/APPROXIMATE_FACT_CARD_HEIGHT);
+
+    this._fetchImages(itemsScrolled);
 
     const previous = this._previousScrollvalue;
     const current = this._currentScrollValue;
@@ -269,8 +289,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchFacts: (timestamp) => {
     dispatch(fetchFacts(timestamp));
   },
-  fetchFactsImages: (date, category, facts, filterSort) => {
-    dispatch(fetchFactsImages(date, category, facts, filterSort));
+  fetchFactsImages: (date, category, facts, filterSort, lastImgIndex) => {
+    dispatch(fetchFactsImages(date, category, facts, filterSort, lastImgIndex));
   },
   changeDate: (date) => {
     dispatch(changeDate(date));

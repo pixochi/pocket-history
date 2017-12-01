@@ -18,14 +18,14 @@ const API_ROOT_URL = config[ENV].apiRootUrl;
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
+const IMAGES_PER_LOAD = 5;
 
 const _fetchFacts = (timestamp, factsState) => {
 
-	if (isNaN(timestamp) || _.isEmpty(factsState)) {
-		reject('One of the parameters is not valid.');
-	}
-
 	return new Promise(async (resolve, reject) => {	
+		if (isNaN(timestamp)) {
+			reject('Timestamp is not a number.');
+		}
 		try {
 			const { facts, selectedDate } = factsState;
 			// [month]/[day] -> 12/30
@@ -51,58 +51,81 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 	  .catch(e => console.log(e));
 }
 
-export const fetchFactsImages = (date, category, facts, filterSort) => async dispatch => {
+export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex = 0) => async dispatch => {
 	
-	if (!date || !category || !filterSort) return;
+	if (!date || !category || !filterSort || _.isEmpty(facts)) return;
 
 	let selectedFacts = facts[date][category];
 
-	if (_.isEmpty(selectedFacts)) return; 
+	const firstAwaitingIndex = lastImgIndex === 0 ? 0 : lastImgIndex+1;
+	// facts which will receive images
+	let factsAwaitingImgs = selectedFacts.slice(firstAwaitingIndex, firstAwaitingIndex+1+IMAGES_PER_LOAD);
+
+	if (_.isEmpty(factsAwaitingImgs)) return; 
 
 	const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
 
-	const factsTitles = selectedFacts.map(fact => fact.links[0].title);
+	const factsTitles = factsAwaitingImgs.map(fact => fact.links[0].title);
 	if (!factsTitles.length) return; 
 
 	const pageTitlesQuery = factsTitles.join('|');
 
 	try {
 		const { data } = await axios.get(imagesUrl+pageTitlesQuery);	
-		selectedFacts = selectedFacts.map((fact, i) => ({ ...fact, img: data[i].src }));
 
+		// add img urls to facts
+		factsAwaitingImgs = factsAwaitingImgs.map((fact, i) => {
+			if (!data[i]) {  
+				return fact;
+			}
+
+			return { 
+				...fact, 
+				img: data[i].src 
+			}
+		});
+
+		// all currently selected facts after images were added
 		let factsWithImages = {};
-		factsWithImages[category] = selectedFacts;
-
-		console.log('F:')
-		console.log(factsWithImages)
+		factsWithImages[category] = [
+			...selectedFacts.slice(0, firstAwaitingIndex),
+			...factsAwaitingImgs,
+			...selectedFacts.slice(firstAwaitingIndex+factsAwaitingImgs.length)
+		];
 
 		// get a new index of the last fact with an image
 		let metaImgIndexes = _.get(facts[date], `meta.images[${category}]`, {});
+
 		if (filterSort === 'latest') {
-			const prevLastFromLatest = metaImgIndexes.lastFromLatest || 0;
+			const prevLastFromLatest = metaImgIndexes.lastFromLatest || -1;
 			metaImgIndexes.lastFromLatest = data.length + prevLastFromLatest;
 		} else {
-			const prevLastFromOldest = metaImgIndexes.lastFromOldest || 0;
+			const prevLastFromOldest = metaImgIndexes.lastFromOldest || -1;
 			metaImgIndexes.lastFromOldest = data.length + prevLastFromOldest;
 		}
 
-		let meta = {};
-		meta.images = metaImgIndexes;
+		
+		let updatedMeta = facts[date].meta || {};
+		updatedMeta.images = updatedMeta.images || {};
+		updatedMeta.images[category] = metaImgIndexes;
+		
 
 		let factsForDay = {};
-		factsForDay[date] = { ...facts[date], ...factsWithImages, meta }
-
-		console.log('factsForDay:')
-		console.log(factsForDay)
+		factsForDay[date] = { 
+			...facts[date], 
+			...factsWithImages, 
+			meta: { 
+				...updatedMeta
+			}
+		}
 
 		facts = { ...facts, ...factsForDay }
-		console.log(facts)
+
 		dispatch({
 			type: FETCH_FACTS_IMAGES,
 			facts
 		});
 	} catch(e) {
-		// statements
 		console.log(e);
 	}
 }

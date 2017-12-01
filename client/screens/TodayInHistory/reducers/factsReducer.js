@@ -39,8 +39,8 @@ const factsReducer = (state = defaultState, action) => {
       return {
         ...state,
         isLoading: false,
-        facts: action.payload,
-        filter: DEFAULT_FACTS_FILTER
+        facts: { ...state.facts, ...action.payload },
+        // filter: DEFAULT_FACTS_FILTER
       }
     }
     case `${FETCH_FACTS}_REJECTED`:

@@ -18,7 +18,7 @@ const API_ROOT_URL = config[ENV].apiRootUrl;
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
-const IMAGES_PER_LOAD = 5;
+const IMAGES_PER_LOAD = 4;
 
 const _fetchFacts = (timestamp, factsState) => {
 
@@ -53,7 +53,7 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 
 export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex = 0) => async dispatch => {
 	
-	if (!date || !category || !filterSort || _.isEmpty(facts)) return;
+	if (!date || !category || !filterSort || _.isEmpty(facts[date])) return;
 
 	let selectedFacts = facts[date][category];
 
@@ -75,14 +75,13 @@ export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex
 
 		// add img urls to facts
 		factsAwaitingImgs = factsAwaitingImgs.map((fact, i) => {
-			if (!data[i]) {  
+			if (!data[i] || !data[i].src) {
 				return fact;
 			}
 
-			return { 
-				...fact, 
-				img: data[i].src 
-			}
+			fact.img = data[i].src;
+
+			return fact;
 		});
 
 		// all currently selected facts after images were added
@@ -112,7 +111,7 @@ export const fetchFactsImages = (date, category, facts, filterSort, lastImgIndex
 
 		let factsForDay = {};
 		factsForDay[date] = { 
-			...facts[date], 
+			...facts[date],
 			...factsWithImages, 
 			meta: { 
 				...updatedMeta

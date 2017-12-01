@@ -46,7 +46,7 @@ const FactsCategories = TabNavigator({
   News: { screen: News }
 }, { tabBarPosition: 'bottom', lazy: true });
 
-const APPROXIMATE_FACT_CARD_HEIGHT = 260;
+const APPROXIMATE_FACT_CARD_HEIGHT = 300;
 
 class TodayInHistory extends PureComponent {
   static navigationOptions = {
@@ -58,7 +58,8 @@ class TodayInHistory extends PureComponent {
   state = {
     scrollAnim: new Animated.Value(0),
     offsetAnim: new Animated.Value(0),
-    isModalVisible: false
+    isModalVisible: false,
+    itemsScrolled: 0
   };
 
   componentDidMount() {
@@ -79,9 +80,10 @@ class TodayInHistory extends PureComponent {
 
     const dateChanged = this.props.selectedDate.factDate !== selectedDate.factDate;
     const categoryChanged = this.props.selectedCategory !== selectedCategory;
+    const receivedFacts = !this.props.allFacts[selectedDate.factDate] && nextProps.allFacts[selectedDate.factDate]
 
-    if (categoryChanged || dateChanged) {
-      this._fetchImages(1);
+    if (categoryChanged || dateChanged || receivedFacts) {
+      this._fetchImages(1, nextProps);
     }
   }
 
@@ -122,12 +124,12 @@ class TodayInHistory extends PureComponent {
     changeCategory(action.routeName);
   }
 
-  _fetchImages = (itemsScrolled) => {
+  _fetchImages = (itemsScrolled, props) => {
     console.log('fetching')
-    if (!this.props.isOnline) { return; }
+    if (!props.isOnline) { return; }
 
     const { allFacts, selectedCategory,
-      selectedDate, filter, fetchFactsImages } = this.props;
+      selectedDate, filter, fetchFactsImages } = props;
 
     const lastImgOrder = filter.sort === 'latest' ? 'lastFromLatest' : 'lastFromOldest';
     const lastImgIndex =  _.get(allFacts, `[${selectedDate.factDate}].meta.images[${selectedCategory}][${lastImgOrder}]`, 0);
@@ -142,7 +144,9 @@ class TodayInHistory extends PureComponent {
     const horizontalOffset = _.get(evt, 'nativeEvent.contentOffset.y', 0);
     const itemsScrolled = Math.floor(horizontalOffset/APPROXIMATE_FACT_CARD_HEIGHT);
 
-    this._fetchImages(itemsScrolled);
+    // this._fetchImages(itemsScrolled, this.props);
+
+    this.setState({ itemsScrolled });
 
     const previous = this._previousScrollvalue;
     const current = this._currentScrollValue;

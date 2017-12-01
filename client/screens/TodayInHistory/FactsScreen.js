@@ -52,7 +52,6 @@ class FactsScreen extends PureComponent {
   	}
   }
 
-
   _addFactToFavorite = (fact) => {
     const { addFavorite, selectedDate } = this.props;
     const id = hash(fact.html+fact.year);
@@ -70,10 +69,11 @@ class FactsScreen extends PureComponent {
     ]
   }
 
-  _renderFact = ({ item }) => {
+  _renderFact = (fact) => {
+  	const { item, index } = fact;
   	const { navigation, category } = this.props;
   	return (
-  		<FactCard 
+  		<FactCard
 		  	{...item}
 		  	category={category}
 		  	isFavorite={false}

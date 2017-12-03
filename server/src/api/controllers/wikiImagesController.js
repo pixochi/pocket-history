@@ -11,7 +11,7 @@ import { addImagesToFacts } from '../../utils/images';
 
 
 const WIKI_API_ROOT_URL = 'https://en.wikipedia.org/w/api.php?';
-const IMG_SIZE = '170';
+const IMG_SIZE = 210;
 
 export const getWikiImages = async (req, res) => {
 	console.log('GETTING WIKI IMAGES FROM API');
@@ -23,11 +23,13 @@ export const getWikiImages = async (req, res) => {
 		if (value == null) {
 			res.status(400).send('Missing parameter: ' + key);
 		}
-	})
+	});
 
 	let queryParams = {
 		action: 'query',
 		prop: 'pageimages',
+		piprop: 'thumbnail',
+		pithumbsize: IMG_SIZE,
 		format: 'json',
 	}
 
@@ -59,7 +61,6 @@ export const getWikiImages = async (req, res) => {
 			}
 
 			images = { ...images, ...pages }
-			console.log(images)
 
 		} catch(err) {
 				console.log('GET WIKI IMAGES FROM API ERROR:')
@@ -75,18 +76,22 @@ export const getWikiImages = async (req, res) => {
 	}
 
 	try {
-		// add images to facts
+		
 		let cachedFacts = await getCachedFacts(date);
-		if (_.isEmpty(cachedFacts)) {
-			res.status(400).send(null);
-		}
 
-		cachedFacts.data[category] = addImagesToFacts(images, cachedFacts.data[category]);
-		let imagesMeta = cachedFacts.data.images || {};
-		imagesMeta[category] = true;
-		cachedFacts.data = { ...cachedFacts.data, images: imagesMeta };
-		res.send(cachedFacts);
-		cacheFacts(date, cachedFacts);
+		// if no facts are cached, send only images
+		// and add them to facts in client
+		if (!cachedFacts) {
+			res.send({ imagesOnly: images });
+		} else {
+			// add images to facts
+			cachedFacts.data[category] = addImagesToFacts(images, cachedFacts.data[category]);
+			let imagesMeta = cachedFacts.data.images || {};
+			imagesMeta[category] = true;
+			cachedFacts.data = { ...cachedFacts.data, images: imagesMeta };
+			res.send(cachedFacts);
+			cacheFacts(date, cachedFacts);
+		}
 	} catch(e) {
 		console.log(e);
 		res.status(400).send(e);

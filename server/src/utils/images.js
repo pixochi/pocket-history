@@ -56,7 +56,6 @@ export const sortByTitles = (data, titles) => {
 }
 
 // add images to facts in one of the categories
-
 export const addImagesToFacts = (images, facts) => {
 	
 	if (!images || !facts) {
@@ -67,15 +66,10 @@ export const addImagesToFacts = (images, facts) => {
 
 	const imagesArr = _.values(images);
 
-	console.log(imagesArr.length)
-	console.log(facts.length)
 	for (let i in facts) {
 		const currTitle = _.get(facts[i], 'links[0].title', '');
 
-		const image = imagesArr.find(imageInfo => {
-			console.log(imageInfo.title)
-			return (imageInfo.title === currTitle);
-		});
+		const image = imagesArr.find(img => img.title === currTitle);
 
 		if (image && image.thumbnail) {
 			facts[i].img = image.thumbnail.source;

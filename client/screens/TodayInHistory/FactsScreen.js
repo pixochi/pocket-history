@@ -28,26 +28,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends PureComponent {
 
-	// used to make the screen change faster
-	// first empty View is rendered instead of FlatList
-	state = { fakeLoading: true }
-
-	componentWillReceiveProps(nextProps) {
-		const { selectedDate, filteredFacts, category } = this.props;
-		const { fakeLoading } = this.state;
-		const dateChanged = (selectedDate.factDate !== nextProps.selectedDate.factDate);
-	  if (!fakeLoading && dateChanged) {
-	  	this.setState({ fakeLoading: true });
-	  }
-
-	  const prevFactText = _.get(filteredFacts, `[${category}][0].text`, '');
-	  const nextFactText =  _.get(nextProps.filteredFacts, `[${category}][0].text`, '');
-
-	  if (fakeLoading && prevFactText === nextFactText) {
-			this.setState({ fakeLoading: false });
-	  }
-	}
-
 
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
@@ -111,12 +91,10 @@ class FactsScreen extends PureComponent {
 
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
-	  if (this.state.fakeLoading) {
 
-	  	Main = <View />;
+		if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
 
-	  }	else if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
-
+	  	console.log('NET')
 	    Main = <NetworkProblem solveConnection={this._refetchFacts} />;
 
 	  } else if (_.has(filteredFacts, category) && !filteredFacts[category].length) {
@@ -128,6 +106,7 @@ class FactsScreen extends PureComponent {
 	  	)
 
 	  } else {
+	  	console.log('LIST')
 	  	Main = (
 	  		<View style={styles.listContainer}>
 	  			<Loader animating={!isReady} />

@@ -59,64 +59,40 @@ class TodayInHistory extends PureComponent {
     scrollAnim: new Animated.Value(0),
     offsetAnim: new Animated.Value(0),
     isModalVisible: false,
-    itemsScrolled: {},
-    canFetchImages: false
+    itemsScrolled: {}
   };
 
   componentDidMount() {
-    const { isOnline, selectedCategory, selectedDate, allFacts } = this.props;
-    const hasImages = _.get(allFacts,`[${selectedDate.factDate}]meta.images[${selectedCategory}]`, false);
     this.state.scrollAnim.addListener(this._handleScroll);
-    this._imgFetchTimer = setTimeout(() => this.setState({canFetchImages: true}), 700);
-    
-    if (isOnline && !hasImages) {
-      fetchFactsImages(selectedDate, selectedCategory, allFacts);
-    }
   }
 
   componentWillUnMount() {
     this.state.scrollAnim.removeListener(this._handleScroll);
-    clearTimeout(this._imgFetchTimer);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { allFacts, selectedDate, selectedCategory, 
+    const { allFacts, selectedDate, selectedCategory,
       fetchFacts, fetchFactsImages, isOnline, filter, imgFetchSrc } = nextProps;
-
-    if (this.canFetch(nextProps) && _.isEmpty(allFacts[selectedDate.factDate]) ) {
-      fetchFacts(nextProps.selectedDate.timestamp);
-    }
-
     const dateChanged = this.props.selectedDate.factDate !== selectedDate.factDate;
     const categoryChanged = this.props.selectedCategory !== selectedCategory;
-    const hasImages = _.get(allFacts,`[${selectedDate.factDate}]meta.images[${selectedCategory}]`, false);
+    const hasImages = _.get(allFacts,`[${selectedDate.factDate}].images[${selectedCategory}]`, false);
 
-    const prevFacts = _.get(this.props.allFacts, `[${this.props.selectedDate.factDate}][${this.props.selectedCategory}]`, []);
-    const nextFacts = _.get(allFacts, `[${selectedDate.factDate}][${selectedCategory}]`, []);
-    const didReceivedNewFacts = prevFacts[0] !== nextFacts[0];
-
-
-    if (!hasImages && isOnline && ((!this.props.rehydrated && nextProps.rehydrated) || didReceivedNewFacts)) {
-      fetchFactsImages(selectedDate, selectedCategory, allFacts);
-    } 
+    if (this._canFetchFacts(nextProps) && _.isEmpty(allFacts[selectedDate.factDate]) ) {
+      fetchFacts(nextProps.selectedDate.timestamp);
+    }
 
     if (dateChanged) {
       this.setState({ itemsScrolled: {} });
     }
 
-    if (categoryChanged || dateChanged) {
+    if (!hasImages && this._canFetchImages(nextProps)) {
+      fetchFactsImages(selectedDate, selectedCategory, allFacts);
+    }
+
+    if (this.props.isFetchingImages && (categoryChanged || dateChanged)) {
       if (imgFetchSrc) {
         imgFetchSrc.cancel('Images fetching cancelled');
-        console.log('FETCHING CANCELLED')
-      }
-      clearTimeout(this._imgFetchTimer);
-      this.setState({ canFetchImages: false });
-      console.log('CANT BE FATCHED!!')
-      this._imgFetchTimer = setTimeout(
-        () => { 
-          this.setState({ canFetchImages: true });
-          console.log('NOW IMAGES CAN BE FATCHED')
-        }, 700);
+      } 
     }
   }
 
@@ -193,9 +169,22 @@ class TodayInHistory extends PureComponent {
     }
   };
 
-  canFetch = (props) => {
-    const { rehydrated, isLoading, isOnline} = props;
-    return (!isLoading && isOnline && rehydrated);
+  _canFetch = (props) => {
+    const { rehydrated, isOnline} = props;
+    return (isOnline && rehydrated);
+  }
+
+  _canFetchImages = (props) => {
+    const { isFetchingImages, allFacts, 
+      selectedDate, selectedCategory, imgErr } = props;
+    const nextFacts = _.get(allFacts, `[${selectedDate.factDate}][${selectedCategory}]`, false);
+    const hasFacts = !_.isEmpty(nextFacts);
+
+    return (!isFetchingImages && hasFacts && this._canFetch(props));
+  }
+
+  _canFetchFacts = (props) => {
+    return (!props.isLoading && this._canFetch(props));
   }
 
   closeModal = () => {
@@ -237,7 +226,7 @@ class TodayInHistory extends PureComponent {
       copyToClipboard,
       renderFact: this.renderFact,
       isReady: (!isLoading && rehydrated),
-      canFetch: this.canFetch(this.props),
+      canFetch: this._canFetchFacts(this.props),
       fetchFacts: fetchFacts,
       onScroll: handleScroll,
       onMomentumScrollBegin: this._handleMomentumScrollBegin,
@@ -307,7 +296,9 @@ const filterFacts = (facts = {}, { search = '', sort }) => {
 }
 
 const mapStateToProps = ({ historyOnDay, offline, persist }) => {
-  const { facts, filter, selectedDate, selectedCategory, isLoading, fetching } = historyOnDay;
+  const { facts, filter, selectedDate, selectedCategory, 
+    isLoading, imgFetchSrc, imgErr, isFetchingImages } = historyOnDay;
+
   return {
     allFacts: facts,
     filteredFacts: filterFacts(facts[selectedDate.factDate], filter),
@@ -315,7 +306,9 @@ const mapStateToProps = ({ historyOnDay, offline, persist }) => {
     selectedDate,
     selectedCategory,
     isLoading,
-    imgFetchSrc: fetching.images,
+    isFetchingImages,
+    imgFetchSrc,
+    imgErr,
     isOnline: offline.online,
     rehydrated: persist.rehydrated
   }

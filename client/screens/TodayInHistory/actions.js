@@ -11,6 +11,7 @@ import {
 	CHANGE_IMG_AJAX_SRC
 } from '../../constants/actionTypes';
 import { toApiFactDate, toFactDate } from '../../utils/date';
+import { addImagesToFacts, getTitlesFromFacts } from './helpers/images';
 import config from '../../constants/config';
 
 const ENV = config.env;
@@ -33,7 +34,6 @@ const _fetchFacts = (timestamp, factsState) => {
 			const factApiDate = toApiFactDate(timestamp);
 			// facts - events, births, deaths
 			const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
-			console.log(response)
 			const { data, date } = response.data;
 
 			let newFacts = {};
@@ -53,51 +53,60 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 	  .catch(e => console.log(e));
 }
 
-export const fetchFactsImages = (selectedDate, category, facts) => async dispatch => {
-	
-	const date = selectedDate.factDate;
-	if (!selectedDate || !category || _.isEmpty(facts[date])) return;
-
-	let selectedFacts = facts[date][category];
-	const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
-	const factsTitles = selectedFacts.map(fact => {
-
-		if (!fact.links[0]) {
-			return 'This fact does not have any links';
+export const _fetchFactsImages = (selectedDate, category, facts, axiosSrcToken) => {
+	return new Promise( async (resolve, reject) => {
+		const { factDate } = selectedDate;
+		if (!selectedDate || !category || _.isEmpty(facts[factDate])) {
+			reject('Parameters are not correct.');
 		}
 
-		const factTitle = fact.links[0].title;
+		let selectedFacts = facts[factDate][category];
+		const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
+		const factsTitles = getTitlesFromFacts(selectedFacts);
 
-		return factTitle;
+		if (!factsTitles.length){
+			reject('Titles are empty');
+		};
+
+		const pageTitlesQuery = factsTitles.join('|');
+
+		try {
+			const apiDate = toApiFactDate(selectedDate.timestamp);
+			const apiUrl = imagesUrl + pageTitlesQuery + `&date=${apiDate}&category=${category}`;
+			const { data } = await axios.get(apiUrl, { cancelToken: axiosSrcToken });
+
+			const images = data.imagesOnly;
+
+			if (images) {
+				const factWithImages = addImagesToFacts(images, selectedFacts);
+
+				facts[factDate][category] = factWithImages;
+				let imagesMeta = facts[factDate].images || {};
+				imagesMeta[category] = true;
+				facts[factDate].images = imagesMeta;
+			} else {
+				facts[factDate] = data.data
+			}
+
+			resolve(facts)
+
+		} catch(e) {
+			console.log(e);
+			reject(e);
+		}
 	});
+}
 
-	if (!factsTitles.length) return;
-
-	const pageTitlesQuery = factsTitles.join('|');
-
+export const fetchFactsImages = (selectedDate, category, facts) => dispatch => {
 	const CancelToken = axios.CancelToken;
 	const source = CancelToken.source();
 
 	dispatch({ type: CHANGE_IMG_AJAX_SRC, source });
 
-	try {
-		const date = toApiFactDate(selectedDate.timestamp);
-		const apiUrl = imagesUrl + pageTitlesQuery + `&date=${date}&category=${category}`;
-		const { data } = await axios.get(apiUrl, { cancelToken: source.token });
-
-
-		let factsForDay = {};
-		factsForDay[selectedDate.factDate] = data.data;
-
-		facts = { ...facts, ...factsForDay }
-
-		dispatch({
-			type: FETCH_FACTS_IMAGES,
-			facts
-		});
-	} catch(e) {
-		console.log(e);
-	}
+	dispatch({ 
+		type: FETCH_FACTS_IMAGES, 
+		payload: _fetchFactsImages(selectedDate, category, facts, source.token) 
+	});
 }
 
 export const fetchNews = () => dispatch => {
@@ -126,6 +135,8 @@ export const changeFactsFilter = (filter) => {
 }
 
 export const changeCategory = (category) => {
+	if (category === 'News') return;
+	
 	return {
 		type: CHANGE_FACTS_CATEGORY,
 		category

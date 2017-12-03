@@ -18,7 +18,7 @@ export const getCachedFacts = (date) => {
 	  }
 
 	  console.log('GETTING CACHED FACTS')
-
+	  console.log(date)
 	  const hashedKey = hash(date+'facts');
 
 	  redisClient.get(hashedKey, (err, data) => {
@@ -27,8 +27,11 @@ export const getCachedFacts = (date) => {
 	      reject(err);
 	    }
 
+	    if (!data) {
+	    	resolve(null);
+	    }
+
 	    data = JSON.parse(data);
-	    console.log(data)
 	    resolve(data);
 	  });
 	});

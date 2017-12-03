@@ -15,57 +15,59 @@ const currentTimestamp = new Date().getTime();
 
 const defaultState = {
   facts: {},
-  images: {
-    lastWithPic: {
-      fromStart: 0,
-      fromEnd: 0
-    }
-  },
   filter: DEFAULT_FACTS_FILTER,
   selectedDate: {
     timestamp: currentTimestamp,
     factDate: toFactDate(currentTimestamp)
   },
   selectedCategory: 'Events',
-  fetching: {
-    images: null
-  },
+  imgFetchSrc: null,
+  isFetchingImages: false,
   isLoading: false,
-  error: false
+  error: false,
+  imgErr: false
 }
 
 const factsReducer = (state = defaultState, action) => {
   switch(action.type) {
+
     // FETCHING FACTS BLOCK
     case `${FETCH_FACTS}_PENDING`:
       return { ...state, isLoading: true };
-    case `${FETCH_FACTS}_FULFILLED`: {     
+    case `${FETCH_FACTS}_FULFILLED`:      
       return {
         ...state,
         isLoading: false,
         facts: { ...state.facts, ...action.payload },
-        // filter: DEFAULT_FACTS_FILTER
       }
-    }
     case `${FETCH_FACTS}_REJECTED`:
       return { ...state, isLoading: false, error: true };
-    case FETCH_FACTS_IMAGES:
-      return { ...state, facts: action.facts }
-    case CHANGE_DATE: {
+
+    // FETCHING IMAGES FOR FACTS
+    case `${FETCH_FACTS_IMAGES}_PENDING`:
+      return { ...state, isFetchingImages: true }
+    case `${FETCH_FACTS_IMAGES}_FULFILLED`:
+      return { 
+        ...state, 
+        facts: action.payload, 
+        isFetchingImages: false,
+        imgErr: false 
+      }
+    case `${FETCH_FACTS_IMAGES}_REJECTED`:
+      return { ...state,  isFetchingImages: false, imgErr: true }
+
+    case CHANGE_DATE: 
       return { ...state, selectedDate: {...action.date} }
-    }
     case CHANGE_FACTS_CATEGORY:
       return { ...state, selectedCategory: action.category }
-    case CHANGE_FACTS_FILTER: {
+    case CHANGE_FACTS_FILTER: 
       return {...state, filter: action.filter}
-    }
     case CHANGE_IMG_AJAX_SRC: 
       return { 
         ...state,
-        fetching: { ...state.fetching, images: action.source }
+        imgFetchSrc: action.source,
+        isFetchingImages: true
       }
-    // case SCROLL_CHANGED:
-    //   return {...state, state[selectedDate].meta.images[selectedCategory]}
     default:
       return state;
   }

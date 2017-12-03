@@ -26,9 +26,11 @@ export const cacheFacts = (date, facts) => {
   return new Promise((resolve, reject) => {
 
     console.log('CACHING FACTS')
+    console.log(date)
 
     const serializedFacts = JSON.stringify(facts); // array to string
     const expiresIn = 60*5 // 6 hours in seconds
+
     const hashedKey = hash(date+'facts');
     
     redisClient.setex(hashedKey, expiresIn, serializedFacts, (err, reply) => {

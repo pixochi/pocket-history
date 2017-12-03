@@ -4,7 +4,8 @@ import {
   FETCH_FACTS_IMAGES,
   CHANGE_DATE,
   CHANGE_FACTS_FILTER,
-  CHANGE_FACTS_CATEGORY
+  CHANGE_FACTS_CATEGORY,
+  CHANGE_IMG_AJAX_SRC
 } from '../../../constants/actionTypes';
 import { toFactDate } from '../../../utils/date';
 
@@ -26,6 +27,9 @@ const defaultState = {
     factDate: toFactDate(currentTimestamp)
   },
   selectedCategory: 'Events',
+  fetching: {
+    images: null
+  },
   isLoading: false,
   error: false
 }
@@ -55,6 +59,11 @@ const factsReducer = (state = defaultState, action) => {
     case CHANGE_FACTS_FILTER: {
       return {...state, filter: action.filter}
     }
+    case CHANGE_IMG_AJAX_SRC: 
+      return { 
+        ...state,
+        fetching: { ...state.fetching, images: action.source }
+      }
     // case SCROLL_CHANGED:
     //   return {...state, state[selectedDate].meta.images[selectedCategory]}
     default:

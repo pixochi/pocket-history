@@ -6,6 +6,7 @@ import passport from 'passport'
 import db from './db'; //database connection
 import passportStrategies from './api/passport';
 import booksRoute from './api/routes/books';
+import factsRoute from './api/routes/facts';
 import videosRoute from './api/routes/videos';
 import authRoute from './api/routes/auth';
 import newsRoute from './api/routes/news';
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 
 app.use(authRoute);
 app.use(booksRoute);
+app.use(factsRoute);
 app.use(videosRoute);
 app.use(newsRoute);
 app.use(wikiImagesRoute);

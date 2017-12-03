@@ -30,21 +30,24 @@ class FactsScreen extends PureComponent {
 
 	// used to make the screen change faster
 	// first empty View is rendered instead of FlatList
-	state = { fakeLoading: false }
+	state = { fakeLoading: true }
 
 	componentWillReceiveProps(nextProps) {
-		const { selectedDate } = this.props;
+		const { selectedDate, filteredFacts, category } = this.props;
+		const { fakeLoading } = this.state;
 		const dateChanged = (selectedDate.factDate !== nextProps.selectedDate.factDate);
-	  if (!this.state.fakeLoading && dateChanged) {
+	  if (!fakeLoading && dateChanged) {
 	  	this.setState({ fakeLoading: true });
+	  }
+
+	  const prevFactText = _.get(filteredFacts, `[${category}][0].text`, '');
+	  const nextFactText =  _.get(nextProps.filteredFacts, `[${category}][0].text`, '');
+
+	  if (fakeLoading && prevFactText === nextFactText) {
+			this.setState({ fakeLoading: false });
 	  }
 	}
 
-	componentDidUpdate() {
-		if (this.state.fakeLoading) {
-			this.setState({ fakeLoading: false });
-		} 
-	}
 
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
@@ -70,7 +73,9 @@ class FactsScreen extends PureComponent {
     ]
   }
 
-  _isImgShown = (factIndex) => {
+  _isImgShown = (factIndex, img) => {
+
+  	if (!img) { return false; }
 
   	const { category, itemsScrolled } = this.props;
   	const currentScroll = itemsScrolled[category] || 0;
@@ -86,7 +91,7 @@ class FactsScreen extends PureComponent {
   	return (
   		<FactCard
 		  	{...item}
-		  	isImgShown={this._isImgShown(index)}
+		  	isImgShown={this._isImgShown(index, item.img)}
 		  	category={category}
 		  	isFavorite={false}
 		  	navigation={navigation}
@@ -100,44 +105,55 @@ class FactsScreen extends PureComponent {
 	   renderFact, category, isReady,onMomentumScrollBegin, 
 	   onMomentumScrollEnd, onScroll, onScrollEndDrag } = this.props;
 	   
+	  let Main;
+
+
+
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
-	  if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
-	    return <NetworkProblem solveConnection={this._refetchFacts} />
-	  }
-
 	  if (this.state.fakeLoading) {
-	  	return <View />
-	  }
 
-	  if (_.has(filteredFacts, category) && !filteredFacts[category].length) {
-	  	return (
+	  	Main = <View />;
+
+	  }	else if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
+
+	    Main = <NetworkProblem solveConnection={this._refetchFacts} />;
+
+	  } else if (_.has(filteredFacts, category) && !filteredFacts[category].length) {
+
+	  	Main = (
 	  		<View style={gStyles.screenMiddle}>		
 	  			<Text>Your search - { filter.search }  - did not match any { category }.</Text>
 	  		</View>
 	  	)
+
+	  } else {
+	  	Main = (
+	  		<View style={styles.listContainer}>
+	  			<Loader animating={!isReady} />
+		      <AnimatedFlatList
+		       	contentContainerStyle={styles.list}
+		        data = {filteredFacts[category]}
+		        extraData = {filteredFacts[category]}
+		        keyExtractor = {(fact) => fact.html}
+		        renderItem = {this._renderFact}
+		        scrollEventThrottle={16}
+		        onScroll={onScroll}
+		        onMomentumScrollBegin={onMomentumScrollBegin}
+		        onMomentumScrollEnd={onMomentumScrollEnd}
+		        onScrollEndDrag={onScrollEndDrag}
+		        initialNumToRender={6}
+		      />
+        </View>
+  		)
 	  }
 
-	  return (
-	    <View style={styles.listContainer}>
-	      <Loader animating={!isReady} />
-	      { _.has(filteredFacts, category) &&
-	        <AnimatedFlatList
-	         	contentContainerStyle={styles.list}
-	          data = {filteredFacts[category]}
-	          extraData = {filteredFacts[category]}
-	          keyExtractor = {(fact) => fact.html}
-	          renderItem = {this._renderFact}
-	          scrollEventThrottle={16}
-	          onScroll={onScroll}
-	          onMomentumScrollBegin={onMomentumScrollBegin}
-	          onMomentumScrollEnd={onMomentumScrollEnd}
-	          onScrollEndDrag={onScrollEndDrag}
-	          initialNumToRender={8}
-	        />
-      	}
+    return (
+    	<View style={{flex:1}}>
+    		{ Main }
     	</View>
-  	)
+    ) 
+  	
   }
 }
 

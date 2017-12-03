@@ -8,6 +8,7 @@ import {
 	CHANGE_DATE,
 	CHANGE_FACTS_CATEGORY,
 	CHANGE_FACTS_FILTER,
+	CHANGE_IMG_AJAX_SRC
 } from '../../constants/actionTypes';
 import { toApiFactDate, toFactDate } from '../../utils/date';
 import config from '../../constants/config';
@@ -31,7 +32,8 @@ const _fetchFacts = (timestamp, factsState) => {
 			// [month]/[day] -> 12/30
 			const factApiDate = toApiFactDate(timestamp);
 			// facts - events, births, deaths
-			const response = await axios.get(`http://history.muffinlabs.com/date/${factApiDate}`);
+			const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
+			console.log(response)
 			const { data, date } = response.data;
 
 			let newFacts = {};
@@ -51,44 +53,41 @@ export const fetchFacts = (timestamp) => (dispatch, getState) => {
 	  .catch(e => console.log(e));
 }
 
-export const fetchFactsImages = (date, category, facts) => async dispatch => {
+export const fetchFactsImages = (selectedDate, category, facts) => async dispatch => {
 	
-	if (!date || !category || _.isEmpty(facts[date])) return;
+	const date = selectedDate.factDate;
+	if (!selectedDate || !category || _.isEmpty(facts[date])) return;
 
 	let selectedFacts = facts[date][category];
 	const imagesUrl = `${API_ROOT_URL}/wikiImages?pageTitles=`;
-	const factsTitles = selectedFacts.map(fact => fact.links[0].title);
+	const factsTitles = selectedFacts.map(fact => {
+
+		if (!fact.links[0]) {
+			return 'This fact does not have any links';
+		}
+
+		const factTitle = fact.links[0].title;
+
+		return factTitle;
+	});
 
 	if (!factsTitles.length) return;
 
 	const pageTitlesQuery = factsTitles.join('|');
 
+	const CancelToken = axios.CancelToken;
+	const source = CancelToken.source();
+
+	dispatch({ type: CHANGE_IMG_AJAX_SRC, source });
+
 	try {
-		const { data } = await axios.get(imagesUrl+pageTitlesQuery);	
+		const date = toApiFactDate(selectedDate.timestamp);
+		const apiUrl = imagesUrl + pageTitlesQuery + `&date=${date}&category=${category}`;
+		const { data } = await axios.get(apiUrl, { cancelToken: source.token });
 
-		// add img urls to facts
-		selectedFacts = selectedFacts.map((fact, i) => {
-			if (!data[i] || !data[i].src) {
-				return fact;
-			}
-			fact.img = data[i].src;
-
-			return fact;
-		});
-
-		let factsWithImages = {};
-		factsWithImages[category] = selectedFacts;
-
-		let updatedMeta = facts[date].meta || {};
-		updatedMeta.images = updatedMeta.images || {};
-		updatedMeta.images[category] = true;
 
 		let factsForDay = {};
-		factsForDay[date] = { 
-			...facts[date],
-			...factsWithImages,
-			meta: { ...updatedMeta }
-		}
+		factsForDay[selectedDate.factDate] = data.data;
 
 		facts = { ...facts, ...factsForDay }
 

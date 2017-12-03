@@ -37,20 +37,50 @@ export const getFullImageSource = (source) => {
 // sorts the array of returned images from wiki
 // because they are sorted by page IDs
 export const sortByTitles = (data, titles) => {
-	if (_.isEmpty(titles) || data === null) {
+	if (_.isEmpty(titles) || data == null) {
 		return false;
 	}
 
 	let sortedData = [];
 
-	for (let imgInfo of data) {
+	for (let key of Object.keys(data)) {
 		for (let i in titles) {
-	  	if(imgInfo.title === titles[i]) {
-	      sortedData[i] = imgInfo;
+	  	if(data[key].title === titles[i]) {
+	      sortedData[i] = data[key];
 	      break;
 	    }
 	  }
 	}
 
 	return sortedData;
+}
+
+// add images to facts in one of the categories
+
+export const addImagesToFacts = (images, facts) => {
+	
+	if (!images || !facts) {
+		return facts;
+	}
+
+	console.log('ADDING IMAGES TO FACTS')
+
+	const imagesArr = _.values(images);
+
+	console.log(imagesArr.length)
+	console.log(facts.length)
+	for (let i in facts) {
+		const currTitle = _.get(facts[i], 'links[0].title', '');
+
+		const image = imagesArr.find(imageInfo => {
+			console.log(imageInfo.title)
+			return (imageInfo.title === currTitle);
+		});
+
+		if (image && image.thumbnail) {
+			facts[i].img = image.thumbnail.source;
+		}
+	}
+
+	return facts;
 }

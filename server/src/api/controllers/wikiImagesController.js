@@ -4,21 +4,26 @@ import _ from 'lodash';
 
 import CONFIG from '../../config.json';
 import redisClient from '../../cache';
+import { cacheFacts } from '../../cache/facts';
+import { getCachedFacts } from '../../cache/helpers/facts';
 import { cacheWikiImages } from '../../cache/wikiImages';
-import { sortByTitles } from '../../utils/images';
+import { addImagesToFacts } from '../../utils/images';
 
 
 const WIKI_API_ROOT_URL = 'https://en.wikipedia.org/w/api.php?';
-const IMG_SIZE = '160';
-const IMG_FORMATS = ['jpg', 'png', 'jpeg', 'svg', 'gif', 'JPG', 'PNG', 'JPEG', 'SVG', 'GIF', 'tif'];
+const IMG_SIZE = '170';
 
 export const getWikiImages = async (req, res) => {
 	console.log('GETTING WIKI IMAGES FROM API');
 
-	const { pageTitles } = req.query;
-	if (pageTitles == null) {
-		res.status(400).send('Missing parameter: pageTitles');
-	}
+	const IMAGES_API_LIMIT = 50;
+	const { pageTitles, date, category } = req.query;
+
+	_.forEach({pageTitles, date, category}, (value, key) => {
+		if (value == null) {
+			res.status(400).send('Missing parameter: ' + key);
+		}
+	})
 
 	let queryParams = {
 		action: 'query',
@@ -28,10 +33,18 @@ export const getWikiImages = async (req, res) => {
 
 	let images = {};
 	const titles = pageTitles.split('|');
+	const uniqueTitles = _.uniq(titles);
 
-	while (Object.keys(images).length < titles.length) {
+	// there is never more than 750 facts in one category
+	const safetyCounter = 15;
+	let counter = 0;
+
+	// get images for all titles
+	// limit is 50 per 1 request
+	while ((counter < safetyCounter) && (Object.keys(images).length < uniqueTitles.length) ) {
+		counter++;
 		const imagesLength = Object.keys(images).length;
-		const pageTitlesParam = titles.slice(imagesLength, imagesLength + 50).join('|');
+		const pageTitlesParam = titles.slice(imagesLength, imagesLength + IMAGES_API_LIMIT).join('|');
 
 		queryParams.titles = pageTitlesParam;
 		const query = qs.stringify(queryParams);
@@ -42,11 +55,12 @@ export const getWikiImages = async (req, res) => {
 			const { pages } = data.query;
 
 			if (!_.isEmpty(pages['-1'])) {
-				res.send([]);
 				break;
-			} else {
-				images = { ...images, ...pages }
-			}	
+			}
+
+			images = { ...images, ...pages }
+			console.log(images)
+
 		} catch(err) {
 				console.log('GET WIKI IMAGES FROM API ERROR:')
 				console.log(err)
@@ -56,30 +70,25 @@ export const getWikiImages = async (req, res) => {
 				}
 
 				res.status(400).send(error);
+				break;
 		}
 	}
 
-	// return only basic info about images
-		let imagesData = Object.keys(images).map(pageId => {
-			const { title, thumbnail } = images[pageId];
-			
-			let imgInfo = {};
-			imgInfo.title = title;
+	try {
+		// add images to facts
+		let cachedFacts = await getCachedFacts(date);
+		if (_.isEmpty(cachedFacts)) {
+			res.status(400).send(null);
+		}
 
-			if (thumbnail && thumbnail.source) {
-				const { source } = thumbnail;
-				
-				// change size of the requested image
-				const pattern = new RegExp(`.(${IMG_FORMATS.join('|')})\/(\\d+)`);
-				imgInfo.src = source.replace(pattern, '.$1/'+IMG_SIZE);
-			}
-
-			return imgInfo;
-		});
-
-		// sort imagesData in the same order as they were requested
-		imagesData = sortByTitles(imagesData, titles);
-
-		res.send(imagesData);
-		cacheWikiImages(pageTitles, imagesData);
+		cachedFacts.data[category] = addImagesToFacts(images, cachedFacts.data[category]);
+		let imagesMeta = cachedFacts.data.images || {};
+		imagesMeta[category] = true;
+		cachedFacts.data = { ...cachedFacts.data, images: imagesMeta };
+		res.send(cachedFacts);
+		cacheFacts(date, cachedFacts);
+	} catch(e) {
+		console.log(e);
+		res.status(400).send(e);
+	}
 }

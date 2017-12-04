@@ -31,7 +31,10 @@ export const getCachedFacts = (date) => {
 	    	resolve(null);
 	    }
 
-	    data = JSON.parse(data);
+	    if (typeof data === 'string') {
+	    	data = JSON.parse(data);
+	    }
+ 
 	    resolve(data);
 	  });
 	});

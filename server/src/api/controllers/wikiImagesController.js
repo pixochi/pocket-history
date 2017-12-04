@@ -11,7 +11,7 @@ import { addImagesToFacts } from '../../utils/images';
 
 
 const WIKI_API_ROOT_URL = 'https://en.wikipedia.org/w/api.php?';
-const IMG_SIZE = 210;
+const IMG_SIZE = 240;
 
 export const getWikiImages = async (req, res) => {
 	console.log('GETTING WIKI IMAGES FROM API');

@@ -102,11 +102,14 @@ export const fetchFactsImages = (selectedDate, category, facts) => dispatch => {
 	const source = CancelToken.source();
 
 	dispatch({ type: CHANGE_IMG_AJAX_SRC, source });
-
-	dispatch({ 
-		type: FETCH_FACTS_IMAGES, 
-		payload: _fetchFactsImages(selectedDate, category, facts, source.token) 
-	});
+	console.log('CATEGORY')
+	console.log(category)
+	if (category !== 'News') {
+		dispatch({ 
+			type: FETCH_FACTS_IMAGES, 
+			payload: _fetchFactsImages(selectedDate, category, facts, source.token) 
+		});
+	}	
 }
 
 export const fetchNews = () => dispatch => {
@@ -135,8 +138,6 @@ export const changeFactsFilter = (filter) => {
 }
 
 export const changeCategory = (category) => {
-	if (category === 'News') return;
-	
 	return {
 		type: CHANGE_FACTS_CATEGORY,
 		category

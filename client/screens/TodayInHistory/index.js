@@ -35,16 +35,35 @@ import DateHeader from '../../components/DateHeader';
 import Header from '../../components/Header';
 
 //CONSTANTS
-import { HEADER_HEIGHT } from '../../constants/components';
+import { HEADER_HEIGHT, COLORS } from '../../constants/components';
 
 import gStyles from '../../styles';
+
+const tabBarOptions = {
+  style: {
+    backgroundColor: COLORS.header,
+    height: 45,
+
+  },
+  labelStyle: {
+    fontSize: 13,
+    margin: 5,
+  },
+  activeTintColor: '#fff',
+  inactiveTintColor: '#fef',
+  indicatorStyle: { 
+    backgroundColor: '#fff',
+    height: 2,
+  }
+}
 
 const FactsCategories = TabNavigator({
   Events: { screen: Events },
   Births: { screen: Births },
   Deaths: { screen: Deaths },
   News: { screen: News }
-}, { tabBarPosition: 'bottom', lazy: true });
+}, { tabBarPosition: 'bottom', lazy: true, tabBarOptions });
+
 
 const APPROXIMATE_FACT_CARD_HEIGHT = 250;
 
@@ -206,8 +225,9 @@ class TodayInHistory extends PureComponent {
   });
 
   render() {
-    const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard, isLoading, rehydrated, selectedDate,
-       changeDate, fetchFacts, changeFilter, navigation } = this.props;
+    const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard,
+     isLoading, rehydrated, selectedDate, selectedCategory,changeDate, fetchFacts,
+      changeFilter, navigation } = this.props;
 
     const { itemsScrolled } = this.state;
 

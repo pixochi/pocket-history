@@ -12,6 +12,8 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
+import { COLORS } from '../constants/components';
+
 
 // @param defaultOptions bool - use default options(share, copy, save, remove)
 // @param optionProps obj - properties for the default options
@@ -37,11 +39,12 @@ class CardMenu extends PureComponent {
     return (
       <View style={styles.menuContainer}>
         <Menu>
-          <MenuTrigger>
+          <MenuTrigger style={styles.trigger}>
             <Icon 
               name='options-vertical' 
               type='simple-line-icon'
-              color='#517fa4' 
+              color={COLORS.actionIcon}
+              style={styles.triggerIcon}
             />
           </MenuTrigger>
           <MenuOptions>
@@ -58,10 +61,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   optionContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    paddingLeft: 5
   },
   optionText: {
-    marginLeft: 10
+    paddingLeft: 15
+  },
+  trigger: {
+    padding: 4
+  },
+  triggerIcon: {
+    padding: 4
   }
 });
 

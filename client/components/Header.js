@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput
+  TextInput,
+  Platform
 } from 'react-native';
 import { Header, SearchBar } from 'react-native-elements';
 
@@ -47,10 +48,10 @@ class AppHeader extends PureComponent {
       <Header
         outerContainerStyles={styles.outerHeaderStyles}
         innerContainerStyles={styles.innerHeaderStyles}
-        backgroundColor='#ff0000'
+        backgroundColor='#33B38E'
       >
         <View style={styles.innerHeaderStyles}>
-          <View style={{flex:1}}><MenuIcon navigation={navigation}/></View>
+          <View style={styles.leftComponent}><MenuIcon navigation={navigation}/></View>
           <View style={styles.center}>{_center}</View>
           <View style={styles.rightComponent}>{rightComponent}</View>
         </View>
@@ -63,26 +64,32 @@ class AppHeader extends PureComponent {
 const styles = StyleSheet.create({
   outerHeaderStyles: {
     position: 'absolute', 
-    zIndex:10000,    
+    zIndex:10000,
+    borderBottomWidth: 0
   },
   innerHeaderStyles: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 50,
     height: 35
   },
   center: {
-    flex:10,
-    marginLeft: 17,
-    marginRight: 10
+    flex:8
   },
 	title: {
     flex: 1,
     textAlign: 'center',
 		color: '#fff',
 		fontSize: 20,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'AmericanTypewriter-Condensed'
+      },
+      android: {
+        fontFamily: 'Roboto'
+      }
+    })
 	},
   searchContainer: {
     flex: 1,
@@ -92,6 +99,10 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
     backgroundColor: 'white',  
     borderRadius:5
+  },
+  leftComponent: {
+    flex: 1,
+    alignSelf: 'center'
   },
   rightComponent: {
     flex:1,

@@ -5,5 +5,5 @@ app.yaml
 config.json
 config.js
 build
-packager-info.json
-settings.json
+.expo/
+special.js

@@ -94,7 +94,6 @@ class FactsScreen extends PureComponent {
 
 		if(isReady && _.isEmpty(allFacts[selectedDate.factDate])){
 
-	  	console.log('NET')
 	    Main = <NetworkProblem solveConnection={this._refetchFacts} />;
 
 	  } else if (_.has(filteredFacts, category) && !filteredFacts[category].length) {
@@ -106,7 +105,6 @@ class FactsScreen extends PureComponent {
 	  	)
 
 	  } else {
-	  	console.log('LIST')
 	  	Main = (
 	  		<View style={styles.listContainer}>
 	  			<Loader animating={!isReady} />

@@ -4,7 +4,8 @@ import {
   View,
   Text,
   Linking,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import HTMLView from 'react-native-htmlview'; // not same as webview
@@ -14,6 +15,8 @@ import CardMenu from './CardMenu';
 
 import { yearsAgo } from '../utils/date';
 import { fixWikiLink } from '../utils/link';
+
+import { COLORS } from '../constants/components';
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
@@ -37,65 +40,85 @@ class FactCard extends PureComponent {
     return (
       <View style={styles.factCard}>
 
-        <View style={styles.cardHeader}>
-          <View style={styles.yearsContainer}>
-            <Text style={styles.year}>
-              { year }
-            </Text>
-            <View style={{marginLeft: 15}}>
-              <Text>
-                { yearsAgo(year) } years ago
-              </Text>
-            </View>
-          </View> 
-          <CardMenu options={menuOptions} />
-        </View>
-
-        {
-          (img && isImgShown) &&
-          <View style={styles.imgContainer}>
+      {
+        (img && (isImgShown || isFavorite)) &&
+        <View style={styles.imgContainer}>
             <Image
+              resizeMode='cover'
               style={styles.img}
               source={{uri: img}}
-              width={SCREEN_WIDTH - 70}
               maxHeight={SCREEN_HEIGHT/2 - 30}
+              width={SCREEN_WIDTH - 25}
             />  
           </View>
         }
-          
-        <HTMLView 
-          value={html}
-          RootComponent={Text}
-          style={styles.factText}
-          onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
-        />
 
-        { !isFavorite &&
-          <Icon 
-            name='chevron-double-right'
-            type='material-community'
-            size={40}
-            color='#517fa4'
-            style={styles.openDetailIcon}
-            containerStyle={{ width: 50}}
-            onPress={() => this.props.navigation.navigate('factDetail', { html, text, links, category, year })}
-          /> 
-        }
+        <View style={styles.cardBody}>
+          <View style={styles.cardHeader}>
+            <View style={styles.yearsContainer}>
+              <Text style={styles.year}>
+                { year }
+              </Text>
+              <View style={{marginLeft: 15}}>
+                <Text style={styles.yearsText}>
+                  { yearsAgo(year) } years ago
+                </Text>
+              </View>
+            </View> 
+            <CardMenu options={menuOptions} />
+          </View>
+          
+          <View style={styles.htmlView}>
+            <HTMLView 
+              value={html}
+              RootComponent={Text}
+              style={styles.factText}
+              stylesheet={htmlViewStyles}
+              onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
+            />
+          </View>
+
+          { !isFavorite &&
+            <Icon
+              name='chevron-double-right'
+              type='material-community'
+              size={40}
+              color={COLORS.actionIcon}
+              underlayColor='#053242'
+              style={styles.openDetailIcon}
+              containerStyle={{ width: 50}}
+              onPress={() => this.props.navigation.navigate('factDetail', { html, text, links, category, year })}
+            /> 
+          }
+        </View>
+        
 
       </View>
     );
   }
 }
 
+const htmlViewStyles = {
+  a: {
+      color: COLORS.link,
+      fontWeight: 'bold'
+  }
+}
+
 const styles = StyleSheet.create({
   factCard: {
     flex: 1,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#B351E1',
+    backgroundColor: '#063b4e',
+    marginHorizontal: 10,
+    marginVertical: 6,
     borderRadius: 3,
-    margin: 6,
-    padding: 8
+    borderWidth: 10,
+    borderColor: '#fff',
+  },
+  cardBody: {
+    paddingHorizontal: 12,
+    paddingTop: 4,
+    justifyContent: 'center',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -107,24 +130,51 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   year: {
-    fontSize: 21,  
+    fontSize: 21,
+    color: '#fff',
+    ...Platform.select({
+      android: {
+        fontFamily: 'monospace'
+      }
+    })
+  },
+  yearsText: {
+    fontSize: 16,
+    color: '#fff',
+    ...Platform.select({
+      android: {
+        fontFamily: 'monospace'
+      }
+    })
+  },
+  htmlView: {
+    marginTop: 8
   },
   imgContainer: {
     flex: 1,
-    marginHorizontal: 40,
-    marginVertical: 8,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: '#eee'
   },
   img: {
-    flex: 1,
+    flex: 1
   },
   factText: {
     // uncomment when finishing
-    // fontSize: 16 
+    fontSize: 16,
+    color: '#fff',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'San Francisco',
+      },
+      android: {
+        fontFamily: 'notoserif'
+      },
+    }),
   },
   openDetailIcon: {
     alignSelf: 'flex-end',
+    padding: 4
   },
 });
 

@@ -46,7 +46,7 @@ class ReduxModal extends Component {
 	      onBackButtonPress={closeModal}
 	      style={modalStyle}
 	    >
-		    <ContentContainer style={styles.flex} >
+		    <ContentContainer>
 		    	{ children }
 		    	{ btnClose }
 		    </ContentContainer>
@@ -58,16 +58,14 @@ class ReduxModal extends Component {
 
 const styles = StyleSheet.create({
 	modal: {
-		flex: 1,
 		margin: 12
 	},
-	flex: {
-		flex: 1
-	},
 	closeBtn: {
+		flex: 1,
 		height: 40,
 		margin: 10,
-		backgroundColor: 'rgb(255, 87, 35)'
+		backgroundColor: 'rgb(255, 87, 35)',
+		borderRadius: 4
 	},
 	closeBtnText: {
 		padding: 5,

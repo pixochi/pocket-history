@@ -58,7 +58,8 @@ class Books extends PureComponent {
   }
 
   _onBookPress = (bookDescription) => {
-    this.setState({ bookDescription }, () => this.props.openModal('factBook'));
+    const { openModal } = this.props;
+    this.setState({ bookDescription }, () => openModal('factBook'));
   }
  
   _renderBooks(books) {

@@ -20,7 +20,6 @@ const API_ROOT_URL = config[ENV].apiRootUrl;
 // maximum number of days
 // saved in AsyncStorage
 const MAX_FACTS = 10;
-const IMAGES_PER_LOAD = 4;
 
 const _fetchFacts = (timestamp, factsState) => {
 
@@ -102,8 +101,6 @@ export const fetchFactsImages = (selectedDate, category, facts) => dispatch => {
 	const source = CancelToken.source();
 
 	dispatch({ type: CHANGE_IMG_AJAX_SRC, source });
-	console.log('CATEGORY')
-	console.log(category)
 	if (category !== 'News') {
 		dispatch({ 
 			type: FETCH_FACTS_IMAGES, 

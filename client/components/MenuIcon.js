@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
+import { COLORS } from '../constants/components';
+
 class MenuIcon extends PureComponent {
   render() {
     const { props } = this;
@@ -17,7 +19,7 @@ class MenuIcon extends PureComponent {
         name='menu'
         color= '#fff'
         size={30}
-        underlayColor='rgba(0,0,0,.2)'
+        underlayColor={COLORS.headerIconUnderlay}
         iconStyle={iconStyle}
         containerStyle={containerStyle}
         onPress={() =>{ navigation.navigate('DrawerOpen')}}

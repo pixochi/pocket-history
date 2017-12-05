@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { View, StyleSheet } from 'react-native';
+import { SearchBar, Icon } from 'react-native-elements';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
 
@@ -9,17 +9,20 @@ import FavoriteFacts from './Facts';
 import FavoriteArticles from './Articles';
 import FavoriteBooks from './Books';
 import FavoriteVideos from './Videos';
+import SearchScreen from './SearchScreen';
 
+// COMPONENTS
 import Options from '../../components/Options';
 import Header from '../../components/Header';
 import MenuIcon from '../../components/MenuIcon';
 import Modal from '../../components/Modal';
 
-
+// ACTIONS
 import { removeFavorite, changeFavoritesFilter } from './actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
 
+import { COLORS } from '../../constants/components';
 import gStyles from '../../styles';
 
 
@@ -31,50 +34,55 @@ const FavNavigator = StackNavigator({
         videos: { screen: FavoriteVideos },
 			  books: { screen: FavoriteBooks }, 
 			}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false }
-		)
+		),
 	}
-},{ navigationOptions: (props) => ({
+},{ navigationOptions: {
 			header: null
-	})
+	}
 }); 
 
 class Favorite extends PureComponent {
 
-	_openFilter = () => {
-		this.props.openModal('favoritesFilter');
+	_openSearchScreen = () => {
+    const { navigation } = this.props;
+		navigation.navigate('searchFavorite');
 	}
+
+  _renderSearchIcon = () => {
+    return (
+      <Icon 
+        name='search'
+        color={COLORS.actionIcon}
+        underlayColor={COLORS.headerIconUnderlay}
+        iconStyle={styles.searchIcon}
+        containerStyle={{flex:1}}
+        onPress={this._openSearchScreen}
+      />
+    )
+  }
 
 	render(){
 		const { removeFavorite, changeFilter, filter, copyToClipboard, navigation } = this.props;
 		return (
-
-			 <View style={{flex:1}}>
+			<View style={{flex:1}}>
         <Header 
           title='Favorite'
           navigation={navigation}
-          rightComponent={<Options onPress={this._openFilter} />}
+          rightComponent={this._renderSearchIcon()}
         />
         <View style={gStyles.screenBody}>
          <FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />
-
-         <Modal name='favoritesFilter' modalStyle={{flex:1}}>
-            <View style={{flex:1}}>
-               <SearchBar
-                  value={filter.search}
-                  onChangeText={(text) => changeFilter({ search: text })}
-                  onClearText={() => changeFilter({ search: '' })}
-                  placeholder='Type Here...' 
-                />
-            </View>
-          </Modal>
         </View>
-      </View>
-
-
-			
+      </View>			
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+  searchIcon: {
+    padding: 4
+  }
+});
 
 const mapStateToProps = ({favorite}) => {
 	const { facts, articles, books, videos, filter } = favorite;

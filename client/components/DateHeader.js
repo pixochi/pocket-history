@@ -12,7 +12,7 @@ import { HEADER_HEIGHT, COLORS } from '../constants/components';
 class DateHeader extends PureComponent {
 
   render() {
-    // headerStyle contains animated prop
+    // headerStyle contains animated props
     const { selectedDate, changeDate, openModal, headerStyle } = this.props;
     const day = 1000*60*60*24 // miliseconds to 1 day
 
@@ -23,9 +23,9 @@ class DateHeader extends PureComponent {
             raised
             name='keyboard-arrow-left'
             color='#fff'
-            underlayColor='#2b8c70'
+            underlayColor={COLORS.headerIconUnderlay}
             size={44}
-            style={styles.arrow} 
+            style={[styles.arrow, styles.arrowLeft]} 
             onPress={() => changeDate(selectedDate.timestamp - day)} 
           />
        </View>
@@ -40,10 +40,9 @@ class DateHeader extends PureComponent {
         </View>
         <View style={styles.iconContainer}>
           <Icon 
-            raised
             name='keyboard-arrow-right'
             color='#fff'
-            underlayColor='#2b8c70'
+            underlayColor={COLORS.headerIconUnderlay}
             size={44}
             style={styles.arrow}
             onPress={() => changeDate(selectedDate.timestamp + day)} 
@@ -69,19 +68,20 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   dateContainer: {
-    flex: 1
+    flex: 5
   },
   headerText: {
     fontSize: 25
   },
   iconContainer: {
-   
+   flex: 1
   },
   arrow: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 6
-  }
+    alignItems: 'center',
+    paddingHorizontal: 6,
+  },
 });
 
 

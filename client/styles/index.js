@@ -48,7 +48,6 @@ export default StyleSheet.create({
   screenBody: {
     flex: 1,
     marginTop: 68,
-    padding: 10,
-    backgroundColor: '#111'
+    backgroundColor: '#eee'
   }
 });

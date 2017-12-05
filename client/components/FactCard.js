@@ -33,6 +33,16 @@ class FactCard extends PureComponent {
     }
   }
 
+  _openFactDetail = () => {
+    const { navigation, html, text, links, category, year  } = this.props;
+      navigation.navigate('factDetail', { html, text, links, category, year });
+  }
+
+  _openFactLink = (url) => {
+    url = fixWikiLink(url);
+    Linking.openURL(url);
+  }
+
   render() {
     const { year, html, text, img, isImgShown, links,
       category, isFavorite, menuOptions } = this.props;
@@ -43,15 +53,15 @@ class FactCard extends PureComponent {
       {
         (img && (isImgShown || isFavorite)) &&
         <View style={styles.imgContainer}>
-            <Image
-              resizeMode='cover'
-              style={styles.img}
-              source={{uri: img}}
-              maxHeight={SCREEN_HEIGHT/2 - 30}
-              width={SCREEN_WIDTH - 25}
-            />  
-          </View>
-        }
+          <Image
+            resizeMode='cover'
+            style={styles.img}
+            source={{uri: img}}
+            maxHeight={SCREEN_HEIGHT *0.6}
+            width={SCREEN_WIDTH - 25}
+          />  
+        </View>
+      }
 
         <View style={styles.cardBody}>
           <View style={styles.cardHeader}>
@@ -59,8 +69,8 @@ class FactCard extends PureComponent {
               <Text style={styles.year}>
                 { year }
               </Text>
-              <View style={{marginLeft: 15}}>
-                <Text style={styles.yearsText}>
+              <View style={styles.yearsAgoContainer}>
+                <Text style={styles.yearsAgoText}>
                   { yearsAgo(year) } years ago
                 </Text>
               </View>
@@ -74,7 +84,7 @@ class FactCard extends PureComponent {
               RootComponent={Text}
               style={styles.factText}
               stylesheet={htmlViewStyles}
-              onLinkPress={(url) => Linking.openURL(fixWikiLink(url))}
+              onLinkPress={(url) => this._openFactLink(url)}
             />
           </View>
 
@@ -84,15 +94,13 @@ class FactCard extends PureComponent {
               type='material-community'
               size={40}
               color={COLORS.actionIcon}
-              underlayColor='#053242'
+              underlayColor={'#053242'}
               style={styles.openDetailIcon}
-              containerStyle={{ width: 50}}
-              onPress={() => this.props.navigation.navigate('factDetail', { html, text, links, category, year })}
+              onPress={this._openFactDetail}
             /> 
           }
         </View>
         
-
       </View>
     );
   }
@@ -112,8 +120,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 6,
     borderRadius: 3,
-    borderWidth: 10,
-    borderColor: '#fff',
+    borderWidth: 8,
+    borderColor: '#fefefe',
   },
   cardBody: {
     paddingHorizontal: 12,
@@ -138,7 +146,10 @@ const styles = StyleSheet.create({
       }
     })
   },
-  yearsText: {
+  yearsAgoContainer: {
+    marginLeft: 15
+  },
+  yearsAgoText: {
     fontSize: 16,
     color: '#fff',
     ...Platform.select({
@@ -148,7 +159,7 @@ const styles = StyleSheet.create({
     })
   },
   htmlView: {
-    marginTop: 8
+    marginBottom: 5
   },
   imgContainer: {
     flex: 1,

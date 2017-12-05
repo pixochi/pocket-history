@@ -82,6 +82,7 @@ class TodayInHistory extends PureComponent {
   };
 
   componentDidMount() {
+    // AsyncStorage.clear();
     this.state.scrollAnim.addListener(this._handleScroll);
   }
 

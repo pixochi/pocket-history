@@ -44,7 +44,8 @@ class CardMenu extends PureComponent {
               name='options-vertical' 
               type='simple-line-icon'
               color={COLORS.actionIcon}
-              style={styles.triggerIcon}
+              iconStyle={styles.triggerIcon}
+              containerStyle={{flex:1}}
             />
           </MenuTrigger>
           <MenuOptions>
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15
   },
   trigger: {
-    padding: 4
+
   },
   triggerIcon: {
     padding: 4

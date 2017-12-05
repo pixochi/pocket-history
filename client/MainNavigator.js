@@ -10,6 +10,7 @@ import MenuIcon from './components/MenuIcon';
 // SCREENS
 import FactDetail from './screens/FactDetail';
 import Favorite from './screens/Favorite';
+import SearchFavorite from './screens/Favorite/SearchScreen';
 import FuturePredictions from './screens/FuturePredictions';
 import MyAccount from './screens/MyAccount';
 import Diary from './screens/Diary';
@@ -32,11 +33,19 @@ export default class MainNavigator extends Component {
 		  happenedSooner: { screen: WhichHappenedSooner },
 		  predictions: { screen: FuturePredictions },
 		  diary: { screen: Diary },
-		  favorite: { screen: (props) =>  <Favorite {...props} />, 
-        navigationOptions: {
-          drawerLabel: 'Favorite'
+		  favorite: { 
+        screen: StackNavigator({
+          favorite: {
+            screen: (props) =>  <Favorite {...props} />, 
+          },
+          searchFavorite: { screen: SearchFavorite }
+        }, { navigationOptions: {
+            drawerLabel: 'Favorite',
+            header: null
+          }
         }
-      },
+        )
+      }, 
 		  myAccount: { screen: MyAccount }
 		});
 

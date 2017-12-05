@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform
 } from 'react-native';
+import { Constants } from 'expo';
 import { Header, SearchBar } from 'react-native-elements';
 
 import MenuIcon from './MenuIcon';
@@ -31,18 +32,23 @@ class AppHeader extends PureComponent {
   _renderTextTitle = () => {
     const { title } = this.props;
     return (
-    <View style={{flex:1}}>
       <Text style={styles.title}>
         { title }
-       </Text>
-    </View>
+      </Text>
+    )
+  }
+
+  _renderLeftComponent = () => {
+    const { navigation } = this.props;
+    return (
+      <MenuIcon navigation={navigation} />
     )
   }
 
   render() {
-  	const { navigation, title ='', rightComponent, search } = this.props;
-
-    const _center = search ? this._renderSearch() : this._renderTextTitle();
+  	const { rightComponent, leftComponent, search } = this.props;
+    const _leftComponent = leftComponent ? leftComponent : this._renderLeftComponent();
+    const _centerComponent = search ? this._renderSearch() : this._renderTextTitle();
 
     return (
       <Header
@@ -50,9 +56,10 @@ class AppHeader extends PureComponent {
         innerContainerStyles={styles.innerHeaderStyles}
         backgroundColor='#33B38E'
       >
-        <View style={styles.innerHeaderStyles}>
-          <View style={styles.leftComponent}><MenuIcon navigation={navigation}/></View>
-          <View style={styles.center}>{_center}</View>
+      
+        <View style={styles.headerItemsContainer}>
+          <View style={styles.leftComponent}>{_leftComponent}</View>
+          <View style={styles.center}>{_centerComponent}</View>
           <View style={styles.rightComponent}>{rightComponent}</View>
         </View>
         
@@ -63,22 +70,36 @@ class AppHeader extends PureComponent {
 
 const styles = StyleSheet.create({
   outerHeaderStyles: {
-    position: 'absolute', 
     zIndex:10000,
-    borderBottomWidth: 0
+    borderBottomWidth: 0,
+    alignItems: 'center',
+    paddingTop: 0
   },
   innerHeaderStyles: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
+  },
+  headerItemsContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 50,
-    height: 35
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Constants.statusBarHeight
+    // height: 35
   },
   center: {
-    flex:8
+    flex: 5,
+    padding: 4
   },
 	title: {
     flex: 1,
+    alignSelf: 'center',
     textAlign: 'center',
+    paddingTop: 5,
 		color: '#fff',
 		fontSize: 20,
 		fontWeight: 'bold',
@@ -102,11 +123,12 @@ const styles = StyleSheet.create({
   },
   leftComponent: {
     flex: 1,
-    alignSelf: 'center'
+    alignContent: 'center'
+    // alignSelf: 'center'
   },
   rightComponent: {
     flex:1,
-    alignSelf: 'center'
+    alignContent: 'center'
   }
 });
 

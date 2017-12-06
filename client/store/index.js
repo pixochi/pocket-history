@@ -29,7 +29,7 @@ const offlineConfig = {
       createBlacklistFilter('account', ['error', 'isLoading']),
       createBlacklistFilter('persist', ['rehydrated']),
       createBlacklistFilter('toast', ['message', 'error', 'warning', 'duration']),
-      createBlacklistFilter('modal', ['isVisible', 'name'])
+      createBlacklistFilter('modal', ['isVisible', 'currentName'])
     ]
   }
 };

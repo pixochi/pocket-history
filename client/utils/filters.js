@@ -6,7 +6,7 @@ import { parseNumber } from './date';
 // @param searchIn string[] - keys of data objects to search searchValue in
 // @return array - result after filtering
 export const filterBySearch = (data, searchValue, searchIn) => {
-	if (!searchValue || !searchIn.length || !searchIn[0]) { return data; }
+	if (!searchValue || !searchIn.length) { return data; }
 
   const filteredData = data.filter(obj => {
     for (key of searchIn) {

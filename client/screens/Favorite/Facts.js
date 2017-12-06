@@ -11,28 +11,20 @@ import { removeFavorite } from './actions';
 
 import Favorites from './Favorites';
 import FactCard from '../../components/FactCard';
-import { copy, share, remove } from '../../components/utils/cardMenuOptions';
+import { createCardMenuOptions } from './helpers/facts';
 
 
 class FavoriteFacts extends PureComponent {
 
-  _createCardMenuOptions = ({id, text}) => {
-    const { removeFavorite, copyToClipboard } = this.props.screenProps;
-    return [
-      copy({ onSelect: () => copyToClipboard(text)}),
-      share({ message: text }),
-      remove({ onSelect: () => removeFavorite(id, 'facts') })
-    ]
-  }
-
   _renderFact = ({item}) => {
     const { navigation } = this.props;
+    const { copyToClipboard, removeFavorite } = this.props.screenProps;
     return (
       <FactCard 
         {...item}
         isFavorite={true}
         navigation={navigation}
-        menuOptions={this._createCardMenuOptions(item)} 
+        menuOptions={createCardMenuOptions(item, copyToClipboard, removeFavorite)} 
       />
     );
   }

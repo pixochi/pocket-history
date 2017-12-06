@@ -116,7 +116,7 @@ const htmlViewStyles = {
 const styles = StyleSheet.create({
   factCard: {
     flex: 1,
-    backgroundColor: '#063b4e',
+    backgroundColor: COLORS.blue,
     marginHorizontal: 10,
     marginVertical: 6,
     borderRadius: 3,

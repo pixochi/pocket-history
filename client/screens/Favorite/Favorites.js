@@ -12,12 +12,12 @@ import EmptyFavorites from '../../components/EmptyFavorites';
 class Favorites extends PureComponent {
 
   render() {
-    const { data, user, renderFavorite } = this.props;
+    const { data, category = 'favorites', renderFavorite } = this.props;
 
-    if (!data || !data.length) {
+    if (!data.length) {
       return (
-        <EmptyFavorites 
-          message='No favorites yet.'
+        <EmptyFavorites
+          message={`No ${category} found.`}
         />
       );
     }

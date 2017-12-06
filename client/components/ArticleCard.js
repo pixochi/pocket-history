@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
 		color: '#fff'
 	},
 	menu: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		bottom: 8,
-		top: 8,
-		backgroundColor: '#fff'
+		// justifyContent: 'center',
+		// alignItems: 'center',
+		// bottom: 8,
+		// top: 8,
+		backgroundColor: '#000'
 	},
 });
 

@@ -8,7 +8,7 @@ import { CheckBox } from 'react-native-elements';
 class MyCheckBox extends PureComponent {
 
   render() {
-  	const { title, checked } = this.props;
+  	const { title, checked, onPress } = this.props;
 
     return (
       <CheckBox
@@ -22,6 +22,7 @@ class MyCheckBox extends PureComponent {
 	      uncheckedColor='#495954'
 	      checked={checked}
 	      textStyle={{fontSize: 20}}
+	      onPress={onPress}
 	    />
     );
   }

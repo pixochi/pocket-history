@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 // COMPONENTS
 import BookCard from '../../components/BookCard';
+import BookModal from '../../components/BookModal';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
@@ -23,9 +24,8 @@ import gStyles from '../../styles';
 
 
 class Books extends PureComponent {
-  state = { 
-    bookDescription: "Sorry, we couldn't find a description for the selected book." 
-  }
+
+  state = {}
 
   componentDidMount() {
     const { screenProps, fetchBooks } = this.props;
@@ -75,8 +75,7 @@ class Books extends PureComponent {
 
   render() {
     const { books, isLoading, isOnline, screenProps } = this.props;
-    const { bookDescription = "Sorry, we couldn't find a description for the selected book." 
-     } = this.state;
+    const { bookDescription } = this.state;
     let Main;
 
     if (isLoading) {
@@ -97,13 +96,9 @@ class Books extends PureComponent {
           <ScrollView style={styles.bookList}>
           { this._renderBooks(books) }
           </ScrollView>
-          <Modal name='factBook'>
-            <View style={styles.descriptionContainer}>
-              <Text style={styles.descriptionText}>
-                { bookDescription }
-              </Text>
-            </View> 
-          </Modal>
+          <BookModal 
+            bookDescription={bookDescription}
+          />
         </View> 
       )
     }
@@ -127,15 +122,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 16,
     paddingHorizontal: 10
-  },
-  descriptionContainer: {
-    flex: 1,
-    padding: 15,
-    backgroundColor: '#fff'
-  },
-  descriptionText: {
-    textAlign: 'center',
-    fontSize: 18
   }
 });
 

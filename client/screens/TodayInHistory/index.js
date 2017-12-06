@@ -7,7 +7,6 @@ import {
   AsyncStorage
 } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
-import { Button, Icon, SearchBar } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -68,10 +67,6 @@ const FactsCategories = TabNavigator({
 const APPROXIMATE_FACT_CARD_HEIGHT = 250;
 
 class TodayInHistory extends PureComponent {
-  static navigationOptions = {
-    headerTitle: 'Today In History',
-    drawerLabel: 'Today In History'
-  };
 
   // only visual stuff
   state = {

@@ -37,11 +37,15 @@ const FavNavigator = StackNavigator({
 		),
 	}
 },{ navigationOptions: {
-			header: null
+			header: null,
+      drawerIcon: ({tintColor}) => <Icon name='home' color={tintColor} size={28} />
 	}
 }); 
 
 class Favorite extends PureComponent {
+  static navigationOptions = {
+    drawerIcon: ({tintColor}) => <Icon name='home' color={tintColor} size={28} />
+  };
 
 	_openSearchScreen = () => {
     const { navigation } = this.props;

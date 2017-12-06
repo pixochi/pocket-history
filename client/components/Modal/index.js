@@ -46,7 +46,7 @@ class ReduxModal extends Component {
 	      onBackButtonPress={closeModal}
 	      style={modalStyle}
 	    >
-		    <ContentContainer>
+		    <ContentContainer style={{flex: 1}}>
 		    	{ children }
 		    	{ btnClose }
 		    </ContentContainer>

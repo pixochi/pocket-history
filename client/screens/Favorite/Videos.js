@@ -10,15 +10,12 @@ import { connect } from 'react-redux';
 import { openModal } from '../../components/Modal/actions';
 
 import Favorites from './Favorites';
-import Modal from '../../components/Modal';
-import Loader from '../../components/Loader';
 import VideoCard from '../../components/VideoCard';
+import VideoModal from './components/VideoModal';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
-import gStyles from '../../styles';
+import { VIDEO_ROOT_URL } from '../../constants/urls';
 
-
-const VIDEO_ROOT_URL = 'https://www.youtube.com/watch?v=';
 
 class FavoriteVideos extends PureComponent {
   state = { selectedVideoId: '' }
@@ -62,30 +59,16 @@ class FavoriteVideos extends PureComponent {
           category='videos'
           renderFavorite={this._renderVideo}
         />
-        <Modal 
-          isScrollable={false} 
-          modalStyle={styles.modal} 
-          name='favVideo'
-        >
-          <View style={gStyles.videoContainer}>
-            <WebView
-              startInLoadingState
-              renderLoading={() => <Loader />}
-              source={{uri: videoUrl}}
-              style={gStyles.videoPlayer}
-            />
-          </View>
-        </Modal>
+        <VideoModal 
+          videoUrl={videoUrl}
+        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    margin: -8
-  }
+  
 });
 
 const mapStateToProps = ({ favorite }) => ({

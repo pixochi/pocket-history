@@ -9,14 +9,12 @@ import { connect } from 'react-redux';
 import { openModal } from '../../components/Modal/actions';
 
 import Favorites from './Favorites';
-import Modal from '../../components/Modal';
+import BookModal from '../../components/BookModal';
 import BookCard from '../../components/BookCard';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 class FavoriteBooks extends PureComponent {
-  state = { 
-    bookDescription: "Sorry, we couldn't find a description for the selected book." 
-  }
+  state = {}
 
   _cardMenuOptions = ({id, title}) => {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;
@@ -29,7 +27,7 @@ class FavoriteBooks extends PureComponent {
   }
 
   _onBookPress = (bookDescription) => {
-    this.setState({ bookDescription }, () => this.props.openModal('favBook'));
+    this.setState({ bookDescription }, () => this.props.openModal('factBook'));
   }
 
   _renderBook = ({item}) => {
@@ -53,28 +51,16 @@ class FavoriteBooks extends PureComponent {
           category='books'
           renderFavorite={this._renderBook}
         />
-        <Modal name='favBook'>
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.descriptionText}>
-              { bookDescription }
-            </Text>
-          </View> 
-        </Modal>
+        <BookModal
+          bookDescription={bookDescription}
+        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  descriptionContainer: {
-    flex: 1,
-    padding: 15,
-    backgroundColor: '#fff'
-  },
-  descriptionText: {
-    textAlign: 'center',
-    fontSize: 18
-  }
+  
 })
 
 const mapStateToProps = ({ favorite }) => ({

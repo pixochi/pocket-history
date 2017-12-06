@@ -6,5 +6,5 @@ export const COLORS = {
 	headerIconUnderlay: '#2b8c70',
 	dateHeader: '#33B38E',
 	actionIcon: '#fff',
-	blue: '#063b4e'
+	blue: '#073660'
 }

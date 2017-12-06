@@ -18,21 +18,27 @@ import { openModal } from '../../components/Modal/actions';
 // COMPONENTS
 import ArrowBack from '../../components/ArrowBack';
 import ArticleCard from '../../components/ArticleCard';
+import BookCard from '../../components/BookCard';
+import BookModal from '../../components/BookModal';
 import CheckBox from '../../components/CheckBox';
 import FactCard from '../../components/FactCard';
 import Favorites from './Favorites';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import VideoCard from '../../components/VideoCard';
+import VideoModal from './components/VideoModal';
 import { createCardMenuOptions } from './helpers/facts';
 
 import { filterBySearch } from '../../utils/filters';
 
 import { COLORS } from '../../constants/components';
+import { VIDEO_ROOT_URL } from '../../constants/urls';
 import gStyles from '../../styles';
 
 
 class SearchScreen extends PureComponent {
+
+  state = {}
 
   _searchField = () => {
     const { search, changeSearch } = this.props;
@@ -71,14 +77,41 @@ class SearchScreen extends PureComponent {
     );
   }
 
-   _renderVideo = ({item}) => {
+  _onVideoPress = (selectedVideoId) => {
+    this.setState({ selectedVideoId }, () => {
+      this.props.openModal('favVideo');
+    });
+  }
+
+  _renderVideo = ({item}) => {
+    const url = VIDEO_ROOT_URL+item.id;
+    const { copyToClipboard, removeFavorite, openModal } = this.props;
+    const copy = () => copyToClipboard(url);
+    const remove = () => removeFavorite(item.id, 'videos');
     return (
       <VideoCard
         onVideoPress={this._onVideoPress}
-        menuOptions={this._cardMenuOptions(item)}
+        menuOptions={createCardMenuOptions(item, url, copy, remove)}
         {...item}
       />
-    ) 
+    )
+  }
+
+  _onBookPress = (bookDescription) => {
+    this.setState({ bookDescription }, () => this.props.openModal('factBook'));
+  }
+
+  _renderBook = ({item}) => {
+    const { copyToClipboard, removeFavorite } = this.props;
+    const copy = () => copyToClipboard(item.title);
+    const remove = () => removeFavorite(item.id, 'books');
+    return (
+      <BookCard
+        book={item}
+        onBookPress={this._onBookPress}
+        menuOptions={createCardMenuOptions(item, item.title, copy, remove)}
+      />
+    );
   }
 
   _openCategoriesModal = () => {
@@ -101,8 +134,10 @@ class SearchScreen extends PureComponent {
   }
 
   render() {
-    const { navigation, categories, facts, articles, toggleCategory,
-     removeFavorite, copyToClipboard } = this.props;
+    const { navigation, categories, facts, articles, videos, 
+      books, toggleCategory, removeFavorite, copyToClipboard } = this.props;
+
+    const { selectedVideoId, bookDescription } = this.state;
 
     return (
       <View style={styles.screenContainer}>
@@ -144,7 +179,42 @@ class SearchScreen extends PureComponent {
               />
             </View>
           }
+
+          { categories.videos &&
+            <View style={styles.categoryContainer}>
+              <View style={styles.categoryLabelContainer}>
+                <Text style={styles.categoryLabel}>
+                  VIDEOS
+                </Text>
+              </View>
+              <Favorites
+                data={videos}
+                category='videos'
+                renderFavorite={this._renderVideo}
+              />
+              <VideoModal 
+                videoUrl={VIDEO_ROOT_URL+selectedVideoId}
+              />
+            </View>
+          }
           
+          { categories.books &&
+            <View style={styles.categoryContainer}>
+              <View style={styles.categoryLabelContainer}>
+                <Text style={styles.categoryLabel}>
+                  BOOKS
+                </Text>
+              </View>
+              <Favorites
+                data={books}
+                category='books'
+                renderFavorite={this._renderBook}
+              />
+              <BookModal
+                bookDescription={bookDescription}
+              />
+            </View>
+          }
 
         </ScrollView>
 
@@ -186,8 +256,8 @@ const mapStateToProps = ({ favorite }) => {
     categories,
     facts: filterBySearch(facts, search, ['text'] ),
     articles: filterBySearch(articles, search, ['title'] ),
-    videos,
-    books
+    videos: filterBySearch(videos, search, ['title'] ),
+    books: filterBySearch(books, search, ['title', 'description', 'textSnippet'] )
   }
 }
 
@@ -226,19 +296,18 @@ const styles = StyleSheet.create({
   },
   categoriesContainer: {
     backgroundColor: '#ddd',
-    borderRadius: 7
+    borderRadius: 7,
   },
   categoryLabelContainer: {
     flex: 1,
-    padding: 10,
-    borderBottomColor: '#777',
-    borderBottomWidth: 1
+    paddingLeft: 20,
+    paddingVertical: 7,
+    backgroundColor: '#fadf3e'
   },
   categoryLabel: {
-    color: '#777',
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: 4
+    color: '#fff',
+    fontSize: 26,
+    fontWeight: 'bold'
   }
 });
 

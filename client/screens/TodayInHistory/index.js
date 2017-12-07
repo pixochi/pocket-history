@@ -6,7 +6,6 @@ import {
   Animated,
   AsyncStorage
 } from 'react-native';
-import { TabNavigator, StackNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -20,48 +19,18 @@ import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
 
-// SCREENS
-import Events from './Events';
-import Births from './Births';
-import Deaths from './Deaths';
-import News from './News';
-import FactDetail from '../FactDetail';
-
 // COMPONENTS
 import CalendarModal from '../../components/CalendarModal';
 import Options from '../../components/Options';
 import DateHeader from '../../components/DateHeader';
 import Header from '../../components/Header';
 
+import { RoutesFactCategories } from '../../navigation/todayInHistory';
+
 //CONSTANTS
 import { HEADER_HEIGHT, COLORS } from '../../constants/components';
 
 import gStyles from '../../styles';
-
-const tabBarOptions = {
-  style: {
-    backgroundColor: COLORS.header,
-    height: 45,
-
-  },
-  labelStyle: {
-    fontSize: 13,
-    margin: 5,
-  },
-  activeTintColor: '#fff',
-  inactiveTintColor: '#fef',
-  indicatorStyle: { 
-    backgroundColor: '#fff',
-    height: 2,
-  }
-}
-
-const FactsCategories = TabNavigator({
-  Events: { screen: Events },
-  Births: { screen: Births },
-  Deaths: { screen: Deaths },
-  News: { screen: News }
-}, { tabBarPosition: 'bottom', lazy: true, tabBarOptions });
 
 
 const APPROXIMATE_FACT_CARD_HEIGHT = 250;
@@ -275,7 +244,7 @@ class TodayInHistory extends PureComponent {
             openModal={this.openModal}
           />
 
-          <FactsCategories
+          <RoutesFactCategories
             onNavigationStateChange={this._onNavigationStateChange}
             screenProps={screenProps} 
           />

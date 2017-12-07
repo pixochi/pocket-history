@@ -8,12 +8,17 @@ import { connect } from 'react-redux';
 
 import { removeFavorite } from './actions';
 
-import Favorites from './Favorites';
 import ArticleCard from '../../components/ArticleCard';
+import ArticlesLabel from '../../components/TabBarLabels/ArticlesLabel';
+import Favorites from './Favorites';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 
 class FavoriteArticles extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel: <ArticlesLabel />
+  }
+  
 
   _cardMenuOptions = ({id, link, title}) => {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;

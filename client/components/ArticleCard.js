@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { PropTypes } from 'prop-types';
 import {
   StyleSheet,
   View,
@@ -10,58 +11,75 @@ import {
 } from 'react-native';
 
 import CardMenu from './CardMenu';
-
 import { fixWikiLink } from '../utils/link';
-
+import { COLORS } from '../constants/components';
 import gStyles from '../styles';
 
 
 class ArticleCard extends PureComponent {
+	static propTypes = {
+	  link: PropTypes.string.isRequired,
+	  title: PropTypes.string.isRequired,
+	  menuOptions: PropTypes.array.isRequired
+	}
+
+	_openArticle = (link) => {
+		Linking.openURL(fixWikiLink(link));
+	}
 
 	render() {
 		const { link, title, menuOptions } = this.props;
+
 		return (
-	  	<View>
-				<TouchableHighlight
-				  onPress={() => Linking.openURL(fixWikiLink(link))}
+	  	<View style={styles.articleCard}>
+	  		
+				<TouchableHighlight 
+					style={styles.titleContainer}
+					underlayColor='#aaa'
+					onPress={() => this._openArticle(link)}
 				>
-				  <View style={styles.articleContainer}>
-						<Text style={styles.articleTitle}>
+						<Text style={styles.title}>
 						  { title }
 						</Text>
-					</View>
 				</TouchableHighlight>
-				<View style={[gStyles.cardMenu,styles.menu]}>
+
+				<View style={styles.menu}>
 					<CardMenu options={menuOptions}/>
 				</View>
+
 			</View>
 	  );
 	}
 }
 
 const styles = StyleSheet.create({
-	articleContainer: {
-		marginVertical: 8,
-		padding: 12,
-		paddingRight: 20,
-		paddingLeft: 4,
-		borderRadius: 4,
-		borderWidth: 1,
-		borderColor: '#454545',
-		backgroundColor: '#333'
+	articleCard: {
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		borderBottomWidth: 1,
+		borderBottomColor: '#777',
+		backgroundColor: '#ccc',
 	},
-	articleTitle: {
-		paddingRight: 15,
-		paddingLeft: 9,
+	titleContainer: {
+		// marginVertical: 8,
+		// padding: 12,
+		// paddingRight: 20,
+		// paddingLeft: 4,
+		flex: .95,
+		paddingLeft: 15,
+		paddingVertical: 15
+	},
+	title: {
+		// paddingRight: 15,
+		// paddingLeft: 9,
 		fontSize: 20,
-		color: '#fff'
+		fontWeight: 'bold',
+		color: COLORS.link
 	},
 	menu: {
-		// justifyContent: 'center',
-		// alignItems: 'center',
-		// bottom: 8,
-		// top: 8,
-		backgroundColor: '#000'
+		marginRight: 10
 	},
 });
 

@@ -33,6 +33,7 @@ class VideoCard extends PureComponent {
       
 	      <TouchableOpacity 
 	    		style={styles.imgContainer}
+	    		activeOpacity={0.7}
 	    		onPress={() => onVideoPress(id)}
 	    	>
 		      <View>
@@ -59,7 +60,7 @@ class VideoCard extends PureComponent {
       		</Text>
 	      </View>
 
-    	  <View style={gStyles.cardMenu}>
+    	  <View style={[gStyles.cardMenu, styles.menu]}>
     	  	<CardMenu options={menuOptions}/>
     		</View>
 
@@ -74,13 +75,14 @@ const IMG_HEIGHT =  180;
 const styles = StyleSheet.create({
 	videoCardContainer: {
 		flex: 1,
-		margin: 20,
+		marginHorizontal: 20,
+		marginVertical: 10,
 		backgroundColor: '#fff',
 		borderColor: '#ddd',
 		borderWidth: 1
 	},
 	titleContainer: {
-		backgroundColor: '#333'
+		backgroundColor: '#f6c228'
 	},
 	title: {
 		padding: 10,
@@ -93,7 +95,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: 190,
 	},
 	image:{
 		height: IMG_HEIGHT,
@@ -102,6 +103,10 @@ const styles = StyleSheet.create({
 	iconContainer: {
 		backgroundColor: 'rgba(0,0,0,.25)'
 	},
+	menu: {
+		padding: 8,
+		backgroundColor: '#000'
+	}
 });
 
 

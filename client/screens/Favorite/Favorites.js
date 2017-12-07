@@ -17,7 +17,7 @@ class Favorites extends PureComponent {
     if (!data.length) {
       return (
         <EmptyFavorites
-          message={`No ${category} found.`}
+          message={`No ${category} saved.`}
         />
       );
     }

@@ -57,9 +57,9 @@ const factsReducer = (state = defaultState, action) => {
       return { ...state,  isFetchingImages: false, imgErr: true }
 
     case CHANGE_DATE: 
-      return { ...state, selectedDate: {...action.date} }
+      return { ...state, selectedDate: {...action.date}, isLoading: false, error: false }
     case CHANGE_FACTS_CATEGORY:
-      return { ...state, selectedCategory: action.category }
+      return { ...state, selectedCategory: action.category, isLoading: false, error: false }
     case CHANGE_FACTS_FILTER: 
       return {...state, filter: action.filter}
     case CHANGE_IMG_AJAX_SRC: 

@@ -5,16 +5,21 @@ import {
   Text,
   FlatList
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import { removeFavorite } from './actions';
 
-import Favorites from './Favorites';
 import FactCard from '../../components/FactCard';
+import FactsLabel from '../../components/TabBarLabels/FactsLabel';
+import Favorites from './Favorites';
 import { createCardMenuOptions } from './helpers/facts';
 
 
 class FavoriteFacts extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel: <FactsLabel />
+  }
 
   _renderFact = ({item}) => {
     const { navigation } = this.props;

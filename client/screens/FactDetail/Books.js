@@ -10,11 +10,12 @@ import { connect } from 'react-redux';
 // COMPONENTS
 import BookCard from '../../components/BookCard';
 import BookModal from '../../components/BookModal';
-import { copy, share, save } from '../../components/utils/cardMenuOptions';
+import BooksLabel from '../../components/TabBarLabels/BooksLabel';
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
+import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 // ACTIONS
 import { fetchBooks } from './actions';
@@ -24,6 +25,9 @@ import gStyles from '../../styles';
 
 
 class Books extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel : <BooksLabel />
+  }
 
   state = {}
 

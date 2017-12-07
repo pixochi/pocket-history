@@ -11,6 +11,7 @@ import hash from 'string-hash';
 import { dateRangeFromString } from '../../utils/date';
 
 import ArticleCard from '../../components/ArticleCard';
+import ArticlesLabel from '../../components/TabBarLabels/ArticlesLabel';
 import Header from '../../components/Header';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
@@ -18,6 +19,9 @@ import gStyles from '../../styles';
 
 
 class Articles extends PureComponent {
+	static navigationOptions = {
+    tabBarLabel : <ArticlesLabel />
+  }
 
 	_cardMenuOptions = ({link, title}) => {
 		const { addFavorite, copyToClipboard } = this.props.screenProps;
@@ -50,7 +54,7 @@ class Articles extends PureComponent {
 	        navigation={navigation}
 	      />
 	      <View style={gStyles.screenBody}>
-			    <FlatList 
+			    <FlatList
 			    	contentContainerStyle={styles.articlesContainer}
 	          data = {links}
 	          extraData = {links}
@@ -65,8 +69,7 @@ class Articles extends PureComponent {
 
 const styles = StyleSheet.create({
 	articlesContainer: {
-		paddingTop: 10,
-		marginHorizontal: 15,
+		
 	}
 });
 

@@ -1,15 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
-import { TabNavigator, StackNavigator } from 'react-navigation';
 import { connect } from 'react-redux';
-
-// SCREENS
-import FavoriteFacts from './Facts';
-import FavoriteArticles from './Articles';
-import FavoriteBooks from './Books';
-import FavoriteVideos from './Videos';
-import SearchScreen from './SearchScreen';
 
 // COMPONENTS
 import Options from '../../components/Options';
@@ -25,27 +17,10 @@ import { openModal } from '../../components/Modal/actions';
 import { COLORS } from '../../constants/components';
 import gStyles from '../../styles';
 
+import { RoutesFavGroups } from '../../navigation/favorites';
 
-const FavNavigator = StackNavigator({
-	favorite: { 
-		screen: TabNavigator({
-			  facts: { screen: FavoriteFacts },
-			  articles: { screen: FavoriteArticles },
-        videos: { screen: FavoriteVideos },
-			  books: { screen: FavoriteBooks }, 
-			}, { tabBarPosition: 'bottom', lazy: true, animationEnabled: false }
-		),
-	}
-},{ navigationOptions: {
-			header: null,
-      drawerIcon: ({tintColor}) => <Icon name='home' color={tintColor} size={28} />
-	}
-}); 
 
 class Favorite extends PureComponent {
-  static navigationOptions = {
-    drawerIcon: ({tintColor}) => <Icon name='home' color={tintColor} size={28} />
-  };
 
 	_openSearchScreen = () => {
     const { navigation } = this.props;
@@ -75,7 +50,7 @@ class Favorite extends PureComponent {
           rightComponent={this._renderSearchIcon()}
         />
         <View style={gStyles.screenBody}>
-         <FavNavigator screenProps={{removeFavorite, copyToClipboard, navigation}} />
+         <RoutesFavGroups screenProps={{removeFavorite, copyToClipboard, navigation}} />
         </View>
       </View>			
 		)

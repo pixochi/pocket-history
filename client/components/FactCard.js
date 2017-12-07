@@ -94,7 +94,7 @@ class FactCard extends PureComponent {
               type='material-community'
               size={40}
               color={COLORS.actionIcon}
-              underlayColor={'#053242'}
+              underlayColor='#d3a417'
               style={styles.openDetailIcon}
               onPress={this._openFactDetail}
             /> 
@@ -116,7 +116,7 @@ const htmlViewStyles = {
 const styles = StyleSheet.create({
   factCard: {
     flex: 1,
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.factTextBackground,
     marginHorizontal: 10,
     marginVertical: 6,
     borderRadius: 3,

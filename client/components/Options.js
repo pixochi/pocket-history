@@ -40,14 +40,14 @@ class Options extends PureComponent {
             style={styles.optionsContainer} 
             onSelect={() => changeFilter({ sort: 'latest' })} 
           >
-            <Text> Latest first </Text>
+            <Text style={styles.optionText}> Latest first </Text>
           </MenuOption>
           
           <MenuOption 
             style={styles.optionsContainer} 
             onSelect={() => changeFilter({ sort: 'oldest' })}
           >
-            <Text> Oldest first </Text>
+            <Text style={styles.optionText}> Oldest first </Text>
           </MenuOption>
 
         </MenuOptions>
@@ -68,7 +68,10 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     paddingLeft: 8,
-    paddingVertical: 8
+    paddingVertical: 14
+  },
+  optionText: {
+    fontSize: 15
   },
   separator: {
     backgroundColor: '#eee',

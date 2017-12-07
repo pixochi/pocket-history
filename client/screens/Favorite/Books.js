@@ -8,12 +8,17 @@ import { connect } from 'react-redux';
 
 import { openModal } from '../../components/Modal/actions';
 
-import Favorites from './Favorites';
-import BookModal from '../../components/BookModal';
 import BookCard from '../../components/BookCard';
+import BooksLabel from '../../components/TabBarLabels/BooksLabel';
+import BookModal from '../../components/BookModal';
+import Favorites from './Favorites';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 class FavoriteBooks extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel: <BooksLabel />
+  }
+
   state = {}
 
   _cardMenuOptions = ({id, title}) => {

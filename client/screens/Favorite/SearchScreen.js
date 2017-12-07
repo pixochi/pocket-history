@@ -295,14 +295,13 @@ const styles = StyleSheet.create({
     padding: 4
   },
   categoriesContainer: {
-    backgroundColor: '#ddd',
-    borderRadius: 7,
+    backgroundColor: '#ddd'
   },
   categoryLabelContainer: {
     flex: 1,
     paddingLeft: 20,
     paddingVertical: 7,
-    backgroundColor: '#fadf3e'
+    backgroundColor: '#4285f4'
   },
   categoryLabel: {
     color: '#fff',

@@ -11,9 +11,10 @@ import { connect } from 'react-redux';
 // COMPONENTS
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
-import VideoCard from '../../components/VideoCard';
 import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
+import VideoCard from '../../components/VideoCard';
+import VideosLabel from '../../components/TabBarLabels/VideosLabel';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 // ACTIONS
@@ -25,6 +26,10 @@ import gStyles from '../../styles';
 const VIDEO_ROOT_URL = 'https://www.youtube.com/watch?v=';
 
 class Videos extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel : <VideosLabel />
+  }
+  
   static defaultProps = {
     videos: [],
     isLoading: true,

@@ -3,9 +3,10 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 import { DrawerItems, SafeAreaView } from 'react-navigation';
 import { Constants } from 'expo';
 
-import { routesFavorite } from './favorite';
-import { routesTodayInHistory } from './todayInHistory';
+import { RoutesFavorites } from './favorites';
+import { RoutesTodayInHistory } from './todayInHistory';
 
+import { COLORS } from '../constants/components'
 
 export class DrawerContent extends PureComponent {
 	render() {
@@ -16,7 +17,7 @@ export class DrawerContent extends PureComponent {
 			      {...this.props}
 			      inactiveTintColor='#444'
 			      activeTintColor='#fff'
-			      activeBackgroundColor='#ffbf00'
+			      activeBackgroundColor={ COLORS.yellowDark }
 			      inactiveBackgroundColor='#ddd'
 			      labelStyle={styles.label}
 		      />
@@ -50,10 +51,10 @@ const styles = StyleSheet.create({
 });
 
 export const routesDrawer = {
-  todayInHistory: { screen: routesTodayInHistory },
+  todayInHistory: { screen: RoutesTodayInHistory },
   // happenedSooner: { screen: WhichHappenedSooner },
   // predictions: { screen: FuturePredictions },
   // diary: { screen: Diary },
-  favorite: { screen: routesFavorite }, 
+  favorite: { screen: RoutesFavorites }, 
   // myAccount: { screen: MyAccount }
 }

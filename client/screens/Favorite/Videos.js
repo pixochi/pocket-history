@@ -10,14 +10,20 @@ import { connect } from 'react-redux';
 import { openModal } from '../../components/Modal/actions';
 
 import Favorites from './Favorites';
+
 import VideoCard from '../../components/VideoCard';
 import VideoModal from './components/VideoModal';
+import VideosLabel from '../../components/TabBarLabels/VideosLabel';
 import { copy, share, remove } from '../../components/utils/cardMenuOptions';
 
 import { VIDEO_ROOT_URL } from '../../constants/urls';
 
 
 class FavoriteVideos extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel: <VideosLabel />
+  }
+
   state = { selectedVideoId: '' }
 
   _cardMenuOptions = ({id}) => {

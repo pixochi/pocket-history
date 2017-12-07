@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15
   },
   trigger: {
-
+    flex: 1
   },
   triggerIcon: {
     padding: 4

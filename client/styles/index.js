@@ -30,8 +30,7 @@ export default StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 1000,
-    padding: 4,
-    backgroundColor:'rgba(255,255,255,1)'
+    padding: 4
   },
   videoContainer: {
     flex: 1,

@@ -13,11 +13,12 @@ import TimelineList from 'react-native-timeline-listview'
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
+// COMPONENTS
 import DateRangeFilter from '../../components/DateRangeFilter';
-import Options from '../../components/Options';
-import Header from '../../components/Header';
 import Loader from '../../components/Loader';
 import NetworkProblem from '../../components/NetworkProblem';
+import Options from '../../components/Options';
+import TimelineLabel from '../../components/TabBarLabels/TimelineLabel';
 
 import { dateRangeFromString, addLeadingChars } from '../../utils/date';
 import { filterBySearch, filterTimelineByDate, sortByDate } from '../../utils/filters';
@@ -31,6 +32,9 @@ import gStyles from '../../styles';
 
 
 class Timeline extends PureComponent {
+  static navigationOptions = {
+    tabBarLabel : <TimelineLabel />
+  }
 
   _rangeFilterProps = {}
   componentDidMount() {

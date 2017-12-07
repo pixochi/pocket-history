@@ -1,12 +1,20 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, TabNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
-import TodayInHistory from '../screens/TodayInHistory';
+// SCREENS
+import Births from '../screens/TodayInHistory/Births';
+import Deaths from '../screens/TodayInHistory/Deaths';
+import Events from '../screens/TodayInHistory/Events';
 import FactDetail from '../screens/FactDetail';
+import News from '../screens/TodayInHistory/News';
+import TodayInHistory from '../screens/TodayInHistory';
+
+import { COLORS } from '../constants/components';
+import { tabBarOptions } from './common';
 
 
-export const routesTodayInHistory = StackNavigator(
+export const RoutesTodayInHistory = StackNavigator(
 	{
 	  todayInHistory: { screen: TodayInHistory },
 	  factDetail: { screen: FactDetail }
@@ -17,6 +25,20 @@ export const routesTodayInHistory = StackNavigator(
       drawerLabel: 'Today In History',
     	drawerIcon: ({tintColor}) => <Icon name='home' color={tintColor} size={28} />
   	})
+	}
+);
+
+export const RoutesFactCategories = TabNavigator(
+	{
+	  Events: { screen: Events },
+	  Births: { screen: Births },
+	  Deaths: { screen: Deaths },
+	  News: { screen: News }
+	},
+	{
+	  tabBarPosition: 'bottom',
+	  lazy: true,
+	  tabBarOptions
 	}
 );
 

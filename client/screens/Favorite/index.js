@@ -47,6 +47,7 @@ class Favorite extends PureComponent {
         <Header 
           title='Favorite'
           navigation={navigation}
+          leftComponent={<MenuIcon navigation={navigation} />}
           rightComponent={this._renderSearchIcon()}
         />
         <View style={gStyles.screenBody}>

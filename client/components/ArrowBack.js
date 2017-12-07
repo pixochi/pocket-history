@@ -4,12 +4,17 @@ import {
   View,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import PropTypes from 'prop-types';
 
 import { COLORS } from '../constants/components';
 
 
 class ArrowBack extends PureComponent {
 	
+  static propTypes = {
+    navigation: PropTypes.object,
+    onPress: PropTypes.func
+  }
 
 	_goBack = () => {
 		const { navigation } = this.props;
@@ -17,17 +22,20 @@ class ArrowBack extends PureComponent {
 	}
 
   render() {
+    const { onPress } = this.props;
+    const _onPress = onPress ? onPress : this._goBack;
+
     return (
-      	<Icon
-      		name='keyboard-arrow-left'
-      		type='material-icon'
-      		size={40}
-      		color={COLORS.actionIcon}
-      		underlayColor={COLORS.headerIconUnderlay}
-      		onPress={this._goBack}
-      		iconStyle={styles.arrowBack}
-      		containerStyle={{flex:1}}
-      	/>
+    	<Icon
+    		name='keyboard-arrow-left'
+    		type='material-icon'
+    		size={40}
+    		color={COLORS.actionIcon}
+    		underlayColor={COLORS.headerIconUnderlay}
+    		onPress={_onPress}
+    		iconStyle={styles.arrowBack}
+    		containerStyle={{flex:1}}
+    	/>
     );
   }
 }

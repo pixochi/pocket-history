@@ -59,14 +59,10 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		borderBottomWidth: 1,
-		borderBottomColor: '#777',
-		backgroundColor: '#ccc',
+		borderBottomColor: '#888',
+		backgroundColor: '#ddd',
 	},
 	titleContainer: {
-		// marginVertical: 8,
-		// padding: 12,
-		// paddingRight: 20,
-		// paddingLeft: 4,
 		flex: .95,
 		paddingLeft: 15,
 		paddingVertical: 15

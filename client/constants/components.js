@@ -7,7 +7,7 @@ export const COLORS = {
 	headerIconUnderlay: '#2b8c70',
 	dateHeader: '#33B38E',
 	actionIcon: '#fff',
-	factTextBackground: '#f6c228',
+	factTextBackground: '#f8ca3f',
 	yellowDark: '#ffbf00',
-	yellowLight: '#fadf3e'
+	yellowLight: '#f8ca3f'
 }

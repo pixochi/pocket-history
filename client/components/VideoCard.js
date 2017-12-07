@@ -11,8 +11,8 @@ import {
 import { Icon } from 'react-native-elements';
 
 import CardMenu from './CardMenu';
-
 import gStyles from '../styles';
+import { COLORS } from '../constants/components';
 
 
 const IMG_ROOT_URL = 'https://i.ytimg.com/vi';
@@ -47,7 +47,7 @@ class VideoCard extends PureComponent {
 		      			reverse
 			      		name='play'
 			      		type='font-awesome'
-			      		size={35}
+			      		size={30}
 			      		color='#ff0000'
 			      		iconStyle={{paddingLeft: 8}}
 			      	/>
@@ -72,22 +72,35 @@ class VideoCard extends PureComponent {
 const IMG_WIDTH = 320;
 const IMG_HEIGHT =  180;
 
+const borderBottomRadius = {
+	borderBottomRightRadius: 10,
+	borderBottomLeftRadius: 10
+}
+
+const borderTopRadius = {
+	borderTopRightRadius: 15,
+	borderTopLeftRadius: 15
+}
+
 const styles = StyleSheet.create({
 	videoCardContainer: {
 		flex: 1,
-		marginHorizontal: 20,
+		marginHorizontal: 15,
 		marginVertical: 10,
 		backgroundColor: '#fff',
-		borderColor: '#ddd',
-		borderWidth: 1
+		borderColor: '#fff',
+		borderWidth: 6,
+		borderRadius: 10
 	},
 	titleContainer: {
-		backgroundColor: '#f6c228'
+		flex: 1,
+		backgroundColor: COLORS.yellowLight,
+		// ...borderBottomRadius
 	},
 	title: {
 		padding: 10,
 		textAlign: 'center',
-		fontSize: 20,
+		fontSize: 22,
 		fontWeight: 'bold',
 		color: '#fff'
 	},
@@ -95,17 +108,21 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		// ...borderTopRadius
 	},
 	image:{
 		height: IMG_HEIGHT,
-		width: IMG_WIDTH
+		width: IMG_WIDTH,
+		// ...borderTopRadius
 	},
 	iconContainer: {
-		backgroundColor: 'rgba(0,0,0,.25)'
+		backgroundColor: 'rgba(0,0,0,.25)',
+		// ...borderTopRadius
 	},
 	menu: {
 		padding: 8,
-		backgroundColor: '#000'
+		backgroundColor: '#222',
+		// borderTopRightRadius: 10
 	}
 });
 

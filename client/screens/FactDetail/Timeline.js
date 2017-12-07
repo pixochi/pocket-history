@@ -6,7 +6,6 @@ import {
   Linking,
   ActivityIndicator
 } from 'react-native';
-import { Icon, SearchBar } from 'react-native-elements';
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import TimelineList from 'react-native-timeline-listview'
 
@@ -17,7 +16,6 @@ import _ from 'lodash';
 import DateRangeFilter from '../../components/DateRangeFilter';
 import Loader from '../../components/Loader';
 import NetworkProblem from '../../components/NetworkProblem';
-import Options from '../../components/Options';
 import TimelineLabel from '../../components/TabBarLabels/TimelineLabel';
 
 import { dateRangeFromString, addLeadingChars } from '../../utils/date';
@@ -187,15 +185,6 @@ class Timeline extends PureComponent {
     const { min, max, labelMin, labelMax, rangeKey } = this._rangeFilterProps;
     return (
       <View style={{flex:1}}>
-        <Header
-          search={{
-            value:filter.search,
-            onChangeText: (text) => changeFilter({ search: text }),
-            placeholder: 'Search in Timeline'
-          }}
-          navigation={this.props.screenProps.navigation}
-          rightComponent={<Options changeFilter={changeFilter} />}
-        />
         <View style={gStyles.screenBody}>
           <DateRangeFilter
             values={filter.range.start[rangeKey], filter.range.end[rangeKey]}
@@ -255,15 +244,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
   borderItem: {
-    // UNCOMMENT LATER
-    // fontSize: 18,
-    // fontWeight: 'bold'
+    fontSize: 18,
+    fontWeight: 'bold'
   },
   description: {
-    color: '#fff'
-    // UNCOMMENT LATER
-    // fontSize: 14,
-    // marginTop: 4,
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 4,
   },
   listContainer: {
     flex: 1,
@@ -308,12 +295,6 @@ const styles = StyleSheet.create({
   filterContainer: {
     flex: 1,
     backgroundColor: '#fff'
-  },
-  htmlView: {
-    // a: {
-    //   color: '#94269d',
-    //   fontWeight: 400
-    // }
   }
 });
 

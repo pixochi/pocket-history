@@ -12,10 +12,9 @@ import {
 import { Button, Icon } from 'react-native-elements';
 
 import CardMenu from './CardMenu';
-
 import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
-
 import gStyles from '../styles';
+import { COLORS } from '../constants/components';
 
 
 class BookCard extends PureComponent {
@@ -29,99 +28,110 @@ class BookCard extends PureComponent {
 		description = replaceHtmlChars(removeHtmlTags(description)) || this._message404;
 
 		 return (
-	    <View style={styles.bookCardContainer}>
-	    	<View style={styles.bookInfo}>
-	    		<Text style={styles.title}>
-	      	{ book.title }
-		    	</Text>
+		 	<View style={styles.bookCard}>
+		    <View style={styles.bookCardContainer}>
+		    	<View style={styles.bookInfo}>
+		    		<Text style={styles.title}>
+		      	{ book.title }
+			    	</Text>
 
-		    	<Button 
-		    		title='Read'
-		    		onPress={() => Linking.openURL(fullScreenBookPreview)}
-		    		buttonStyle={styles.btn}
-		    		textStyle={styles.btnText}
-		    	/>
-		    	<Button 
-		    		title='Buy'
-		    		onPress={() => Linking.openURL(book.infoLink)}
-		    		buttonStyle={styles.btn}
-		    		textStyle={styles.btnText}
-		    	/>
-	    	</View>
+			    	<Button 
+			    		title='Read'
+			    		onPress={() => Linking.openURL(fullScreenBookPreview)}
+			    		buttonStyle={styles.btn}
+			    		textStyle={styles.btnText}
+			    	/>
+			    	<Button 
+			    		title='Buy'
+			    		onPress={() => Linking.openURL(book.infoLink)}
+			    		buttonStyle={styles.btn}
+			    		textStyle={styles.btnText}
+			    	/>
+		    	</View>
 
-	    	<TouchableOpacity 
-	    		style={styles.imgContainer}
-	    		onPress={() => onBookPress(description)}
-	    	>
-		    	<Image
-		    		style={styles.img}
-		        source={{uri: book.image}}
-		      />
-		      <View style={gStyles.overlay}>
-		      	<Icon
-		      		name='magnifying-glass'
-		      		type='entypo'
-		      		size={50}
-		      		color='#f2ff38'
-		      	/>
-		      </View>
-	      </TouchableOpacity>
-		    <View style={gStyles.cardMenu}>
-		    	<CardMenu options={menuOptions} />
+		    	<TouchableOpacity 
+		    		style={styles.imgContainer}
+		    		activeOpacity={0.7}
+		    		onPress={() => onBookPress(description)}
+		    	>
+			      	<Icon
+			      		reverse
+			      		name='magnifying-glass'
+			      		type='entypo'
+			      		size={18}
+			      		color='#ff0000'
+			      		containerStyle={styles.iconContainer}
+			      	/>
+				      <Image
+				    		style={styles.img}
+				        source={{uri: book.image}}
+				      />
+		      </TouchableOpacity>
+		      <View style={[gStyles.cardMenu, styles.menu]}>
+			    	<CardMenu options={menuOptions} />
+			  	</View>
 		    </View>
-	    </View>
+		  </View>
 	  );
 	}
 }
 
+const IMG_HEIGHT = 190;
+const IMG_WIDTH = 130;
+
 const styles = StyleSheet.create({
+	bookCard: {
+		marginVertical: 10,
+		marginHorizontal: 15
+	},
 	bookCardContainer: {
 		flex: 1,
 		flexDirection: 'row',
-		justifyContent: 'space-around',
 		alignItems: 'center',
-		minHeight: 190,
-		backgroundColor: '#333',
-    borderWidth: 0,
+		padding: 7,
+		backgroundColor: COLORS.yellowLight,
     borderColor: '#fff',
-    borderRadius: 3,
-    margin: 4,
-    marginVertical: 8,
-    padding: 4
+		borderWidth: 6,
+		borderRadius: 4,
 	},
 	bookInfo: {
-		flex: .65,
+		flex: .55,
 	},
 	title: {
 		color: '#fff',
-		fontSize: 20,
+		fontSize: 24,
 		fontWeight: 'bold',
 		textAlign: 'center',
-		margin: 5,
-		marginBottom: 15
+		marginBottom: 10
 	},
 	imgContainer: {
-		flex: .35,
+		flex: 1,
+		maxWidth: IMG_WIDTH,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: 180,
 		margin: 5,
-		marginLeft: 0,
+		marginLeft: 0
 	},
 	img: {
-		width: 130,
-		height: 180,
-		borderColor: '#ddd',
-		borderWidth: 1
+		width: IMG_WIDTH,
+		height: IMG_HEIGHT,
+	},
+	iconContainer: {
+		position: 'absolute',
+		zIndex: 1000
 	},
 	btn: {
 		marginBottom: 10,
-		backgroundColor: '#94269d'
+		borderRadius: 3,
+		backgroundColor: '#444455'
 	},
 	btnText: {
 		color: '#fff',
-		fontSize: 20,
+		fontSize: 18,
 		fontWeight: 'bold'
+	},
+	menu: {
+		backgroundColor: '#222'
 	}
 });
 

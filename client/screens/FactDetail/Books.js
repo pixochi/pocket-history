@@ -3,7 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
-  ScrollView
+  FlatList
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import BookCard from '../../components/BookCard';
 import BookModal from '../../components/BookModal';
 import BooksLabel from '../../components/TabBarLabels/BooksLabel';
-import Header from '../../components/Header';
+import Header from './Header';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
@@ -66,16 +66,14 @@ class Books extends PureComponent {
     this.setState({ bookDescription }, () => openModal('factBook'));
   }
  
-  _renderBooks(books) {
-    return books.map(book => (
-      <BookCard 
-        key={book.id} 
-        book={book}
-        onBookPress={this._onBookPress}
-        menuOptions={this._cardMenuOptions(book)}
-      />
-    ));
-  }
+  _renderBook = ({item}) => (
+    <BookCard 
+      key={item.id} 
+      book={item}
+      onBookPress={this._onBookPress}
+      menuOptions={this._cardMenuOptions(item)}
+    />
+  )
 
   render() {
     const { books, isLoading, isOnline, screenProps } = this.props;
@@ -96,10 +94,14 @@ class Books extends PureComponent {
       )
     } else {
       Main = (
-        <View style={{flex:1}}>
-          <ScrollView style={styles.bookList}>
-          { this._renderBooks(books) }
-          </ScrollView>
+        <View>
+          <FlatList
+            data={books}
+            extraData={books}
+            keyExtractor = {(book) => book.infoLink}
+            renderItem = {this._renderBook}
+            contentContainerStyle={styles.booksContainer}
+          />
           <BookModal 
             bookDescription={bookDescription}
           />
@@ -109,10 +111,7 @@ class Books extends PureComponent {
 
     return (
      <View style={{flex:1}}>
-      <Header 
-        title='Library'
-        navigation={screenProps.navigation}
-      />
+      <Header navigation={screenProps.navigation} />
       <View style={gStyles.screenBody}>
         { Main }
       </View>
@@ -122,10 +121,9 @@ class Books extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-  bookList: {
-    paddingTop: 8,
-    paddingBottom: 16,
-    paddingHorizontal: 10
+  booksContainer: {
+    // marginHorizontal: 10,
+    paddingVertical: 15
   }
 });
 

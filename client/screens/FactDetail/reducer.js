@@ -3,7 +3,8 @@ import {
   FETCH_FACT_VIDEOS,
   FETCH_TIMELINE_FACTS,
   CHANGE_TIMELINE_RANGE,
-  CHANGE_TIMELINE_FILTER
+  CHANGE_TIMELINE_FILTER,
+  NAVIGATION_CHANGE
 } from '../../constants/actionTypes';
 
 import { DEFAULT_TIMELINE_FILTER } from './constants';
@@ -26,7 +27,8 @@ const defaultState = {
     filter: DEFAULT_TIMELINE_FILTER,
     isLoading: false,
     error: null
-  }
+  },
+  selectedRoute: 'articles'
 }
 
 // // @param max - number of daily facts saved
@@ -137,6 +139,11 @@ const factDetailReducer = (state = defaultState, action) => {
           ...timeline,
           filter: {...timeline.filter, ...action.filter},
         }
+      }
+    case NAVIGATION_CHANGE: 
+      return {
+        ...state,
+        selectedRoute: action.route
       }
     
     default: 

@@ -171,8 +171,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   factText: {
-    // uncomment when finishing
     fontSize: 16,
+    fontWeight: 'bold',
     color: '#fff',
     ...Platform.select({
       ios: {

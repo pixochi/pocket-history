@@ -2,14 +2,14 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView,
+  FlatList,
   Text,
   WebView,
 } from 'react-native';
 import { connect } from 'react-redux';
 
 // COMPONENTS
-import Header from '../../components/Header';
+import Header from './Header';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
@@ -71,16 +71,13 @@ class Videos extends PureComponent {
     });
   }
 
-  _renderVideos(videos) {
-    return videos.map(video => (
-      <VideoCard
-        key={video.id}
-        onVideoPress={this._onVideoPress}
-        menuOptions={this._cardMenuOptions(video)}
-        {...video}
-      />
-    ));
-  }
+  _renderVideo = ({item}) => (
+    <VideoCard
+      onVideoPress={this._onVideoPress}
+      menuOptions={this._cardMenuOptions(item)}
+      {...item}
+    />
+  )
 
   render() {
     const { videos, isLoading, isOnline, screenProps } = this.props;
@@ -102,8 +99,13 @@ class Videos extends PureComponent {
       );
     } else {
       Main = (
-        <ScrollView>
-          { this._renderVideos(videos) }
+        <View>
+          <FlatList 
+            data={videos}
+            extraData={videos}
+            keyExtractor={video => video.id}
+            renderItem={this._renderVideo}
+          />
           <Modal 
             isScrollable={false} 
             modalStyle={styles.modal} 
@@ -118,16 +120,13 @@ class Videos extends PureComponent {
               />
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )
     }
 
     return (
       <View style={{flex:1}}>
-      <Header 
-        title='Library'
-        navigation={screenProps.navigation}
-      />
+      <Header navigation={screenProps.navigation} />
       <View style={gStyles.screenBody}>
         { Main }
       </View>

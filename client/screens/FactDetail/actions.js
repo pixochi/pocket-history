@@ -102,7 +102,7 @@ export const fetchTimeline = (options) => (dispatch, getState) => {
 	  .catch(e => console.log(e));
 }
 
-export const changeTimelineFilter = (filter) => {
+export const changeFilter = (filter) => {
 	return {
 		type: CHANGE_TIMELINE_FILTER,
 		filter

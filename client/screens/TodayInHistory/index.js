@@ -14,7 +14,8 @@ import { toCalendarDate } from '../../utils/date';
 import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // ACTIONS
-import { fetchFacts, fetchFactsImages, changeDate, changeFactsFilter, changeCategory } from './actions';
+import { fetchFacts, fetchFactsImages, changeDate, changeFactsFilter } from './actions';
+import { changeRoute } from '../../navigation/actions';
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
@@ -24,6 +25,7 @@ import CalendarModal from '../../components/CalendarModal';
 import Options from '../../components/Options';
 import DateHeader from '../../components/DateHeader';
 import Header from '../../components/Header';
+import MenuIcon from '../../components/MenuIcon';
 
 import { RoutesFactCategories } from '../../navigation/todayInHistory';
 
@@ -112,9 +114,9 @@ class TodayInHistory extends PureComponent {
   }
 
   _onNavigationStateChange = (prevState, nextState, action) => {
-    const { changeCategory } = this.props;
+    const { changeRoute } = this.props;
     this._showDate();
-    changeCategory(action.routeName);
+    changeRoute(action.routeName);
   }
   
   _handleMomentumScrollEnd = (evt) => {
@@ -226,6 +228,7 @@ class TodayInHistory extends PureComponent {
       <Header 
         title='Today In History' 
         navigation={navigation}
+        leftComponent={<MenuIcon navigation={navigation} />}
         rightComponent={<Options changeFilter={changeFilter} />}
       />
       <View style={styles.container}>   
@@ -309,8 +312,8 @@ const mapDispatchToProps = (dispatch) => ({
   changeDate: (date) => {
     dispatch(changeDate(date));
   },
-  changeCategory: (category) => {
-    dispatch(changeCategory(category));
+  changeRoute: (route) => {
+    dispatch(changeRoute(route));
   },
   addFavorite: (item, category) => {
     dispatch(addFavorite(item, category));

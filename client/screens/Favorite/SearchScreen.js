@@ -3,8 +3,9 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput,
   FlatList,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -39,16 +40,6 @@ import gStyles from '../../styles';
 class SearchScreen extends PureComponent {
 
   state = {}
-
-  _searchField = () => {
-    const { search, changeSearch } = this.props;
-
-    return {
-      value: search,
-      onChangeText:  (text) => changeSearch(text),
-      placeholder: 'Search in Favorites'
-    } 
-  }
 
   _renderFact = ({item}) => {
     const { navigation } = this.props;
@@ -133,6 +124,25 @@ class SearchScreen extends PureComponent {
     )
   }
 
+  _onSearchChange = (text) => {
+    this.props.changeSearch(text);
+  }
+
+  _renderSearch = () => {
+    const { search } = this.props;
+     return (
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          value={search}
+          onChangeText={this._onSearchChange}
+          placeholder='Search in Favorites'
+          underlineColorAndroid='transparent'
+        />
+      </View>
+    )
+  }
+
   render() {
     const { navigation, categories, facts, articles, videos, 
       books, toggleCategory, removeFavorite, copyToClipboard } = this.props;
@@ -144,8 +154,8 @@ class SearchScreen extends PureComponent {
         <Header
           navigation={navigation}
           leftComponent={<ArrowBack navigation={navigation} />}
+          centerComponent={this._renderSearch()}
           rightComponent={this._categoriesIcon()}
-          search={this._searchField()}
         />
 
         <ScrollView style={gStyles.screenBody}>
@@ -282,6 +292,15 @@ const mapDispatchToProps = (dispatch) => ({
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1
+  },
+  searchContainer: {
+    flex: 1,
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',  
+    borderRadius: 5
   },
   categoryContainer: {
     flex: 1

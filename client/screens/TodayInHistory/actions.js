@@ -6,7 +6,6 @@ import {
 	FETCH_FACTS_IMAGES,
 	FETCH_NEWS,
 	CHANGE_DATE,
-	CHANGE_FACTS_CATEGORY,
 	CHANGE_FACTS_FILTER,
 	CHANGE_IMG_AJAX_SRC
 } from '../../constants/actionTypes';
@@ -131,13 +130,6 @@ export const changeFactsFilter = (filter) => {
 	return {
 		type: CHANGE_FACTS_FILTER,
 		filter
-	}
-}
-
-export const changeCategory = (category) => {
-	return {
-		type: CHANGE_FACTS_CATEGORY,
-		category
 	}
 }
 

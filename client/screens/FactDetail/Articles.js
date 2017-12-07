@@ -12,7 +12,7 @@ import { dateRangeFromString } from '../../utils/date';
 
 import ArticleCard from '../../components/ArticleCard';
 import ArticlesLabel from '../../components/TabBarLabels/ArticlesLabel';
-import Header from '../../components/Header';
+import Header from './Header';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 import gStyles from '../../styles';
@@ -49,10 +49,7 @@ class Articles extends PureComponent {
 
   	return (
 	    <View style={{flex:1}}>
-	      <Header 
-	        title='Library'
-	        navigation={navigation}
-	      />
+	      <Header navigation={navigation} />
 	      <View style={gStyles.screenBody}>
 			    <FlatList
 			    	contentContainerStyle={styles.articlesContainer}

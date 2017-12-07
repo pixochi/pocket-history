@@ -6,6 +6,7 @@ import {
   TextInput,
   Platform
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { Constants } from 'expo';
 import { Header, SearchBar } from 'react-native-elements';
 
@@ -14,41 +15,33 @@ import MenuIcon from './MenuIcon';
 
 class AppHeader extends PureComponent {
 
-  _renderSearch = () => {
-    const { search } = this.props;
-     return (
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          value={search.value}
-          onChangeText={search.onChangeText}
-          placeholder={search.placeholder}
-          underlineColorAndroid='transparent'
-        />
-      </View>
-    )
+  static propTypes = {
+    title: PropTypes.string,
+    centerComponent: PropTypes.element,
+    centerComponentStyle: PropTypes.object,
+    leftComponent: PropTypes.element,
+    leftComponentStyle: PropTypes.object,
+    rightComponent: PropTypes.element,
+    rightComponentStyle: PropTypes.object
   }
 
-  _renderTextTitle = () => {
+  _renderTitle = () => {
     const { title } = this.props;
     return (
       <Text style={styles.title}>
         { title }
       </Text>
-    )
-  }
-
-  _renderLeftComponent = () => {
-    const { navigation } = this.props;
-    return (
-      <MenuIcon navigation={navigation} />
-    )
+    )  
   }
 
   render() {
-  	const { rightComponent, leftComponent, search } = this.props;
-    const _leftComponent = leftComponent ? leftComponent : this._renderLeftComponent();
-    const _centerComponent = search ? this._renderSearch() : this._renderTextTitle();
+  	const { rightComponent, centerComponent, leftComponent, title } = this.props;
+    const _centerComponent = title ? this._renderTitle() : centerComponent;
+    const {
+      leftComponentStyle = styles.leftComponent,
+      centerComponentStyle = styles.centerComponent,
+      rightComponentStyle = styles.rightComponent,
+    } = this.props;
 
     return (
       <Header
@@ -58,9 +51,9 @@ class AppHeader extends PureComponent {
       >
       
         <View style={styles.headerItemsContainer}>
-          <View style={styles.leftComponent}>{_leftComponent}</View>
-          <View style={styles.center}>{_centerComponent}</View>
-          <View style={styles.rightComponent}>{rightComponent}</View>
+          <View style={leftComponentStyle}>{leftComponent}</View>
+          <View style={centerComponentStyle}>{_centerComponent}</View>
+          <View style={rightComponentStyle}>{rightComponent}</View>
         </View>
         
       </Header>
@@ -89,9 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: Constants.statusBarHeight
-    // height: 35
   },
-  center: {
+  centerComponent: {
     flex: 5,
     padding: 4
   },
@@ -112,15 +104,6 @@ const styles = StyleSheet.create({
       }
     })
 	},
-  searchContainer: {
-    flex: 1,
-  },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal:10,
-    backgroundColor: 'white',  
-    borderRadius:5
-  },
   leftComponent: {
     flex: 1,
     alignContent: 'center'

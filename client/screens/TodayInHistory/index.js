@@ -225,14 +225,13 @@ class TodayInHistory extends PureComponent {
 
     return (
       <View style={styles.container}>
-      <Header 
-        title='Today In History' 
-        navigation={navigation}
-        leftComponent={<MenuIcon navigation={navigation} />}
-        rightComponent={<Options changeFilter={changeFilter} />}
-      />
-      <View style={styles.container}>   
-        <View style={styles.screenBody}>
+        <Header 
+          title='Today In History' 
+          navigation={navigation}
+          leftComponent={<MenuIcon navigation={navigation} />}
+          rightComponent={<Options changeFilter={changeFilter} />}
+        />
+        <View style={gStyles.screenBody}>
           <CalendarModal 
             isVisible={this.state.isModalVisible}
             currentDate={toCalendarDate(selectedDate.timestamp)} 
@@ -253,7 +252,6 @@ class TodayInHistory extends PureComponent {
           />
         </View>
       </View>
-      </View>
     );
   }
 }
@@ -261,10 +259,6 @@ class TodayInHistory extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  screenBody: {
-    flex: 1,
-    marginTop: 70
   }
 });
 

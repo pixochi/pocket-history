@@ -58,7 +58,7 @@ class FactCard extends PureComponent {
             style={styles.img}
             source={{uri: img}}
             maxHeight={SCREEN_HEIGHT *0.6}
-            width={SCREEN_WIDTH - 25}
+            width={SCREEN_WIDTH}
           />  
         </View>
       }
@@ -94,7 +94,7 @@ class FactCard extends PureComponent {
               type='material-community'
               size={40}
               color={COLORS.actionIcon}
-              underlayColor='#d3a417'
+              underlayColor={COLORS.underlayColor}
               style={styles.openDetailIcon}
               onPress={this._openFactDetail}
             /> 
@@ -106,6 +106,9 @@ class FactCard extends PureComponent {
   }
 }
 
+
+const TEXT_COLOR = COLORS.greyDark;
+
 const htmlViewStyles = {
   a: {
       color: COLORS.link,
@@ -116,15 +119,15 @@ const htmlViewStyles = {
 const styles = StyleSheet.create({
   factCard: {
     flex: 1,
-    backgroundColor: COLORS.factTextBackground,
-    marginHorizontal: 10,
-    marginVertical: 6,
-    borderRadius: 3,
-    borderWidth: 8,
-    borderColor: '#fefefe',
+    marginVertical: 4,
+    marginBottom: 2,
+    borderColor: COLORS.cardBorder,
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    backgroundColor: COLORS.cardBackground
   },
   cardBody: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
     paddingTop: 4,
     justifyContent: 'center',
   },
@@ -139,7 +142,7 @@ const styles = StyleSheet.create({
   },
   year: {
     fontSize: 21,
-    color: '#fff',
+    color: '#2b2b2b',
     ...Platform.select({
       android: {
         fontFamily: 'monospace'
@@ -151,7 +154,7 @@ const styles = StyleSheet.create({
   },
   yearsAgoText: {
     fontSize: 16,
-    color: '#fff',
+    color: TEXT_COLOR,
     ...Platform.select({
       android: {
         fontFamily: 'monospace'
@@ -159,21 +162,20 @@ const styles = StyleSheet.create({
     })
   },
   htmlView: {
-    marginBottom: 5
+    marginBottom: 2,
+    paddingHorizontal: 3
   },
   imgContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#eee'
   },
   img: {
     flex: 1
   },
   factText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
+    color: TEXT_COLOR,
     ...Platform.select({
       ios: {
         fontFamily: 'San Francisco',
@@ -184,8 +186,7 @@ const styles = StyleSheet.create({
     }),
   },
   openDetailIcon: {
-    alignSelf: 'flex-end',
-    padding: 4
+    alignSelf: 'flex-end'
   },
 });
 

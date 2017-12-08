@@ -51,7 +51,7 @@ class BookCard extends PureComponent {
 
 		    	<TouchableOpacity 
 		    		style={styles.imgContainer}
-		    		activeOpacity={0.7}
+		    		activeOpacity={0.8}
 		    		onPress={() => onBookPress(description)}
 		    	>
 			      	<Icon
@@ -67,7 +67,7 @@ class BookCard extends PureComponent {
 				        source={{uri: book.image}}
 				      />
 		      </TouchableOpacity>
-		      <View style={[gStyles.cardMenu, styles.menu]}>
+		      <View style={styles.menu}>
 			    	<CardMenu options={menuOptions} />
 			  	</View>
 		    </View>
@@ -81,25 +81,24 @@ const IMG_WIDTH = 130;
 
 const styles = StyleSheet.create({
 	bookCard: {
-		marginVertical: 10,
-		marginHorizontal: 15
+		marginVertical: 5,
 	},
 	bookCardContainer: {
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center',
-		padding: 7,
-		backgroundColor: COLORS.yellowLight,
-    borderColor: '#fff',
-		borderWidth: 6,
-		borderRadius: 4,
+		padding: 5,
+    borderColor: COLORS.cardBorder,
+		borderTopWidth: 1,
+		borderBottomWidth: 1,
+		backgroundColor: COLORS.cardBackground
 	},
 	bookInfo: {
 		flex: .55,
 	},
 	title: {
-		color: '#fff',
-		fontSize: 24,
+		color: COLORS.greyDark,
+		fontSize: 22,
 		fontWeight: 'bold',
 		textAlign: 'center',
 		marginBottom: 10
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold'
 	},
 	menu: {
-		backgroundColor: '#222'
+		alignSelf: 'flex-start'
 	}
 });
 

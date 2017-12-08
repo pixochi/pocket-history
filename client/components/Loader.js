@@ -6,9 +6,16 @@ import {
   ActivityIndicator,
   Platform
 } from 'react-native';
+import PropTypes from 'prop-types';
 
+import { COLORS } from '../constants/components';
 
 class Loader extends PureComponent {
+
+	static propTypes = {
+	  animating: PropTypes.bool
+	}
+
 	static defaultProps = {
 	  animating: true
 	}
@@ -41,7 +48,7 @@ class Loader extends PureComponent {
 				<ActivityIndicator 
 					size={indicatorSize}
 					animating={this.props.animating}
-					color='#B351E1'
+					color={COLORS.header}
 				/>
 				{ canShowMessage && 
 					<Text style={styles.message}>

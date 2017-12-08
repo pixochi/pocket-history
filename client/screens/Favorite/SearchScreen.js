@@ -115,7 +115,7 @@ class SearchScreen extends PureComponent {
       <Icon 
         name='folder-open'
         type='material-icon'
-        color={COLORS.actionIcon}
+        color={COLORS.headerIcon}
         underlayColor={COLORS.headerIconUnderlay}
         iconStyle={styles.categoriesIcon}
         containerStyle={styles.categoriesIconContainer}

@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import Slider from 'react-native-multi-slider';
 
+import { COLORS } from '../constants/components';
+
 class DateRangeFilter extends PureComponent {
 
   render() {
@@ -35,6 +37,7 @@ class DateRangeFilter extends PureComponent {
 			    onValuesChange={() => null}
 			    selectedStyle={styles.sliderSelected}
 			    containerStyle={styles.slider}
+			    markerStyle={styles.marker}
 			   />
 			   <View style={styles.labelsContainer}>
 			   	<Text style={[styles.label, styles.labelLeft]}>{labelMin}</Text>
@@ -53,15 +56,26 @@ const styles = StyleSheet.create({
 	},
 	slider: {
 		position: 'relative',
-		bottom: -10,
+		bottom: -14,
 		alignSelf: 'center'
+	},
+	sliderSelected: {
+		backgroundColor: COLORS.yellowDark
+	},
+	marker: {
+		backgroundColor: '#fff',
+		height: 28,
+		width: 28,
+		borderColor: COLORS.header,
+		borderWidth: .8,
+		borderRadius: 14
 	},
 	labelsContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between'
 	},
 	label: {
-		color: '#fff',
+		color: COLORS.greyDark,
 		fontSize: 14,
 		fontWeight: 'bold'
 	},
@@ -72,9 +86,6 @@ const styles = StyleSheet.create({
 	labelRight: {
 		position: 'relative',
 		right: -15
-	},
-	sliderSelected: {
-		backgroundColor: '#a31c15'
 	}
 });
 

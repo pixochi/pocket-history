@@ -110,7 +110,7 @@ class Books extends PureComponent {
     }
 
     return (
-     <View style={{flex:1}}>
+     <View style={styles.container}>
       <Header navigation={screenProps.navigation} />
       <View style={gStyles.screenBody}>
         { Main }
@@ -121,9 +121,11 @@ class Books extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   booksContainer: {
-    // marginHorizontal: 10,
-    paddingVertical: 15
+    
   }
 });
 

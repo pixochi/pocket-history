@@ -31,7 +31,7 @@ class Favorite extends PureComponent {
     return (
       <Icon 
         name='search'
-        color={COLORS.actionIcon}
+        color={COLORS.headerIcon}
         underlayColor={COLORS.headerIconUnderlay}
         iconStyle={styles.searchIcon}
         containerStyle={{flex:1}}

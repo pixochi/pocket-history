@@ -48,7 +48,7 @@ class Articles extends PureComponent {
   	const { links } = navigation.state.params;
 
   	return (
-	    <View style={{flex:1}}>
+	    <View style={styles.container}>
 	      <Header navigation={navigation} />
 	      <View style={gStyles.screenBody}>
 			    <FlatList
@@ -65,6 +65,9 @@ class Articles extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1
+	},
 	articlesContainer: {
 		
 	}

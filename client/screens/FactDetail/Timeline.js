@@ -24,17 +24,20 @@ import { filterBySearch, filterTimelineByDate, sortByDate } from '../../utils/fi
 import { buildTimelineBorders, renderTimelineFact,
   getTimeRange, getRangeFilterProps } from './helpers/timeline';
 
-import { fetchTimeline, changeTimelineFilter } from './actions';
+import { fetchTimeline, changeFilter } from './actions';
 
+import { COLORS } from '../../constants/components';
 import gStyles from '../../styles';
 
 
 class Timeline extends PureComponent {
+
   static navigationOptions = {
     tabBarLabel : <TimelineLabel />
   }
 
   _rangeFilterProps = {}
+
   componentDidMount() {
     this._fetchTimeline();
   }
@@ -142,7 +145,6 @@ class Timeline extends PureComponent {
     changeFilter({ range: rangeFilter });
   }
 
-
   render() {
     const { screenProps, timelineFacts, allTimelineFacts, timelineRange, 
       changeFilter, filter, isLoading, isOnline } = this.props;
@@ -162,7 +164,7 @@ class Timeline extends PureComponent {
     } else {
       const { _timelineStart = {}, _timelineEnd = {} } = this;
       Main = (
-        <View style={styles.listContainer}>
+        <View style={styles.timelineContainer}>
           <TimelineList 
             data={[_timelineStart, ...facts, _timelineEnd]}
             renderTime={this._renderTime}
@@ -172,10 +174,10 @@ class Timeline extends PureComponent {
               onEndReached: this._onEndReached
             }}
             lineWidth={1}
-            lineColor='#fff'
-            circleColor='#fff'
+            lineColor={COLORS.greyLight}
+            circleColor={COLORS.header}
             innerCircle='dot'
-            dotColor='#94269d'
+            dotColor='#fff'
             style={styles.timeline}
           />
         </View>      
@@ -184,8 +186,8 @@ class Timeline extends PureComponent {
 
     const { min, max, labelMin, labelMax, rangeKey } = this._rangeFilterProps;
     return (
-      <View style={{flex:1}}>
-        <View style={gStyles.screenBody}>
+      <View style={styles.container}>
+        <View style={[gStyles.screenBody, styles.screenBody]}>
           <DateRangeFilter
             values={filter.range.start[rangeKey], filter.range.end[rangeKey]}
             min={min}
@@ -201,6 +203,74 @@ class Timeline extends PureComponent {
     );
   }
 }
+
+const htmlViewStyles = {
+  a: {
+    color: COLORS.link,
+    fontWeight: 'bold'
+  }
+}
+
+const styles = StyleSheet.create({
+  screenBody: {
+    // backgroundColor: '#fff'
+  },
+  container: {
+    flex: 1
+  },
+  borderItem: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  description: {
+    color: COLORS.greyDark,
+    fontSize: 15,
+    marginTop: 4,
+  },
+  timelineContainer: {
+    flex: 1,
+  },
+  timeline: {
+    paddingHorizontal: 4
+  },
+  timelineTitle: {
+    fontSize: 15,
+    fontWeight: 'bold'
+  },
+  timeWrapper: {
+    alignItems: 'flex-end'
+  },
+  timeContainer: {    
+    minWidth: 75
+  },
+  time: {
+    textAlign: 'right',
+    fontSize: 15,
+    color: '#2a2a2a',
+  },
+  text: {
+    fontSize: 20,
+  },
+  footer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 10,
+    marginBottom: 10
+  },
+  loadingMsgContainer: {
+    marginHorizontal: 5,
+  },
+  textLoading: {
+    color: COLORS.greyLight,
+    fontSize: 18
+  },
+  filterContainer: {
+    flex: 1,
+    backgroundColor: '#fff'
+  }
+});
 
 const filterTimeline = (data, searchValue, dateRange, sortOrder) => {
   data = filterBySearch(data, searchValue, ['description']);
@@ -229,74 +299,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchTimeline(options));
   },
   changeFilter: (filter) => {
-    dispatch(changeTimelineFilter(filter));
+    dispatch(changeFilter(filter));
   }
 });
-
-const htmlViewStyles = {
-  a: {
-      color: '#c136cc',
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  borderItem: {
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  description: {
-    color: '#fff',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  listContainer: {
-    flex: 1,
-  },
-  timeline: {
-    paddingHorizontal: 4
-  },
-  timelineTitle: {
-    fontSize: 15,
-    fontWeight: 'bold'
-  },
-  timeWrapper: {
-    alignItems: 'flex-end'
-  },
-  timeContainer: {    
-    minWidth: 75
-  },
-  time: {
-    textAlign: 'right',
-    fontSize: 14,
-    color: '#fff',
-  },
-  text: {
-    fontSize: 20,
-  },
-  footer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 10,
-    marginBottom: 10
-  },
-  loadingMsgContainer: {
-    marginHorizontal: 5,
-    color: '#fff'
-  },
-  textLoading: {
-    color: '#fff',
-    fontSize: 18
-  },
-  filterContainer: {
-    flex: 1,
-    backgroundColor: '#fff'
-  }
-});
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+		borderColor: COLORS.cardBorder,
 		borderBottomWidth: 1,
-		borderBottomColor: '#888',
-		backgroundColor: '#ddd',
+		backgroundColor: COLORS.cardBackground
 	},
 	titleContainer: {
 		flex: .95,

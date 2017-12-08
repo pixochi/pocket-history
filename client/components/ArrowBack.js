@@ -30,7 +30,7 @@ class ArrowBack extends PureComponent {
     		name='keyboard-arrow-left'
     		type='material-icon'
     		size={40}
-    		color={COLORS.actionIcon}
+    		color={COLORS.headerIcon}
     		underlayColor={COLORS.headerIconUnderlay}
     		onPress={_onPress}
     		iconStyle={styles.arrowBack}

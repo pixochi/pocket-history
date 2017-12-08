@@ -105,17 +105,17 @@ class Videos extends PureComponent {
             extraData={videos}
             keyExtractor={video => video.id}
             renderItem={this._renderVideo}
+            contentContainerStyle={styles.videosContainer}
           />
-          <Modal 
-            isScrollable={false} 
-            modalStyle={styles.modal} 
+          <Modal
             name='factVideo'
+            isScrollable={false}  
           >
             <View style={gStyles.videoContainer}>
               <WebView
+                source={{uri: videoUrl}}
                 startInLoadingState
                 renderLoading={() => <Loader />}
-                source={{uri: videoUrl}}
                 style={gStyles.videoPlayer}
               />
             </View>
@@ -125,20 +125,22 @@ class Videos extends PureComponent {
     }
 
     return (
-      <View style={{flex:1}}>
-      <Header navigation={screenProps.navigation} />
-      <View style={gStyles.screenBody}>
-        { Main }
-      </View>
-    </View>  
+      <View style={styles.container}>
+        <Header navigation={screenProps.navigation} />
+        <View style={gStyles.screenBody}>
+          { Main }
+        </View>
+      </View>  
     );
   }
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    margin: -8
+  container: {
+    flex: 1
+  },
+  videosContainer: {
+    // marginBottom: 60
   },
   screenMessage: {
     fontSize: 16

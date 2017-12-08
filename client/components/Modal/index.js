@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  ScrollView
+  ScrollView,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Button } from 'react-native-elements';
@@ -14,15 +15,29 @@ import { closeModal } from './actions';
 
 class ReduxModal extends Component {
 
+	static propTypes = {
+		name: PropTypes.string.isRequired,
+		children: PropTypes.node,
+		isScrollable: PropTypes.bool,
+	  closeModal: PropTypes.func,
+	  modalStyle: PropTypes.oneOf(PropTypes.object, PropTypes.number),
+	}
+
+	static defaultProps = {
+	  isScrollable: true
+	}
+
 	_btnClose = () => {
 		const { closeModal } = this.props;
 		return (
-			<Button 
-	  		title='Close'
-	  		onPress={() => closeModal()}
-	  		buttonStyle={styles.closeBtn}
-	  		textStyle={styles.closeBtnText}
-	  	/>
+			<View style={styles.btnContainer}>
+				<Button 
+		  		title='Close'
+		  		onPress={() => closeModal()}
+		  		buttonStyle={styles.closeBtn}
+		  		textStyle={styles.closeBtnText}
+		  	/>
+	  	</View>
 		)
 	}
 
@@ -30,12 +45,12 @@ class ReduxModal extends Component {
 		const { 
 			isVisible,
 			closeModal,
-			isScrollable = true,
-			name = '', 
+			isScrollable,
+			name, 
 			currentName,
 			btnClose = this._btnClose(),
-			modalStyle = styles.modal,
-			children = null
+			modalStyle,
+			children
 		} = this.props;
 		let ContentContainer = isScrollable ? ScrollView : View;
 
@@ -44,9 +59,9 @@ class ReduxModal extends Component {
 	      isVisible={isVisible && name === currentName} 
 	      onBackdropPress={closeModal}
 	      onBackButtonPress={closeModal}
-	      style={modalStyle}
+	      style={[styles.modal, modalStyle]}
 	    >
-		    <ContentContainer style={{flex: 1}}>
+		    <ContentContainer style={styles.container}>
 		    	{ children }
 		    	{ btnClose }
 		    </ContentContainer>
@@ -57,19 +72,21 @@ class ReduxModal extends Component {
 
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
 	modal: {
-		margin: 12
+		margin: -5
+	},
+	btnContainer: {
+		marginHorizontal: -10
 	},
 	closeBtn: {
-		flex: 1,
-		height: 40,
-		margin: 10,
-		backgroundColor: 'rgb(255, 87, 35)',
-		borderRadius: 4
+		backgroundColor: '#db4437',
+		borderRadius: 2,
 	},
 	closeBtnText: {
-		padding: 5,
-		fontSize: 24
+		fontSize: 18
 	}
 });
 

@@ -22,15 +22,7 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 1000,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,.3)'
-  },
-  cardMenu: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1000,
-    padding: 4
+    alignItems: 'center'
   },
   videoContainer: {
     flex: 1,

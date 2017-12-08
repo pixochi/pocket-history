@@ -3,18 +3,20 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   TouchableOpacity,
   Share,
-  Clipboard
+  Clipboard,
+  Dimensions
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import Image from 'react-native-scalable-image';
 
 import CardMenu from './CardMenu';
 import gStyles from '../styles';
 import { COLORS } from '../constants/components';
 
 
+const DEVICE_WIDTH = Dimensions.get('screen').width;
 const IMG_ROOT_URL = 'https://i.ytimg.com/vi';
 const IMG_SIZE = 'mqdefault.jpg' // medium, 320*180
 
@@ -33,23 +35,21 @@ class VideoCard extends PureComponent {
       
 	      <TouchableOpacity 
 	    		style={styles.imgContainer}
-	    		activeOpacity={0.7}
+	    		activeOpacity={0.8}
 	    		onPress={() => onVideoPress(id)}
 	    	>
-		      <View>
-		      	<Image
-		      	  style={styles.image}
-		      	  source={{uri: imgUri}}
-		      	/>
-		      </View>
+	      	<Image
+	      		source={{uri: imgUri}}
+	      		width={DEVICE_WIDTH}
+	      	/>
 		      <View style={[gStyles.overlay, styles.iconContainer]}>
 		      		<Icon
 		      			reverse
 			      		name='play'
 			      		type='font-awesome'
-			      		size={30}
+			      		size={28}
 			      		color='#ff0000'
-			      		iconStyle={{paddingLeft: 8}}
+			      		iconStyle={styles.playIcon}
 			      	/>
 	      	</View>
 		    </TouchableOpacity>
@@ -58,12 +58,10 @@ class VideoCard extends PureComponent {
 	      	<Text style={styles.title}>
       	  	{ title }
       		</Text>
+      		<View style={styles.menu}>
+    	  		<CardMenu options={menuOptions}/>
+    			</View>
 	      </View>
-
-    	  <View style={[gStyles.cardMenu, styles.menu]}>
-    	  	<CardMenu options={menuOptions}/>
-    		</View>
-
       </View>
     );
   }
@@ -72,57 +70,37 @@ class VideoCard extends PureComponent {
 const IMG_WIDTH = 320;
 const IMG_HEIGHT =  180;
 
-const borderBottomRadius = {
-	borderBottomRightRadius: 10,
-	borderBottomLeftRadius: 10
-}
-
-const borderTopRadius = {
-	borderTopRightRadius: 15,
-	borderTopLeftRadius: 15
-}
-
 const styles = StyleSheet.create({
 	videoCardContainer: {
 		flex: 1,
-		marginHorizontal: 15,
-		marginVertical: 10,
-		backgroundColor: '#fff',
-		borderColor: '#fff',
-		borderWidth: 6,
-		borderRadius: 10
-	},
-	titleContainer: {
-		flex: 1,
-		backgroundColor: COLORS.yellowLight,
-		// ...borderBottomRadius
-	},
-	title: {
-		padding: 10,
-		textAlign: 'center',
-		fontSize: 22,
-		fontWeight: 'bold',
-		color: '#fff'
+		marginVertical: 6,
+		backgroundColor: COLORS.cardBackground,
+		borderColor: COLORS.cardBorder,
+		borderTopWidth: 1,
+		borderBottomWidth: 1
 	},
 	imgContainer: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		// ...borderTopRadius
 	},
-	image:{
-		height: IMG_HEIGHT,
-		width: IMG_WIDTH,
-		// ...borderTopRadius
+	playIcon: {
+		paddingLeft: 6
 	},
-	iconContainer: {
-		backgroundColor: 'rgba(0,0,0,.25)',
-		// ...borderTopRadius
+	titleContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		paddingVertical: 7
+	},
+	title: {
+		flex: 0.85,
+		paddingLeft: 15,
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: COLORS.greyDark
 	},
 	menu: {
-		padding: 8,
-		backgroundColor: '#222',
-		// borderTopRightRadius: 10
+		flex: .15
 	}
 });
 

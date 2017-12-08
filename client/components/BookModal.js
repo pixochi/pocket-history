@@ -29,11 +29,11 @@ class BookModal extends PureComponent {
 const styles = StyleSheet.create({
 	descriptionContainer: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 17,
     backgroundColor: '#fff'
   },
   descriptionText: {
-    textAlign: 'center',
     fontSize: 18
   }
 });

@@ -106,7 +106,7 @@ class FactsScreen extends PureComponent {
 
 	  } else {
 	  	Main = (
-	  		<View style={styles.listContainer}>
+	  		<View style={styles.container}>
 	  			<Loader animating={!isReady} />
 		      <AnimatedFlatList
 		       	contentContainerStyle={styles.list}
@@ -126,7 +126,7 @@ class FactsScreen extends PureComponent {
 	  }
 
     return (
-    	<View style={{flex:1}}>
+    	<View style={styles.container}>
     		{ Main }
     	</View>
     ) 
@@ -135,11 +135,10 @@ class FactsScreen extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-	listContainer: {
+	container: {
 		flex: 1
 	},
   list: {
-  	padding: 4,
   	paddingTop: HEADER_HEIGHT
   }
 });

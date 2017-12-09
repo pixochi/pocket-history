@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput,
   Linking,
   ActivityIndicator
 } from 'react-native';
@@ -110,10 +111,8 @@ class Timeline extends PureComponent {
   _renderTime = (rowData, sectionID, rowID) => {
     if (_.isEmpty(rowData)) { return <View/> }
     return (
-      <View style={styles.timeWrapper}>
-        <View style={styles.timeContainer}>
-          <Text style={styles.time}>{rowData.date}</Text>
-        </View>
+      <View style={styles.timeContainer}>
+        <Text style={styles.time}>{rowData.date}</Text>
       </View>
     );
   }
@@ -136,7 +135,9 @@ class Timeline extends PureComponent {
     )
   }
 
-  _onRangeFilterChanged = (values, rangeKey) => {
+  _onRangeChange = (values, rangeKey) => {
+    const { filter: { range } } = this.props;
+    const { start, end } = range;
     const { changeFilter } = this.props;
     let rangeFilter = { start: {}, end: {} }
 
@@ -178,25 +179,23 @@ class Timeline extends PureComponent {
             circleColor={COLORS.header}
             innerCircle='dot'
             dotColor='#fff'
-            style={styles.timeline}
           />
         </View>      
       );
     }
 
     const { min, max, labelMin, labelMax, rangeKey } = this._rangeFilterProps;
+    const rangeValues = [filter.range.start[rangeKey], filter.range.end[rangeKey]]
     return (
       <View style={styles.container}>
         <View style={[gStyles.screenBody, styles.screenBody]}>
           <DateRangeFilter
-            values={filter.range.start[rangeKey], filter.range.end[rangeKey]}
-            min={min}
-            max={max}
-            labelMin={labelMin}
-            labelMax={labelMax}
-            rangeKey={rangeKey}
-            onValuesChanged={this._onRangeFilterChanged} 
-           />
+            values = {rangeValues}
+            rangeKey = {rangeKey}
+            min = {min}
+            max = {max}
+            onChangeRange = {this._onRangeChange}
+          />
           { Main }
         </View>
       </View>
@@ -213,7 +212,7 @@ const htmlViewStyles = {
 
 const styles = StyleSheet.create({
   screenBody: {
-    // backgroundColor: '#fff'
+    backgroundColor: '#fff'
   },
   container: {
     flex: 1
@@ -225,27 +224,23 @@ const styles = StyleSheet.create({
   description: {
     color: COLORS.greyDark,
     fontSize: 15,
-    marginTop: 4,
   },
   timelineContainer: {
     flex: 1,
-  },
-  timeline: {
-    paddingHorizontal: 4
+    marginTop: 4
   },
   timelineTitle: {
     fontSize: 15,
     fontWeight: 'bold'
   },
-  timeWrapper: {
-    alignItems: 'flex-end'
-  },
-  timeContainer: {    
-    minWidth: 75
+  timeContainer: {
+    marginLeft: 4,
+    minWidth: 70,
   },
   time: {
-    textAlign: 'right',
-    fontSize: 15,
+    textAlign: 'center',
+    alignSelf: 'center',
+    fontSize: 13,
     color: '#2a2a2a',
   },
   text: {
@@ -265,10 +260,6 @@ const styles = StyleSheet.create({
   textLoading: {
     color: COLORS.greyLight,
     fontSize: 18
-  },
-  filterContainer: {
-    flex: 1,
-    backgroundColor: '#fff'
   }
 });
 

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import TimelineList from 'react-native-timeline-listview'
+import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -35,6 +36,13 @@ class Timeline extends PureComponent {
 
   static navigationOptions = {
     tabBarLabel : <TimelineLabel />
+  }
+
+  static propTypes = {
+    allTimelineFacts: PropTypes.arrayOf(PropTypes.object),
+    timelineRange: PropTypes.object,
+    filter: PropTypes.object,
+    isOnline: PropTypes.bool
   }
 
   _rangeFilterProps = {}
@@ -136,8 +144,8 @@ class Timeline extends PureComponent {
   }
 
   _onRangeChange = (values, rangeKey) => {
-    const { filter: { range } } = this.props;
-    const { start, end } = range;
+    // const { filter: { range } } = this.props;
+    // const { start, end } = range;
     const { changeFilter } = this.props;
     let rangeFilter = { start: {}, end: {} }
 
@@ -177,8 +185,6 @@ class Timeline extends PureComponent {
             lineWidth={1}
             lineColor={COLORS.greyLight}
             circleColor={COLORS.header}
-            innerCircle='dot'
-            dotColor='#fff'
           />
         </View>      
       );
@@ -194,7 +200,7 @@ class Timeline extends PureComponent {
             rangeKey = {rangeKey}
             min = {min}
             max = {max}
-            onChangeRange = {this._onRangeChange}
+            onRangeChange = {this._onRangeChange}
           />
           { Main }
         </View>

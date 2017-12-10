@@ -19,7 +19,6 @@ export const filterBySearch = (data, searchValue, searchIn) => {
   return filteredData;
 }
 
-
 export const filterTimelineByDate = (data, range) => {
 	if (_.isEmpty(range)) { return data; }
 

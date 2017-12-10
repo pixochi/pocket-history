@@ -5,11 +5,19 @@ import {
   Animated
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
+import PropTypes from 'prop-types';
 
 import { HEADER_HEIGHT, COLORS } from '../constants/components';
 
 
 class DateHeader extends PureComponent {
+
+  static propTypes = {
+    selectedDate: PropTypes.object.isRequired,
+    changeDate: PropTypes.func.isRequired,
+    headerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+    openModal: PropTypes.func.isRequired
+  }
 
   render() {
     // headerStyle contains animated props
@@ -23,7 +31,7 @@ class DateHeader extends PureComponent {
             raised
             name='keyboard-arrow-left'
             color='#fff'
-            underlayColor={COLORS.headerIconUnderlay}
+            underlayColor={COLORS.underlayColor}
             size={44}
             style={[styles.arrow, styles.arrowLeft]} 
             onPress={() => changeDate(selectedDate.timestamp - day)} 
@@ -42,7 +50,7 @@ class DateHeader extends PureComponent {
           <Icon 
             name='keyboard-arrow-right'
             color='#fff'
-            underlayColor={COLORS.headerIconUnderlay}
+            underlayColor={COLORS.underlayColor}
             size={44}
             style={styles.arrow}
             onPress={() => changeDate(selectedDate.timestamp + day)} 

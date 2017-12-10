@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Picker,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
@@ -14,33 +15,37 @@ import { COLORS } from '../constants/components';
 
 class DateRangeFilter extends PureComponent {
 
+	// the picker with rangeStart loses its selected value
+	// when its items are changed
+	state = { rangeEndUpdated: false }
+
 	static propTypes = {
 	  values: PropTypes.arrayOf(PropTypes.number).isRequired,
 	  rangeKey: PropTypes.string,
 	  min: PropTypes.number,
 	  max: PropTypes.number,
-	  labelMin: PropTypes.string,
-	  labelMax: PropTypes.string,
-	  onChangeRange: PropTypes.func
-	}
-
-	static defaultProps = {
-	  labelMin: 'Date start',
-	  labelMax: 'Date end'
+	  onRangeChange: PropTypes.func
 	}
 
 	_onRangeStartChange = (rangeStart) => {
-		const { values, max, rangeKey, onChangeRange } = this.props;
+		if (this.state.rangeEndUpdated) { 
+			this.setState({ rangeEndUpdated: false });
+			return;
+		}
+		const { values, max, rangeKey, onRangeChange } = this.props;
 		const rangeEnd = values[1] ? values[1] : max;
 		const newRangeValues = [rangeStart, rangeEnd];
-		onChangeRange(newRangeValues, rangeKey);
+		onRangeChange(newRangeValues, rangeKey);
 	}
 
 	_onRangeEndChange = (rangeEnd) => {
-		const { values, min, rangeKey, onChangeRange } = this.props;
+		const { values, min, rangeKey, onRangeChange } = this.props;
 		const rangeStart = values[0] ? values[0] : min;
 		const newRangeValues = [rangeStart, rangeEnd];
-		onChangeRange(newRangeValues, rangeKey);
+
+		this.setState({ rangeEndUpdated: true }, () => {
+			onRangeChange(newRangeValues, rangeKey);
+		});
 	}
 
 	// @param type ['month', 'year']
@@ -51,14 +56,13 @@ class DateRangeFilter extends PureComponent {
 			const label = type === 'month' ? MONTHS[i-1] : (i + '');
 			const pickerItem = (
 				<Picker.Item
-					key = {i}
+					key = {label}
 					label = {label}
 					value = {i}
 				/>
 			)
 			pickerItems.push(pickerItem);
 		}
-
 		return pickerItems;
 	}
 
@@ -72,8 +76,10 @@ class DateRangeFilter extends PureComponent {
       	<View style={styles.inputContainer}>
 	      	<View style={styles.pickerContainer}>
 		      	<Picker
+		      		ref = 'rangeStartPicker'
 						  selectedValue={valueStart}
 						  onValueChange={this._onRangeStartChange}
+						  mode='dropdown'
 						  style = {styles.rangePicker}
 						>
 						  { this._renderPickerItems(min, valueEnd, rangeKey) }
@@ -84,7 +90,7 @@ class DateRangeFilter extends PureComponent {
 						<Icon
 							name = 'dash'
 							type = 'octicon'
-							size = {22}
+							size = {18}
 							color = {COLORS.greyDark}
 							iconStyle = {styles.separatorIcon}
 						/>
@@ -94,6 +100,7 @@ class DateRangeFilter extends PureComponent {
 		      	<Picker
 						  selectedValue={valueEnd}
 						  onValueChange={this._onRangeEndChange}
+						  mode='dropdown'
 						  style = {styles.rangePicker}
 						>
 					  	{ this._renderPickerItems(valueStart, max, rangeKey) }

@@ -18,7 +18,7 @@ export class DrawerContent extends PureComponent {
 			      inactiveTintColor='#444'
 			      activeTintColor='#fff'
 			      activeBackgroundColor={ COLORS.yellowDark }
-			      inactiveBackgroundColor='#ddd'
+			      inactiveBackgroundColor='#eee'
 			      labelStyle={styles.label}
 		      />
 		    </View>
@@ -30,23 +30,14 @@ export class DrawerContent extends PureComponent {
 const styles = StyleSheet.create({
 	drawer: {
 		marginTop: Constants.statusBarHeight - 4,
-		paddingTop: 0,
-		backgroundColor: '#eee',
+		backgroundColor: '#fff',
 	},
   drawerContent: {
     flex: 1,
     justifyContent: 'space-between'
   },
-  drawerItem: {
-  	backgroundColor: 'red'
-  },
   label: {
   	fontSize: 20
-  },
-  iconContainer: {
-  	flex: 1,
-  	padding: 20,
-  	margin: 8
   }
 });
 

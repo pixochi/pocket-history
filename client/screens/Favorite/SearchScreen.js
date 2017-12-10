@@ -42,16 +42,18 @@ class SearchScreen extends PureComponent {
   state = {}
 
   _renderFact = ({item}) => {
+    const { text, date, year } = item;
     const { navigation } = this.props;
+    const copyText = `${date}, ${year} - ${text}`;
     const { copyToClipboard, removeFavorite } = this.props;
-    const copy = () => copyToClipboard(item.text);
-    const remove = () => removeFavorite(item.id, 'facts');
+    const copy = () => copyToClipboard(copyText);
+    const remove = () => removeFavorite(item.id, 'facts');    
     return (
       <FactCard 
         {...item}
         isFavorite={true}
         navigation={navigation}
-        menuOptions={createCardMenuOptions(item, item.text, copy, remove)}
+        menuOptions={createCardMenuOptions(item, copyText, copy, remove)}
       />
     );
   }
@@ -116,7 +118,7 @@ class SearchScreen extends PureComponent {
         name='folder-open'
         type='material-icon'
         color={COLORS.headerIcon}
-        underlayColor={COLORS.headerIconUnderlay}
+        underlayColor={COLORS.underlay}
         iconStyle={styles.categoriesIcon}
         containerStyle={styles.categoriesIconContainer}
         onPress={this._openCategoriesModal}
@@ -257,6 +259,47 @@ class SearchScreen extends PureComponent {
   }
 }
 
+const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1
+  },
+  searchContainer: {
+    flex: 1,
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',  
+    borderRadius: 5
+  },
+  categoryContainer: {
+    flex: 1,
+    backgroundColor: COLORS.screenBody
+  },
+  categoriesIconContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoriesIcon: {
+    padding: 4
+  },
+  categoriesContainer: {
+    backgroundColor: '#ddd'
+  },
+  categoryLabelContainer: {
+    flex: 1,
+    backgroundColor: COLORS.greyDark
+  },
+  categoryLabel: {
+    paddingVertical: 7,
+    paddingLeft: 20,
+    color: '#fff',
+    fontSize: 26,
+    fontWeight: 'bold'
+  }
+});
+
 
 const mapStateToProps = ({ favorite }) => {
   const { search, categories, facts,
@@ -286,46 +329,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openModal: (name) => {
     dispatch(openModal(name));
-  }
-});
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1
-  },
-  searchContainer: {
-    flex: 1,
-  },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',  
-    borderRadius: 5
-  },
-  categoryContainer: {
-    flex: 1
-  },
-  categoriesIconContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  categoriesIcon: {
-    padding: 4
-  },
-  categoriesContainer: {
-    backgroundColor: '#ddd'
-  },
-  categoryLabelContainer: {
-    flex: 1,
-    paddingLeft: 20,
-    paddingVertical: 7,
-    backgroundColor: '#4285f4'
-  },
-  categoryLabel: {
-    color: '#fff',
-    fontSize: 26,
-    fontWeight: 'bold'
   }
 });
 

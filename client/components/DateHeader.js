@@ -31,7 +31,7 @@ class DateHeader extends PureComponent {
             raised
             name='keyboard-arrow-left'
             color='#fff'
-            underlayColor={COLORS.underlayColor}
+            underlayColor={COLORS.underlay}
             size={44}
             style={[styles.arrow, styles.arrowLeft]} 
             onPress={() => changeDate(selectedDate.timestamp - day)} 
@@ -50,7 +50,7 @@ class DateHeader extends PureComponent {
           <Icon 
             name='keyboard-arrow-right'
             color='#fff'
-            underlayColor={COLORS.underlayColor}
+            underlayColor={COLORS.underlay}
             size={44}
             style={styles.arrow}
             onPress={() => changeDate(selectedDate.timestamp + day)} 

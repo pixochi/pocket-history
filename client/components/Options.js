@@ -12,6 +12,9 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
+import { COLORS } from '../constants/components';
+
+
 class Options extends PureComponent {
   render() {
     const { changeFilter } = this.props;
@@ -30,7 +33,7 @@ class Options extends PureComponent {
         <MenuOptions>
 
           <MenuOption 
-            style={[styles.separator, styles.optionsContainer]} 
+            style={styles.separator} 
             disabled
           >
             <Text style={styles.separatorText}> Sort </Text>
@@ -71,16 +74,19 @@ const styles = StyleSheet.create({
     paddingVertical: 14
   },
   optionText: {
-    fontSize: 15
+    fontSize: 15,
+    color: COLORS.greyDark
   },
   separator: {
+    paddingVertical: 7,
+    paddingLeft: 8,
     backgroundColor: '#eee',
     borderBottomWidth: .5,
-    borderBottomColor: '#555'
+    borderBottomColor: COLORS.cardBorder
   },
   separatorText: {
     fontWeight: '500',
-    color: '#343'
+    color: COLORS.greyDark
   }
 });
 

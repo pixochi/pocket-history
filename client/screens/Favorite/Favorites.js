@@ -25,7 +25,6 @@ class Favorites extends PureComponent {
     return (
       <View style={styles.listContainer}>
       	<FlatList
-          contentContainerStyle={styles.list}
           data = {data}
           extraData = {data}
           keyExtractor = {(item) => item.id}
@@ -41,9 +40,6 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1
   },
-  list: {
-    padding: 4
-  }
 });
 
 const mapStateToProps = ({ account }) => ({

@@ -23,8 +23,8 @@ class EmptyFavorites extends PureComponent {
 
 const styles = StyleSheet.create({
   message: {
-  	margin: 10,
-  	fontSize: 24,
+  	margin: 8,
+  	fontSize: 20,
   	textAlign: 'center'
   }
 });

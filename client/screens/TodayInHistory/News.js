@@ -6,28 +6,38 @@ import {
   Text,
   Linking
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { fetchNews, changeFactsFilter } from './actions';
-
-import { filterBySearch, sortByDate } from '../../utils/filters';
-
 // COMPONENTS
-import NewsCard from '../../components/NewsCard';
 import Loader from '../../components/Loader';
+import NewsCard from '../../components/NewsCard';
 import NetworkProblem from '../../components/NetworkProblem';
 
+import { fetchNews, changeFactsFilter } from './actions';
 import { toApiNewsDate } from '../../utils/date';
+import { filterBySearch, sortByDate } from '../../utils/filters';
 
-import { HEADER_HEIGHT } from '../../constants/components';
+import { HEADER_HEIGHT, COLORS } from '../../constants/components';
 import gStyles from '../../styles';
 
 
+const NEWS_ROOT_URL = 'http://news.bbc.co.uk/onthisday/hi/dates/stories/';
+
 class News extends PureComponent {
+
+  static propTypes = {
+    articles: PropTypes.arrayOf(PropTypes.object),
+    fetchNews: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    isOnline: PropTypes.bool,   
+    lastTimeFetched: PropTypes.number.isRequired,
+    selectedDate: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
+    articles: [],
     lastTimeFetched: 0,
-    isOnline: false,
-    articles: []
   }
 
   componentDidMount() {
@@ -47,18 +57,17 @@ class News extends PureComponent {
     }
   }
 
-  _openNews = () => {
-    const NEWS_ROOT_URL = 'http://news.bbc.co.uk/onthisday/hi/dates/stories/';
+  _openNews = () => { 
     const { selectedDate } = this.props;
     const newsDate = toApiNewsDate(selectedDate.timestamp);
-    const onThisDayNewsUrl = `${NEWS_ROOT_URL}${newsDate}`
+    const onThisDayNewsUrl = NEWS_ROOT_URL + newsDate;
     Linking.openURL(onThisDayNewsUrl);
   }
 
   _renderNews = (articles) => {
-    return articles.map((article, i) => {
-      return <NewsCard key={i} {...article} />
-    });
+    return articles.map((article, i) => (
+      <NewsCard key={i} {...article} />
+    ));
   }
 
   render() {
@@ -75,7 +84,7 @@ class News extends PureComponent {
     if (filteredArticles.length === 0) {
       return (
         <View style={gStyles.screenMiddle}>
-          <Text>
+          <Text style={styles.message}>
             No news were found,
             please try again later.
           </Text>
@@ -85,15 +94,19 @@ class News extends PureComponent {
 
     return (
       <ScrollView style={styles.newsContainer}>
-        <View style={styles.titleContainer}>
+
+        <View style={styles.newsLinksContainer}>
           <Text style={styles.newsLink} onPress={this._openNews}>
             News for { this.props.selectedDate.factDate }
           </Text>
-        
-          <Text style={styles.title}>
+        </View>
+          
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>
             Latest news
           </Text>
-        </View>
+        </View>     
+
       	{ this._renderNews(filteredArticles) }
       </ScrollView>
     );
@@ -105,23 +118,39 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: HEADER_HEIGHT
   },
-  titleContainer: {
-    margin: 10
+  newsLinksContainer: {
+    margin: 7,
+    marginBottom: 2,
+    paddingLeft: 10,
+    borderColor: COLORS.cardBorder,
+    borderWidth: 1,
+    backgroundColor: COLORS.cardBackground
   },
   newsLink: {
-    fontSize: 18,
     padding: 4,
-    color: '#3581cf',
+    fontSize: 18, 
+    color: COLORS.link,
     textDecorationLine: 'underline'
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: 4,
-    paddingTop:10,
-    paddingBottom: 0,
-    textAlign: 'left'
+  titleContainer: {
+    margin: 7,
+    marginBottom: 2,
+    paddingLeft: 10,
+    borderColor: COLORS.cardBorder,
+    borderWidth: 1,
+    backgroundColor: COLORS.cardBackground
   },
+  titleText: {
+    paddingHorizontal: 4,
+    paddingVertical: 6,
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: COLORS.greyDark
+  },
+  message: {
+    fontSize: 20,
+    color: COLORS.greyDark
+  }
 });
 
 const filterNews = (news, { search, sort }) => {

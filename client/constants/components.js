@@ -13,7 +13,7 @@ export const COLORS = {
 	headerIcon: '#fff',
 	link: '#40779f',
 	screenBody: '#eee',
-	underlayColor: 'rgba(0,0,0,.1)',
+	underlay: 'rgba(0,0,0,.1)',
 	yellowDark: '#eecf00',
 	yellowLight: '#f8ca3f',
 }

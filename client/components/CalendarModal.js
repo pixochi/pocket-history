@@ -2,17 +2,40 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
+  ScrollView
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
+import PropTypes from 'prop-types';
 
+import { COLORS } from '../constants/components';
 
 class CalendarModal extends PureComponent {
+
+  static propTypes = {
+    currentDate: PropTypes.string.isRequired,
+    isVisible: PropTypes.bool.isRequired,
+    closeModal: PropTypes.func.isRequired,
+    changeDate: PropTypes.func.isRequired
+  }
 
   _onDateChange = (day) => {
     this.props.changeDate(day.timestamp);
     this.props.closeModal();
+  }
+
+  // @param direction ['left', 'right']
+  _renderArrow = (direction) => {
+    const iconName = 'md-arrow-drop' + direction;
+    return (
+      <Icon 
+        name={iconName}
+        type='ionicon'
+        color={COLORS.greyDark}
+        size={35}
+      />
+    )
   }
 
   render() {
@@ -21,20 +44,22 @@ class CalendarModal extends PureComponent {
     markedDate[currentDate] = {selected: true, marked: true};
 
     return (
-      <View style={{backgroundColor: 'white'}}>
+      <View style={styles.modalContainer}>
         <Modal 
           isVisible={isVisible} 
           onBackdropPress={closeModal}
           onBackButtonPress={closeModal}
         >
-        <View style={{flex: 1}}>
+        <ScrollView style={styles.contentContainer}>
           <Calendar
-            style={{flex: 0.75}}
             current={currentDate}
             markedDates={markedDate}
-            onDayPress={(day) => this._onDateChange(day)}
             monthFormat={'MMMM yyyy'}
             firstDay={1}
+            renderArrow={this._renderArrow}
+            onDayPress={(day) => this._onDateChange(day)}
+            theme={calendarTheme}
+            style={styles.calendar}
           />
           <Button 
             title='Cancel' 
@@ -42,7 +67,7 @@ class CalendarModal extends PureComponent {
             buttonStyle={styles.cancelBtn} 
             textStyle={styles.cancelBtnText}
           />
-        </View>
+        </ScrollView>
         </Modal>
       </View>  
     );
@@ -50,9 +75,24 @@ class CalendarModal extends PureComponent {
 
 }
 
+const calendarTheme = {
+  textMonthFontSize: 20,
+  selectedDayBackgroundColor: COLORS.header,
+}
+
 const styles = StyleSheet.create({
+  modalContainer: {
+    backgroundColor: 'red'
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  calendar: {
+    flex: 1
+  },
   cancelBtn: {
-    backgroundColor: 'rgb(255, 87, 35)'
+    flex: 1,
+    backgroundColor: '#db4437',
   },
   cancelBtnText: {
     fontSize: 18

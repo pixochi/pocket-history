@@ -58,18 +58,17 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+		marginVertical: 5,
 		borderColor: COLORS.cardBorder,
 		borderBottomWidth: 1,
 		backgroundColor: COLORS.cardBackground
 	},
 	titleContainer: {
 		flex: .95,
-		paddingLeft: 15,
 		paddingVertical: 15
 	},
 	title: {
-		// paddingRight: 15,
-		// paddingLeft: 9,
+		paddingHorizontal: 15,
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: COLORS.link

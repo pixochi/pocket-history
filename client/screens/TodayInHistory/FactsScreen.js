@@ -45,10 +45,13 @@ class FactsScreen extends PureComponent {
   }
 
   _cardMenuOptions = (item) => {
-  	const { copyToClipboard } = this.props;
+    const { text, year } = item;
+  	const { copyToClipboard, selectedDate } = this.props;
+    const copyText = `${selectedDate.factDate}, ${year} - ${text}`;
+    
     return [
-      copy({ onSelect: () => copyToClipboard(item.text)}),
-      share({ message: item.text }),
+      copy({ onSelect: () => copyToClipboard(copyText)}),
+      share({ message: copyText }),
       save({ onSelect: () => this._addFactToFavorite(item) })
     ]
   }

@@ -73,7 +73,7 @@ const IMG_HEIGHT =  180;
 const styles = StyleSheet.create({
 	videoCardContainer: {
 		flex: 1,
-		marginVertical: 6,
+		marginVertical: 5,
 		backgroundColor: COLORS.cardBackground,
 		borderColor: COLORS.cardBorder,
 		borderTopWidth: 1,

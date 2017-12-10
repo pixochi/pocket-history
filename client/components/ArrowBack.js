@@ -31,7 +31,7 @@ class ArrowBack extends PureComponent {
     		type='material-icon'
     		size={40}
     		color={COLORS.headerIcon}
-    		underlayColor={COLORS.underlayColor}
+    		underlayColor={COLORS.underlay}
     		onPress={_onPress}
     		iconStyle={styles.arrowBack}
     		containerStyle={{flex:1}}

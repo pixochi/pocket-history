@@ -1,7 +1,6 @@
 // REACT
 import React, { Component } from 'react';
-import { View, AsyncStorage } from 'react-native';
-
+import { View, StyleSheet, AsyncStorage } from 'react-native';
 import { MenuContext } from 'react-native-popup-menu';
 import { Toast } from 'react-native-redux-toast';
 
@@ -12,6 +11,7 @@ import configureStore from './store';
 // COMPONENTS
 import MainNavigator from './MainNavigator';
 
+import { COLORS } from './constants/components';
 
 export default class App extends Component {
 	state = {
@@ -30,7 +30,10 @@ export default class App extends Component {
   		return (
 	      <Provider store={store}>
 	      	<MenuContext backHandler={true}>
-	      		<Toast messageStyle={{ color: 'white' }} />
+	      		<Toast 
+	      			messageStyle={styles.toastMessage} 
+	      			containerStyle={styles.toastContainer}
+	      		/>
 	        	<MainNavigator />
 	        </MenuContext>
 	      </Provider>
@@ -38,5 +41,16 @@ export default class App extends Component {
   	}
   	return <View />
   }
-
 }
+
+const styles = StyleSheet.create({
+	toastContainer: {
+		backgroundColor: COLORS.yellowDark
+	},
+	toastMessage: {
+		padding: 2,
+		fontSize: 16,
+		fontWeight: 'bold',
+		color: '#fff'
+	}
+});

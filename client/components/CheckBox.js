@@ -14,6 +14,7 @@ class MyCheckBox extends PureComponent {
       <CheckBox
 	      center
 	      title={title}
+	      containerStyle={styles.checkboxContainer}
 	      iconRight
 	      iconType='material-community'
 	      checkedIcon='checkbox-marked-outline'
@@ -29,7 +30,9 @@ class MyCheckBox extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-
+	checkboxContainer: {
+		backgroundColor: '#fff'
+	}
 });
 
 

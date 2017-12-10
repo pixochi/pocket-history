@@ -25,7 +25,7 @@ class CardMenu extends PureComponent {
     return options.map(({onSelect, iconProps, optionText}) => (
       <MenuOption key={optionText} onSelect={onSelect} >
         <View style={styles.optionContainer}>
-          <Icon {...iconProps} />
+          <Icon color={COLORS.greyDark} {...iconProps} />
           <View style={styles.optionText}>
             <Text>{optionText}</Text>
           </View>

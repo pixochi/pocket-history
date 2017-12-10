@@ -19,7 +19,7 @@ class MenuIcon extends PureComponent {
         name='menu'
         color= '#fff'
         size={30}
-        underlayColor={COLORS.headerIconUnderlay}
+        underlayColor={COLORS.underlay}
         iconStyle={iconStyle}
         containerStyle={containerStyle}
         onPress={() =>{ navigation.navigate('DrawerOpen')}}

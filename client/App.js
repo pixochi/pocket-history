@@ -4,6 +4,8 @@ import { View, StyleSheet, AsyncStorage } from 'react-native';
 import { MenuContext } from 'react-native-popup-menu';
 import { Toast } from 'react-native-redux-toast';
 
+import { registerForPushNotificationsAsync } from './utils/notifications';
+
 // STATE MANAGEMENT
 import { Provider } from 'react-redux';
 import configureStore from './store';
@@ -22,6 +24,10 @@ export default class App extends Component {
 	  await configureStore.then(store => {
 	  	this.setState({ store });
 	  }).catch(e => console.log(e));
+	}
+
+	componentDidMount() {
+	  registerForPushNotificationsAsync();
 	}
 
   render() {

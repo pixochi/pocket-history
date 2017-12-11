@@ -24,9 +24,7 @@ export default class App extends Component {
 	  await configureStore.then(store => {
 	  	this.setState({ store });
 	  }).catch(e => console.log(e));
-	}
 
-	componentDidMount() {
 	  registerForPushNotificationsAsync();
 	}
 

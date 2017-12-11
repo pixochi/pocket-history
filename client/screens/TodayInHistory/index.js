@@ -193,7 +193,7 @@ class TodayInHistory extends PureComponent {
 
   render() {
     const { filteredFacts, allFacts, filter, addFavorite, copyToClipboard,
-     isLoading, rehydrated, selectedDate, selectedCategory,changeDate, fetchFacts,
+     isLoading, rehydrated, selectedDate, selectedCategory, changeDate, fetchFacts,
       changeFilter, navigation } = this.props;
 
     const { itemsScrolled } = this.state;
@@ -210,6 +210,7 @@ class TodayInHistory extends PureComponent {
       selectedDate,
       itemsScrolled,
       addFavorite,
+      changeDate,
       copyToClipboard,
       renderFact: this.renderFact,
       isReady: (!isLoading && rehydrated),

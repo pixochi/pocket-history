@@ -3,7 +3,6 @@ import axios from 'axios';
 import * as admin from 'firebase-admin';
 import firebase from '../../firebase';
 
-// firebase.database().goOffline()
 
 export const saveToken = async (req, res) => {
 	const { token } = req.body;
@@ -47,7 +46,6 @@ export const sendNotifications = async (req, res) => {
 	
   const allTokens = await getAllTokens();
 
-  console.log(allTokens)
   if (!allTokens) { return; }
 
   const tokenValues = Object.values(allTokens);
@@ -70,8 +68,11 @@ export const sendNotifications = async (req, res) => {
     messages.push({
       to: token,
       sound: 'default',
-      body: 'This is a test notification',
-      data: { withSome: 'data' },
+      body: 'VERY INTERESTING FACT!',
+      data: { 
+      	timestamp: '1484146909000',
+      	category: 'Births'
+      },
     })
   }
 
@@ -89,7 +90,7 @@ export const sendNotifications = async (req, res) => {
     for (let chunk of chunks) {
       try {
         let receipts = await expo.sendPushNotificationsAsync(chunk);
-        console.log(receipts);
+        deleteNotRegistered(chunk, receipts);
       } catch (error) {
         console.error(error);
       }
@@ -112,6 +113,42 @@ const tokenExists = (token) => {
 		}
 	});	
 }
+
+const deleteToken = (token) => {
+	return new Promise((resolve, reject) => {
+		const ref = firebase.database().ref('pushTokens');
+
+		try {
+			ref.orderByChild('token').equalTo(token).once('value', snapshot => {
+		     let updates = {};
+		     snapshot.forEach(child => updates[child.key] = null);
+		     ref.update(updates);
+		     resolve(token);
+			});
+		} catch(e) {
+			console.log(e);
+			reject(`Failed to delete token "${token}".`);
+		}
+	});	
+}
+
+// deletes all tokens from DB which are not 
+// associated with any device
+// @param chunk obj[] - notification objects containig a receiver's token
+// @param receipts obj[] - result of expo.sendPushNotificationsAsync()
+const deleteNotRegistered = (chunk, receipts) => {
+	if (!chunk || !receipts) { return; }
+
+	receipts.forEach((receipt, i) => {
+		const { details } = receipt;
+		const deviceNotRegistered = details && details.error === 'DeviceNotRegistered';
+		if (deviceNotRegistered) {
+			const deviceToken = chunk[i].to;
+			deleteToken(deviceToken);
+		}
+	});
+}
+
 
 
 

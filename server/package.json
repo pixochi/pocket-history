@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.1.0",
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
+    "node-schedule": "^1.2.5",
     "passport": "^0.4.0",
     "passport-facebook-token": "^3.3.0",
     "pg": "^7.3.0",

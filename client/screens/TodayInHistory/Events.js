@@ -6,15 +6,13 @@ import FactsScreen from './FactsScreen';
 
 class Events extends PureComponent {
 
-	state = {};
-
 	componentWillMount() {
-	   console.log(this.props)
 	  this._notificationSubscription = Notifications.addListener(this._handleNotification);
-    // this.props.navigation.navigate('Deaths')
 	}
 
-	_handleNotification = ({ data }) => {
+	_handleNotification = (notification) => {
+		console.log(notification)
+		const { data } = notification;
 		const { timestamp, category } = data;
 		const { navigation } = this.props;
 		const { changeDate } = this.props.screenProps;
@@ -32,6 +30,7 @@ class Events extends PureComponent {
     	<FactsScreen 
     		{...screenProps}
     		category='Events'
+    		scrollToIndex={20}
     	/>
     )   
   }

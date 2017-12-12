@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import passport from 'passport'
+import passport from 'passport';
+import schedule from 'node-schedule';
 
 import db from './db'; //database connection
 import passportStrategies from './api/passport';

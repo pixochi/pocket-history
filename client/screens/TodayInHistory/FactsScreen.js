@@ -28,7 +28,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends PureComponent {
 
-
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
   	if (canFetch) {
@@ -90,8 +89,6 @@ class FactsScreen extends PureComponent {
 	   
 	  let Main;
 
-
-
 	  // no facts after a try to rehydrate
 	  // or fetch the facts from API
 
@@ -122,7 +119,7 @@ class FactsScreen extends PureComponent {
 		        onMomentumScrollBegin={onMomentumScrollBegin}
 		        onMomentumScrollEnd={onMomentumScrollEnd}
 		        onScrollEndDrag={onScrollEndDrag}
-		        initialNumToRender={6}
+		        initialNumToRender={5}
 		      />
         </View>
   		)

@@ -2,6 +2,8 @@ import Expo from 'expo-server-sdk';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import firebase from '../../firebase';
+import { getRandomFact } from './factsController';
+import CONFIG from '../../config.json';
 
 
 export const saveToken = async (req, res) => {
@@ -40,11 +42,40 @@ export const getAllTokens = () => {
   });
 }
 
-export const sendNotifications = async (req, res) => {
+export const sendNotificationsOnRequest = async (req, res) => {
 
-	res.send();
+	let { body, timestamp, category, key } = req.query;
+	let data = {};
+
+	if (key !== CONFIG.notificationsKey) { 
+		res.status(401).send('Unauthorized');
+		return; 
+	}
+
+	if (!body || !timestamp || !category) {
+		const randomFact = await getRandomFact();
+		const { year, text } = randomFact;
+		category = randomFact.category;
+		timestamp = randomFact.timestamp;
+		const date = new Date(timestamp);
+		const month = date.getMonth() + 1;
+		const day = date.getDate();
+		body = `${day}/${month}/${year} - ${text}`;
+	}
 	
-  const allTokens = await getAllTokens();
+	data = { category, timestamp }
+
+	try {
+		await sendNotifications(body, data);
+		res.status(200).send();
+	} catch(e) {
+		console.log(e);
+		res.status(400).send('Failed to send notifications:' + e.message);
+	}
+}
+
+export const sendNotifications = async (body, data) => {
+	const allTokens = await getAllTokens();
 
   if (!allTokens) { return; }
 
@@ -68,11 +99,8 @@ export const sendNotifications = async (req, res) => {
     messages.push({
       to: token,
       sound: 'default',
-      body: 'VERY INTERESTING FACT!',
-      data: { 
-      	timestamp: '1484146909000',
-      	category: 'Births'
-      },
+      body,
+      data,
     })
   }
 

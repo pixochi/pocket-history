@@ -3,6 +3,7 @@ import axios from 'axios';
 import CONFIG from '../../config.json';
 import redisClient from '../../cache';
 import { cacheFacts } from '../../cache/facts';
+import { getRandomNumber } from '../../utils/random';
 import theLegend from '../special.js';
 
 
@@ -41,6 +42,26 @@ export const getFacts = async (req, res) => {
 			message: 'Failed to load the facts. Please try again later.'
 		}
 		res.status(400).send(error);
+	}
+}
+
+export const getRandomFact = async () => {
+	const CATEGORIES = ['Events', 'Births', 'Deaths'];
+	const month = getRandomNumber(1,12);
+	const day = getRandomNumber(1,31);
+	const factDate = `${month}/${day}`;
+	const category = CATEGORIES[getRandomNumber(0, 2)];
+	try {
+		const { data } = await axios.get(FACTS_API_RUL + factDate);
+		const facts = data.data[category];
+		const factIndex = getRandomNumber(0, facts.length - 1);
+		let randomFact = facts[factIndex];
+		randomFact.category = category;
+		randomFact.timestamp = new Date(factDate).getTime();
+
+		return randomFact;
+	} catch(e) {
+		console.log(e);
 	}
 }
 

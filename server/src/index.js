@@ -4,8 +4,8 @@ import cors from 'cors';
 import passport from 'passport';
 import schedule from 'node-schedule';
 
-import db from './db'; //database connection
-import passportStrategies from './api/passport';
+import CONFIG from './config.json';
+import { sendRandomFactNotification } from './api/controllers/notificationsController';
 import authRoute from './api/routes/auth';
 import booksRoute from './api/routes/books';
 import factsRoute from './api/routes/facts';
@@ -14,7 +14,6 @@ import notificationsRoute from './api/routes/notifications';
 import videosRoute from './api/routes/videos';
 import wikiImagesRoute from './api/routes/wikiImages';
 
-// import { sendNotifications } from './utils/notifications';
 
 const { PORT = 8800 } = process.env;
 
@@ -32,8 +31,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// sendNotifications();
-
 app.get('/', (req, res) => {
 	res.status(200).send('Server running');
 });
@@ -47,6 +44,13 @@ app.use(videosRoute);
 app.use(wikiImagesRoute);
 
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
+
+const rule = new schedule.RecurrenceRule();
+rule.hour = [7, 20];
+rule.minute = 50;
+const notificationScheduler = schedule.scheduleJob(rule, () => {
+	sendRandomFactNotification();
+});
 
 app.listen(PORT , () => {
 	console.log(`Server is now running on http://localhost:${PORT}`);

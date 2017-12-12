@@ -119,7 +119,7 @@ class FactsScreen extends PureComponent {
 		        onMomentumScrollBegin={onMomentumScrollBegin}
 		        onMomentumScrollEnd={onMomentumScrollEnd}
 		        onScrollEndDrag={onScrollEndDrag}
-		        initialNumToRender={5}
+		        initialNumToRender={4}
 		      />
         </View>
   		)

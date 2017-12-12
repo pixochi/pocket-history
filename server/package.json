@@ -25,6 +25,7 @@
     "passport": "^0.4.0",
     "passport-facebook-token": "^3.3.0",
     "pg": "^7.3.0",
+    "pm2": "^2.8.0",
     "qs": "^6.5.1",
     "redis": "^2.8.0",
     "string-hash": "^1.1.3",

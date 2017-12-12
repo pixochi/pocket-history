@@ -54,7 +54,7 @@ class CalendarModal extends PureComponent {
           <Calendar
             current={currentDate}
             markedDates={markedDate}
-            monthFormat={'MMMM yyyy'}
+            monthFormat={'MMMM'}
             firstDay={1}
             renderArrow={this._renderArrow}
             onDayPress={(day) => this._onDateChange(day)}

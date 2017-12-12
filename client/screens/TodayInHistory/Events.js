@@ -11,16 +11,15 @@ class Events extends PureComponent {
 	}
 
 	_handleNotification = (notification) => {
-		console.log(notification)
-		const { data } = notification;
-		const { timestamp, category } = data;
-		const { navigation } = this.props;
-		const { changeDate } = this.props.screenProps;
-		console.log('HEY NOTIFICATION!');
-		console.log(data);
-
-		navigation.navigate(category);
-		changeDate(parseInt(timestamp));
+		const { data, origin } = notification;
+		
+		if (origin === 'selected') {
+			const { timestamp, category } = data;
+			const { navigation, screenProps } = this.props;
+			const { changeDate } = screenProps;
+			navigation.navigate(category);
+			changeDate(parseInt(timestamp));
+		}
   };
 
   render() {	     

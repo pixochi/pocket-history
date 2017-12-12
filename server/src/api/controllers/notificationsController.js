@@ -1,9 +1,11 @@
 import Expo from 'expo-server-sdk';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
+
 import firebase from '../../firebase';
 import { getRandomFact } from './factsController';
 import CONFIG from '../../config.json';
+import { addLeadingChars } from '../../utils/string';
 
 
 export const saveToken = async (req, res) => {
@@ -45,7 +47,7 @@ export const getAllTokens = () => {
 export const sendNotificationsOnRequest = async (req, res) => {
 
 	let { body, timestamp, category, key } = req.query;
-	let data = {};
+	let data = { category, timestamp }
 
 	if (key !== CONFIG.notificationsKey) { 
 		res.status(401).send('Unauthorized');
@@ -53,24 +55,37 @@ export const sendNotificationsOnRequest = async (req, res) => {
 	}
 
 	if (!body || !timestamp || !category) {
-		const randomFact = await getRandomFact();
-		const { year, text } = randomFact;
-		category = randomFact.category;
-		timestamp = randomFact.timestamp;
-		const date = new Date(timestamp);
-		const month = date.getMonth() + 1;
-		const day = date.getDate();
-		body = `${day}/${month}/${year} - ${text}`;
+		const randomFact = await getRandomNotificationFact();
+		body = randomFact.body;
+		data = randomFact.data;
 	}
 	
-	data = { category, timestamp }
-
 	try {
 		await sendNotifications(body, data);
 		res.status(200).send();
 	} catch(e) {
 		console.log(e);
 		res.status(400).send('Failed to send notifications:' + e.message);
+	}
+}
+
+export const getRandomNotificationFact = async () => {
+	const randomFact = await getRandomFact();
+	const { year, text, category, timestamp } = randomFact;
+	const date = new Date(timestamp);
+	let month = date.getMonth() + 1;
+	let day = date.getDate();
+
+	month = addLeadingChars(month, 2, '0');
+	day = addLeadingChars(day, 2, '0');
+	const body = `${day}/${month}/${year} - ${text}`;
+
+	return {
+		body,
+		data: {
+			category,
+			timestamp
+		}
 	}
 }
 
@@ -124,6 +139,15 @@ export const sendNotifications = async (body, data) => {
       }
     }
   })();
+}
+
+export const sendRandomFactNotification = async () => {
+	try {
+		const { body, data } = await getRandomNotificationFact();
+   	sendNotifications(body, data);
+	} catch(e) {
+		console.log(e);
+	}
 }
 
 const tokenExists = (token) => {

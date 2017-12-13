@@ -8,6 +8,7 @@ import {
 import { connect } from 'react-redux';
 
 // COMPONENTS
+import Banner from '../../components/AdMob';
 import BookCard from '../../components/BookCard';
 import BookModal from '../../components/BookModal';
 import BooksLabel from '../../components/TabBarLabels/BooksLabel';
@@ -66,14 +67,26 @@ class Books extends PureComponent {
     this.setState({ bookDescription }, () => openModal('factBook'));
   }
  
-  _renderBook = ({item}) => (
-    <BookCard 
-      key={item.id} 
-      book={item}
-      onBookPress={this._onBookPress}
-      menuOptions={this._cardMenuOptions(item)}
-    />
-  )
+  _renderBook = (book) => {
+    const { item, index } = book;
+    const Book = (
+      <BookCard
+        key={item.id} 
+        book={item}
+        onBookPress={this._onBookPress}
+        menuOptions={this._cardMenuOptions(item)}
+      />
+    )
+    if (index && index % 4 === 0) {
+      return (
+        <View>
+          <Banner />
+          { Book }
+        </View>
+      )
+    }
+    return Book;
+  }
 
   render() {
     const { books, isLoading, isOnline, screenProps } = this.props;

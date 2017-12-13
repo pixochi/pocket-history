@@ -13,6 +13,7 @@ import _ from 'lodash';
 import hash from 'string-hash';
 
 // COMPONENTS
+import Banner from '../../components/AdMob';
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
 import MenuIcon from '../../components/MenuIcon';
@@ -79,7 +80,7 @@ class FactsScreen extends PureComponent {
   	const { item, index } = fact;
   	const { navigation, category } = this.props;
 
-  	return (
+  	const Fact = (
   		<FactCard
 		  	{...item}
 		  	isImgShown={this._isImgShown(index, item.img)}
@@ -89,6 +90,16 @@ class FactsScreen extends PureComponent {
 		  	menuOptions={this._cardMenuOptions(item)}
 	  	/>
   	);
+
+    if (index && index % 14 === 0) {
+      return (
+        <View>
+          <Banner />
+          { Fact }
+        </View>
+      ) 
+    }
+    return Fact;
   }
 
   render() {

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // COMPONENTS
+import Banner from '../../components/AdMob';
 import Loader from '../../components/Loader';
 import NewsCard from '../../components/NewsCard';
 import NetworkProblem from '../../components/NetworkProblem';
@@ -65,9 +66,18 @@ class News extends PureComponent {
   }
 
   _renderNews = (articles) => {
-    return articles.map((article, i) => (
-      <NewsCard key={i} {...article} />
-    ));
+    return articles.map((article, i) => {
+      const News = <NewsCard key={i} {...article} />
+      if (i && i % 9 === 0) {
+        return (
+          <View>
+            <Banner />
+            { News }
+          </View>
+        )
+      }
+      return News;
+    });
   }
 
   render() {

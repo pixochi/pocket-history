@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 // COMPONENTS
+import Banner from '../../components/AdMob';
 import DateRangeFilter from '../../components/DateRangeFilter';
 import Loader from '../../components/Loader';
 import NetworkProblem from '../../components/NetworkProblem';
@@ -130,7 +131,7 @@ class Timeline extends PureComponent {
 
     const borderItemStyle = rowData.isBorder ? styles.borderItem : null;
 
-    return (
+    const TimelineFact = (
       <View style={styles.container}>
         <HTMLView 
           value={rowData.description}
@@ -141,6 +142,18 @@ class Timeline extends PureComponent {
         />
       </View>
     )
+
+    rowID = parseInt(rowID);
+    if (rowID && rowID % 14 === 0) {
+      console.log(rowID)
+      return (
+        <View>
+          <Banner size='smartBanner' />
+          { TimelineFact }
+        </View>
+      )
+    }
+    return TimelineFact;
   }
 
   _onRangeChange = (values, rangeKey) => {

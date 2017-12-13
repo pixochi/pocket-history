@@ -25,7 +25,7 @@ class FactDetail extends PureComponent {
 
 	componentDidUpdate(prevProps, prevState) {
 	  const { showInterstitial, adMobCounter } = this.props;
-	  if (adMobCounter === 10) {
+	  if (adMobCounter === 9) {
 	  	showInterstitial('factDetailCounter');
 	  }
 	}
@@ -39,7 +39,7 @@ class FactDetail extends PureComponent {
 		const { addFavorite, copyToClipboard, navigation, changeRoute } = this.props;
 		return (
 			<View style={{flex: 1}}>
-				<Header navigation={navigation} changeRoute={changeRoute} />
+				<Header navigation={navigation} changeRoute={changeRoute} />			
 				<RoutesFactDetail 
 					screenProps={{addFavorite, copyToClipboard, navigation}}
 					onNavigationStateChange={this._onNavigationStateChange}

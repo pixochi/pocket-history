@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux';
 
 // COMPONENTS
+import Banner from '../../components/AdMob';
 import Header from './Header';
 import Loader from '../../components/Loader';
 import Modal from '../../components/Modal';
@@ -71,13 +72,25 @@ class Videos extends PureComponent {
     });
   }
 
-  _renderVideo = ({item}) => (
-    <VideoCard
-      onVideoPress={this._onVideoPress}
-      menuOptions={this._cardMenuOptions(item)}
-      {...item}
-    />
-  )
+  _renderVideo = (video) => {
+    const { item, index } = video;
+    const Video = (
+      <VideoCard
+        onVideoPress={this._onVideoPress}
+        menuOptions={this._cardMenuOptions(item)}
+        {...item}
+      />
+    )
+    if (index && index % 4 === 0) {
+      return (
+        <View>
+          <Banner />
+          { Video }
+        </View>
+      )
+    }
+    return Video;
+  }
 
   render() {
     const { videos, isLoading, isOnline, screenProps } = this.props;

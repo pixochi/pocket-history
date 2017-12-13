@@ -10,6 +10,7 @@ import hash from 'string-hash';
 
 import { dateRangeFromString } from '../../utils/date';
 
+import Banner from '../../components/AdMob';
 import ArticleCard from '../../components/ArticleCard';
 import ArticlesLabel from '../../components/TabBarLabels/ArticlesLabel';
 import Header from './Header';
@@ -34,13 +35,23 @@ class Articles extends PureComponent {
 		return menuOptions;
 	}
 
-	_renderArticle = ({item}) => {
-		return (
+	_renderArticle = (article) => {
+		const { item, index } = article;
+		const Article = (
 			<ArticleCard 
 				menuOptions={this._cardMenuOptions(item)}
 				{...item}
 			/>
-		);
+		)
+		if (index && index % 5 === 0) {
+			return (
+				<View>
+					<Banner />
+					{ Article }
+				</View>
+			)
+		}
+		return Article;
 	}
 
   render() {

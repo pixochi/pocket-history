@@ -8,6 +8,7 @@ import {
   Clipboard,
   Share
 } from 'react-native';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import hash from 'string-hash';
 
@@ -17,6 +18,7 @@ import FactCard from '../../components/FactCard';
 import MenuIcon from '../../components/MenuIcon';
 import NetworkProblem from '../../components/NetworkProblem';
 
+import { showInterstitial } from '../../components/AdMob/actions';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 import { HEADER_HEIGHT } from '../../constants/components';
@@ -27,6 +29,13 @@ const IMAGES_ON_LOAD = 3;
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 class FactsScreen extends PureComponent {
+
+  componentDidUpdate(prevProps, prevState) {
+    const { adMobCounter, showInterstitial } = this.props;
+    if (adMobCounter === 7) {
+      showInterstitial('factsCounter');
+    } 
+  }
 
   _refetchFacts = () => {
   	const { canFetch, fetchFacts, selectedDate } = this.props;
@@ -143,5 +152,14 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = ({ adMob }) => ({
+  adMobCounter: adMob.factsCounter
+});
 
-export default FactsScreen;
+const mapDispatchToProps = (dispatch) => ({
+  showInterstitial: (counterName) => {
+    dispatch(showInterstitial(counterName))
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FactsScreen);

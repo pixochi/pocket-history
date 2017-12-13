@@ -10,8 +10,6 @@ import { addLeadingChars } from '../../utils/string';
 
 export const saveToken = async (req, res) => {
 	const { token } = req.body;
-	console.log('SAVING TOKEN')
-
 	const existingToken = await tokenExists(token);
 
 	if (existingToken) { 

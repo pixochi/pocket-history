@@ -1,16 +1,34 @@
 import React, { PureComponent } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { addFavorite } from '../Favorite/actions';
-import { copyToClipboard } from './actions';
 import { changeRoute } from '../../navigation/actions';
+import { copyToClipboard } from './actions';
+import { showInterstitial } from '../../components/AdMob/actions';
 
 import Header from './Header';
 import { RoutesFactDetail } from '../../navigation/factDetail';
 
 
 class FactDetail extends PureComponent {
+
+	static propTypes = {
+		adMobCounter: PropTypes.number.isRequired,
+	  navigation: PropTypes.object.isRequired,
+	  changeRoute: PropTypes.func.isRequired,
+	  copyToClipboard: PropTypes.func.isRequired,
+	  addFavorite: PropTypes.func.isRequired,
+	  showInterstitial: PropTypes.func.isRequired,
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+	  const { showInterstitial, adMobCounter } = this.props;
+	  if (adMobCounter === 10) {
+	  	showInterstitial('factDetailCounter');
+	  }
+	}
 
 	_onNavigationStateChange = (prevState, nextState, action) => {
     const { changeRoute } = this.props;
@@ -31,6 +49,10 @@ class FactDetail extends PureComponent {
 	}
 }
 
+const mapStateToProps = ({adMob}) => ({
+	adMobCounter: adMob.factDetailCounter
+});
+
 const mapDispatchToProps = (dispatch) => ({
   addFavorite: (item, category) => {
     dispatch(addFavorite(item, category));
@@ -40,8 +62,11 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeRoute: (route) => {
   	dispatch(changeRoute(route));
+  },
+  showInterstitial: (counterName) => {
+  	dispatch(showInterstitial(counterName));
   }
 });
 
 
-export default connect(null, mapDispatchToProps)(FactDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(FactDetail);

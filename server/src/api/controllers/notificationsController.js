@@ -12,7 +12,8 @@ export const saveToken = async (req, res) => {
 	const { token } = req.body;
 	const existingToken = await tokenExists(token);
 
-	if (existingToken) { 
+	if (existingToken) {
+		res.status(200).send({ status: 'OK' });
 		return; 
 	}
 

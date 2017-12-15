@@ -17,7 +17,7 @@ import Header from './Header';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 import gStyles from '../../styles';
-
+import { COLORS } from '../../constants/components';
 
 class Articles extends PureComponent {
 	static navigationOptions = {
@@ -57,18 +57,33 @@ class Articles extends PureComponent {
   render() {
   	const { navigation } = this.props.screenProps;
   	const { links } = navigation.state.params;
+  	let Main;
+
+  	if (!links || !links.length) {
+  		Main = (
+  			<View style={gStyles.screenMiddle}>
+	        <Text style={styles.message}>
+	          No articles found
+	        </Text>   
+      	</View>
+  		)
+  	} else {
+  		Main = (
+	  		<FlatList
+		    	contentContainerStyle={styles.articlesContainer}
+	        data = {links}
+	        extraData = {links}
+	        keyExtractor = {(article) => article.title}
+	        renderItem = {this._renderArticle}
+		    />
+			)
+  	}
 
   	return (
 	    <View style={styles.container}>
 	      <Header navigation={navigation} />
 	      <View style={gStyles.screenBody}>
-			    <FlatList
-			    	contentContainerStyle={styles.articlesContainer}
-	          data = {links}
-	          extraData = {links}
-	          keyExtractor = {(article) => article.title}
-	          renderItem = {this._renderArticle}
-			    />
+			   { Main }
 	      </View>
 	    </View>
 	  ); 
@@ -81,6 +96,10 @@ const styles = StyleSheet.create({
 	},
 	articlesContainer: {
 		
+	},
+	message: {
+		fontSize: 20,
+		color: COLORS.greyDark
 	}
 });
 

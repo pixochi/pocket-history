@@ -3,8 +3,10 @@ import {
   StyleSheet,
   View,
   Text,
-  WebView
+  WebView,
+  Platform
 } from 'react-native';
+import { WebBrowser } from 'expo';
 import { connect } from 'react-redux';
 
 import { openModal } from '../../components/Modal/actions';
@@ -38,9 +40,13 @@ class FavoriteVideos extends PureComponent {
   }
 
   _onVideoPress = (selectedVideoId) => {
-    this.setState({ selectedVideoId }, () => {
-      this.props.openModal('favVideo');
-    });
+    if (Platform.OS === 'android') {
+      WebBrowser.openBrowserAsync(VIDEO_ROOT_URL+selectedVideoId);
+    } else {
+      this.setState({ selectedVideoId }, () => {
+        this.props.openModal('favVideo');
+      });
+    }
   }
 
   _renderVideo = ({item}) => {

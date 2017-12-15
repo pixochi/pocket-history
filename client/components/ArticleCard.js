@@ -4,11 +4,11 @@ import {
   StyleSheet,
   View,
   Text,
-  Linking,
   Share,
   Clipboard,
   TouchableHighlight
 } from 'react-native';
+import { WebBrowser } from 'expo';
 
 import CardMenu from './CardMenu';
 import { fixWikiLink } from '../utils/link';
@@ -24,7 +24,7 @@ class ArticleCard extends PureComponent {
 	}
 
 	_openArticle = (link) => {
-		Linking.openURL(fixWikiLink(link));
+		WebBrowser.openBrowserAsync(fixWikiLink(link));
 	}
 
 	render() {

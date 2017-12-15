@@ -43,14 +43,14 @@ class VideoCard extends PureComponent {
 	      		width={DEVICE_WIDTH}
 	      	/>
 		      <View style={[gStyles.overlay, styles.iconContainer]}>
-		      		<Icon
-		      			reverse
-			      		name='play'
-			      		type='font-awesome'
-			      		size={28}
-			      		color='#ff0000'
-			      		iconStyle={styles.playIcon}
-			      	/>
+	      		<Icon
+	      			reverse
+		      		name='play'
+		      		type='font-awesome'
+		      		size={28}
+		      		color='#ff0000'
+		      		iconStyle={styles.playIcon}
+		      	/>
 	      	</View>
 		    </TouchableOpacity>
 

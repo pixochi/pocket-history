@@ -32,7 +32,5 @@ export const registerForPushNotificationsAsync = async () => {
   const notificationsEndpoint = API_ROOT_URL + '/notifications';
   // POST the token to your backend server from where you can retrieve it to send push notifications.
 
-  console.log('SENDING TOKEN')
-  console.log(token)
   return axios.post(notificationsEndpoint, { token });
 }

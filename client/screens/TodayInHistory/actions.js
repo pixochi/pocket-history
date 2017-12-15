@@ -24,7 +24,7 @@ const _fetchFacts = (timestamp, factsState) => {
 
 	return new Promise(async (resolve, reject) => {	
 		if (isNaN(timestamp)) {
-			reject('Timestamp is not a number.');
+			reject('Parameter "timestamp" is not a number.');
 		}
 		try {
 			const { facts, selectedDate } = factsState;

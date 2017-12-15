@@ -15,7 +15,7 @@ class DateHeader extends PureComponent {
   static propTypes = {
     selectedDate: PropTypes.object.isRequired,
     changeDate: PropTypes.func.isRequired,
-    headerStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+    headerStyle: View.propTypes.style,
     openModal: PropTypes.func.isRequired
   }
 

@@ -85,7 +85,6 @@ class FactsScreen extends PureComponent {
 		  	{...item}
 		  	isImgShown={this._isImgShown(index, item.img)}
 		  	category={category}
-		  	isFavorite={false}
 		  	navigation={navigation}
 		  	menuOptions={this._cardMenuOptions(item)}
 	  	/>

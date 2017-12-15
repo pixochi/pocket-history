@@ -5,6 +5,7 @@ import { Constants } from 'expo';
 
 import { RoutesFavorites } from './favorites';
 import { RoutesTodayInHistory } from './todayInHistory';
+import WhichHappenedSooner from '../screens/WhichHappenedSooner';
 
 import { COLORS } from '../constants/components'
 
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
 	},
   drawerContent: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   label: {
   	fontSize: 20
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
 
 export const routesDrawer = {
   todayInHistory: { screen: RoutesTodayInHistory },
-  // happenedSooner: { screen: WhichHappenedSooner },
+  happenedSooner: { screen: WhichHappenedSooner },
   // predictions: { screen: FuturePredictions },
   // diary: { screen: Diary },
   favorite: { screen: RoutesFavorites }, 

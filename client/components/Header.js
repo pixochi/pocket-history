@@ -11,6 +11,7 @@ import { Constants } from 'expo';
 import { Header, SearchBar } from 'react-native-elements';
 
 import MenuIcon from './MenuIcon';
+import { COLORS } from '../constants/components';
 
 
 class AppHeader extends PureComponent {
@@ -47,7 +48,7 @@ class AppHeader extends PureComponent {
       <Header
         outerContainerStyles={styles.outerHeaderStyles}
         innerContainerStyles={styles.innerHeaderStyles}
-        backgroundColor='#33B38E'
+        backgroundColor={COLORS.header}
       >
       
         <View style={styles.headerItemsContainer}>

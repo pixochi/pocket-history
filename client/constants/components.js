@@ -9,7 +9,7 @@ export const COLORS = {
 	factTextBackground: '#fff',
 	greyDark: '#454545',
 	greyLight: '#757575',
-	header: '#33B38E',
+	header: '#203140',
 	headerIcon: '#fff',
 	link: '#40779f',
 	screenBody: '#eee',

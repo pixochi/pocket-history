@@ -48,6 +48,7 @@ class FavoriteFacts extends PureComponent {
       <FactCard 
         {...item}
         isFavorite={true}
+        canShowDetail={false}
         navigation={navigation}
         menuOptions={this._cardMenuOptions(item)} 
       />

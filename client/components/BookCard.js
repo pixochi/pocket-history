@@ -5,11 +5,11 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  Linking,
   Share,
   Clipboard
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
+import {  WebBrowser } from 'expo';
 
 import CardMenu from './CardMenu';
 import { removeHtmlTags, replaceHtmlChars } from '../utils/string';
@@ -37,13 +37,13 @@ class BookCard extends PureComponent {
 
 			    	<Button 
 			    		title='Read'
-			    		onPress={() => Linking.openURL(fullScreenBookPreview)}
+			    		onPress={() => WebBrowser.openBrowserAsync(fullScreenBookPreview)}
 			    		buttonStyle={styles.btn}
 			    		textStyle={styles.btnText}
 			    	/>
 			    	<Button 
 			    		title='Buy'
-			    		onPress={() => Linking.openURL(book.infoLink)}
+			    		onPress={() => WebBrowser.openBrowserAsync(book.infoLink)}
 			    		buttonStyle={styles.btn}
 			    		textStyle={styles.btnText}
 			    	/>

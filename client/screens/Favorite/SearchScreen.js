@@ -19,6 +19,7 @@ import { openModal } from '../../components/Modal/actions';
 // COMPONENTS
 import ArrowBack from '../../components/ArrowBack';
 import ArticleCard from '../../components/ArticleCard';
+import Banner from '../../components/AdMob';
 import BookCard from '../../components/BookCard';
 import BookModal from '../../components/BookModal';
 import CheckBox from '../../components/CheckBox';
@@ -174,6 +175,7 @@ class SearchScreen extends PureComponent {
                 category='facts'
                 renderFavorite={this._renderFact}
               />
+              <Banner />
             </View>
           }
 
@@ -189,6 +191,7 @@ class SearchScreen extends PureComponent {
                 category='articles'
                 renderFavorite={this._renderArticle}
               />
+              <Banner />
             </View>
           }
 
@@ -207,6 +210,7 @@ class SearchScreen extends PureComponent {
               <VideoModal 
                 videoUrl={VIDEO_ROOT_URL+selectedVideoId}
               />
+              <Banner />
             </View>
           }
           
@@ -225,6 +229,7 @@ class SearchScreen extends PureComponent {
               <BookModal
                 bookDescription={bookDescription}
               />
+              <Banner />
             </View>
           }
 

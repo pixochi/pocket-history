@@ -1,4 +1,4 @@
-import { addLeadingChars } from './string';
+import { addLeadingChars, isString } from './string';
 
 
 export const MONTHS =  [
@@ -14,9 +14,20 @@ export const parseNumber = (str) => {
   return number;
 }
 
+// gets a pure year number from a string
+// @param year string - e.g. "BC 250", "1948"
+export const getYear = (year) => {
+  if (!isString(year)) { return null; }
+
+  let yearNumber = parseNumber(year);
+  yearNumber *= (year.indexOf('BC') > -1) ? -1 : 1;
+
+  return yearNumber;
+}
+
 // @return day, month, year in numbers
 // 1st month is 0
-const getDateNums = (timestamp) => {
+export const getDateNums = (timestamp) => {
   if (!isNumber(timestamp)) return false;
   const date = new Date(timestamp);
   const month = date.getMonth() 

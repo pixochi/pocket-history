@@ -70,7 +70,7 @@ class News extends PureComponent {
       const News = <NewsCard key={i} {...article} />
       if (i && i % 9 === 0) {
         return (
-          <View>
+          <View key={i}>
             <Banner />
             { News }
           </View>

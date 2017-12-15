@@ -5,8 +5,10 @@ import {
   FlatList,
   Text,
   WebView,
+  Platform
 } from 'react-native';
 import { connect } from 'react-redux';
+import { WebBrowser } from 'expo';
 
 // COMPONENTS
 import Banner from '../../components/AdMob';
@@ -67,9 +69,13 @@ class Videos extends PureComponent {
   }
 
   _onVideoPress = (videoId) => {
-    this.setState({ selectedVideoId: videoId }, () => {
-      this.props.openModal('factVideo');
-    });
+    if (Platform.OS === 'android') {
+       WebBrowser.openBrowserAsync(VIDEO_ROOT_URL+videoId);   
+    } else {
+     this.setState({ selectedVideoId: videoId }, () => {
+        this.props.openModal('factVideo');
+      });
+    }
   }
 
   _renderVideo = (video) => {

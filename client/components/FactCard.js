@@ -3,13 +3,14 @@ import {
   StyleSheet,
   View,
   Text,
-  Linking,
   Dimensions,
   Platform
 } from 'react-native';
+import { WebBrowser } from 'expo';
 import { Icon } from 'react-native-elements';
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import Image from 'react-native-scalable-image';
+import PropTypes from 'prop-types';
 
 import CardMenu from './CardMenu';
 
@@ -35,17 +36,24 @@ class FactCard extends PureComponent {
 
   _openFactDetail = () => {
     const { navigation, html, text, links, category, year  } = this.props;
-      navigation.navigate('factDetail', { html, text, links, category, year });
+    navigation.navigate('factDetail', { 
+      navigatedFrom: navigation.state.routeName,
+      html, 
+      text, 
+      links, 
+      category, 
+      year,
+    });
   }
 
   _openFactLink = (url) => {
     url = fixWikiLink(url);
-    Linking.openURL(url);
+    WebBrowser.openBrowserAsync(url);
   }
 
   render() {
     const { year, html, text, img, isImgShown, links,
-      category, isFavorite, menuOptions } = this.props;
+      category, isFavorite, canShowDetail, menuOptions } = this.props;
 
     return (
       <View style={styles.factCard}>
@@ -70,12 +78,14 @@ class FactCard extends PureComponent {
                 { year }
               </Text>
               <View style={styles.yearsAgoContainer}>
-                <Text style={styles.yearsAgoText}>
-                  { yearsAgo(year) } years ago
-                </Text>
+                { year && 
+                  <Text style={styles.yearsAgoText}>
+                    { yearsAgo(year) } years ago
+                  </Text>
+                }
               </View>
             </View> 
-            <CardMenu options={menuOptions} />
+            { menuOptions && <CardMenu options={menuOptions} /> }
           </View>
           
           <View style={styles.htmlView}>
@@ -88,7 +98,7 @@ class FactCard extends PureComponent {
             />
           </View>
 
-          { !isFavorite &&
+          { canShowDetail &&
             <Icon
               name='chevron-double-right'
               type='material-community'
@@ -104,6 +114,25 @@ class FactCard extends PureComponent {
       </View>
     );
   }
+}
+
+FactCard.propTypes = {
+  canShowDetail: PropTypes.bool,
+  category: PropTypes.string,
+  html: PropTypes.string,
+  img: PropTypes.string,
+  isFavorite: PropTypes.bool,
+  isImgShown: PropTypes.bool,
+  links: PropTypes.arrayOf(PropTypes.object),
+  menuOptions: PropTypes.arrayOf(PropTypes.object),
+  text: PropTypes.string,
+  year: PropTypes.string,
+}
+
+FactCard.defaultProps = {
+  canShowDetail: true,
+  isFavorite: false,
+  isImgShown: false,
 }
 
 

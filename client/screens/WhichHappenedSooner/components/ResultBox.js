@@ -12,26 +12,14 @@ import PropTypes from 'prop-types';
 
 class ResultBox extends PureComponent {
 
-	_getMessage = (isCorrect) => {
-		let message = '';
-		if (isCorrect) {
-			message = 'CORRECT!';
-		} else {
-			message = 'WRONG...';
-		}
-
-		return message;
-	}
-
   render() {
   	const { message, isOpen, isCorrect, onClosed } = this.props;
   	const style = isCorrect ? styles.modalCorrect : styles.modalWrong;
-  	const iconName = isCorrect ? 'check' : 'cross';
+  	const iconName = isCorrect ? 'thumbs-up' : 'cross';
     return (
      	<Modal
 	      isOpen={isOpen}
 	      onClosed={onClosed}
-	      swipeThreshold={20}
 	      animationDuration={0}
 	      style={[styles.modal, style]}
 	    >
@@ -40,7 +28,7 @@ class ResultBox extends PureComponent {
 	      		name={iconName}
 	      		type='entypo'
 	      		color='#fff'
-	      		size={40}
+	      		size={45}
 	      	/>
 	        { message }
 	      </View>

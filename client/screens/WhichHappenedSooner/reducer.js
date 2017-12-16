@@ -1,12 +1,11 @@
 import _ from 'lodash';
 import { 
-  FETCH_GAME_FACTS, 
-  GET_FACTS_FROM_STATE,
-  GET_GAME_FACTS,
+  FETCH_GAME_FACTS_PENDING,
   FLIP_GAME_CARDS,
   SELECT_ANSWER,
   START_GAME,
   STOP_GAME,
+  GAME_ERROR,
   CHANGE_TIMER,
   OPEN_RESULT,
   CLOSE_RESULT
@@ -24,28 +23,28 @@ const defaultState = {
   isResultOpen: false,
   isCorrect: false,
   isLoading: false,
-  error: false,
+  error: '',
 }
 
 const happenedSoonerReducer = (state = defaultState, action) => {
   switch(action.type) {
 
-    case GET_FACTS_FROM_STATE:
-      return { ...state, facts: { ...state.facts, ...action.facts }}
-    case GET_GAME_FACTS:
-      return { ...state, gameFacts: action.gameFacts }
     case FLIP_GAME_CARDS:
       return { ...state, flip: action.flip }
     case START_GAME:
       return { 
         ...state, 
         started: true,
+        isLoading: false,
         flip: false,
         timer: defaultState.timer,
+        facts: action.facts,
         gameFacts: action.gameFacts 
       }
     case STOP_GAME: 
       return { ...state }
+    case GAME_ERROR:
+      return { ...state, isLoading: false, error: action.error }
     case CHANGE_TIMER:
       return { ...state, timer: state.timer + action.timeEdit }
     case SELECT_ANSWER:
@@ -56,16 +55,8 @@ const happenedSoonerReducer = (state = defaultState, action) => {
       return { ...state, isResultOpen: true, isCorrect: action.isCorrect }
     case CLOSE_RESULT: 
       return { ...state, isResultOpen: false }
-    case `${FETCH_GAME_FACTS}_PENDING`:
+    case FETCH_GAME_FACTS_PENDING:
       return { ...state, isLoading: true };
-    case `${FETCH_GAME_FACTS}_FULFILLED`:      
-      return {
-        ...state,
-        isLoading: false,
-        facts: { ...state.facts, ...action.payload },
-      }
-    case `${FETCH_GAME_FACTS}_REJECTED`:
-      return { ...state, isLoading: false, error: true };
 
     default:
       return state;

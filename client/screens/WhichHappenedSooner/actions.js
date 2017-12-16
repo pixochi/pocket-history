@@ -2,14 +2,14 @@ import axios from 'axios';
 import _ from 'lodash';
 import config from '../../constants/config';
 
-import { 
-	FETCH_GAME_FACTS, 
-	GET_FACTS_FROM_STATE, 
+import {
+	FETCH_GAME_FACTS_PENDING, 
 	GET_GAME_FACTS,
 	FLIP_GAME_CARDS,
 	SELECT_ANSWER,
 	START_GAME,
 	STOP_GAME,
+	GAME_ERROR,
 	CHANGE_TIMER,
 	OPEN_RESULT,
 	CLOSE_RESULT
@@ -22,36 +22,39 @@ const ENV = config.env;
 const API_ROOT_URL = config[ENV].apiRootUrl;
 
 const fetchFacts = (state) => {
-	return new Promise((resolve, reject) => {
-		// const { online } = getState();
+	return new Promise(async (resolve, reject) => {
+		const factsMin = 250; // min number of facts for start
+		const avgEventsPerDay = 50; // average number of events in a set of facts
+		let allFacts = {};
 		const stateFacts = getFactsFromState(state);
-		console.log('STATE FACTS')
-		console.log(stateFacts)
-		resolve(stateFacts);
-	});
-	
-	// return {
-	// 	type: FETCH_GAME_FACTS,
+		const stateFactsLength = Object.keys(stateFacts).length*avgEventsPerDay;
+		allFacts = {...stateFacts};
 
-	// }
+		if (stateFactsLength < factsMin && state.offline.online) {
+			try {
+				const datesNum = Math.ceil((factsMin - stateFactsLength) / avgEventsPerDay);
+				const apiFacts = await getFactsFromAPI(datesNum);
+				allFacts = {...allFacts, ...apiFacts};
+			} catch(e) {
+				if (allFacts.length) {
+					resolve(allFacts);
+				} else {
+					reject(e);
+				}
+			}
+		}
+		resolve(allFacts);
+	});
 }
 
-const getGameFacts = (state) => {
-	return new Promise(async (resolve, reject) => {
-		try {
-			const facts = await fetchFacts(state);
-			let fact1 = getRandomFact(facts);
-			fact1.id = 0;
-			let fact2 = getRandomFact(facts);
-			fact2.id = 1;
-			const gameFacts = [fact1, fact2]
+const getGameFacts = (allFacts) => {
+	let fact1 = getRandomFact(allFacts);
+	fact1.id = 0;
+	let fact2 = getRandomFact(allFacts);
+	fact2.id = 1;
+	const gameFacts = [fact1, fact2];
 
-			resolve(gameFacts);
-		} catch(e) {
-			console.log(e);
-			reject(e);
-		}
-	});
+	return gameFacts;
 }
 
 let gameTimer = null;
@@ -59,12 +62,31 @@ let gameTimer = null;
 export const startGame = () => async (dispatch, getState) => {
 	clearInterval(gameTimer);
 	const state = getState();
-	const gameFacts = await getGameFacts(state);
-	dispatch({
-		type: START_GAME,
-		gameFacts
-	});
-	gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
+	let allFacts;
+
+	try {
+		const factsForGame = state.happenedSooner.facts;
+		if (_.isEmpty(factsForGame)) {
+			dispatch({ type: FETCH_GAME_FACTS_PENDING });
+			allFacts = await fetchFacts(state)
+		} else {
+			allFacts = factsForGame;
+		}
+		
+		const gameFacts = getGameFacts(allFacts);
+		dispatch({
+			type: START_GAME,
+			gameFacts,
+			facts: allFacts
+		});
+		gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
+	} catch(e) {
+		console.log(e);
+		dispatch({
+			type: GAME_ERROR,
+			error: 'Sorry, the Internet connection appears to be offline and there are no saved facts on your device.'
+		});
+	}
 }
 
 export const stopGame = () => {
@@ -115,19 +137,32 @@ const getFactsFromAPI = (numberOfDays = 4) => {
 		// create a bulk of dates
 		for (let i = numberOfDays - 1; i >= 0; i--) {
 			const nextDateTimestamp = randomDate.setDate(randomDate.getDate() + i);
-			const factDate = toApiFactDate(timestamp)
+			const factDate = toApiFactDate(nextDateTimestamp);
 			bulkDates.push(factDate);
 		}
 
-		const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
-		const { data, date } = response.data;
+		const datesParam = bulkDates.join(',');
+		try {
+			const { data } = await axios.get(`${API_ROOT_URL}/facts?date=${datesParam}`);
+			let events = {};
+			for (factDate of data) {
+				events[factDate.date] = factDate.data.Events;
+			}
+			resolve(events);
+		} catch(e) {
+			console.log(e);
+			reject(e);
+		}
 	});
 }
 
 const getFactsFromState = (state) => {
-	const { historyOnDay: { facts } } = state;
+	const { happenedSooner, historyOnDay } = state;
+	const factsForGame = happenedSooner.facts;
+	const factsOnDay = historyOnDay.facts;
+	const facts = {...factsForGame, ...factsOnDay}
 	let events = {};
-	if (!facts) { return; }
+	if (!factsForGame && ! factsOnDay) { return; }
 
 	for (date in facts) {
 		events[date] = facts[date].Events;
@@ -148,9 +183,7 @@ const getRandomFact = (facts) => {
 
   let randomFact = factsSet[randomFactNum];
   const factTimestamp = new Date(getYear(randomFact.year), month, day).getTime();
-
   randomFact.timestamp = factTimestamp;
 
-  console.log(randomFact);
   return randomFact;
 }

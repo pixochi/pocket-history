@@ -1,4 +1,6 @@
+import axios from 'axios';
 import _ from 'lodash';
+import config from '../../constants/config';
 
 import { 
 	FETCH_GAME_FACTS, 
@@ -13,8 +15,11 @@ import {
 	CLOSE_RESULT
 } from '../../constants/actionTypes';
 import { getRandomNumber } from '../../utils/random';
-import { getDateNums, getYear } from '../../utils/date';
+import { getDateNums, getYear, toApiFactDate } from '../../utils/date';
 
+
+const ENV = config.env;
+const API_ROOT_URL = config[ENV].apiRootUrl;
 
 const fetchFacts = (state) => {
 	return new Promise((resolve, reject) => {
@@ -33,40 +38,34 @@ const fetchFacts = (state) => {
 
 const getGameFacts = (state) => {
 	return new Promise(async (resolve, reject) => {
-		const facts = await fetchFacts(state);
-		let fact1 = getRandomFact(facts);
-		fact1.id = 0;
-		let fact2 = getRandomFact(facts);
-		fact2.id = 1;
-		const gameFacts = [ fact1, fact2 ]
+		try {
+			const facts = await fetchFacts(state);
+			let fact1 = getRandomFact(facts);
+			fact1.id = 0;
+			let fact2 = getRandomFact(facts);
+			fact2.id = 1;
+			const gameFacts = [fact1, fact2]
 
-		resolve(gameFacts);
+			resolve(gameFacts);
+		} catch(e) {
+			console.log(e);
+			reject(e);
+		}
 	});
 }
 
 let gameTimer = null;
 
 export const startGame = () => async (dispatch, getState) => {
+	clearInterval(gameTimer);
 	const state = getState();
 	const gameFacts = await getGameFacts(state);
-	clearInterval(gameTimer);
 	dispatch({
 		type: START_GAME,
 		gameFacts
 	});
 	gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
 }
-
-// export const continueGame = () => async (dispatch, getState) => {
-// 	const state = getState();
-// 	const gameFacts = await getGameFacts(state);
-// 	clearInterval(gameTimer);
-// 	dispatch({
-// 		type: START_GAME,
-// 		gameFacts
-// 	});
-// 	gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
-// }
 
 export const stopGame = () => {
 	clearInterval(gameTimer);
@@ -75,19 +74,20 @@ export const stopGame = () => {
 	}
 }
 
-export const flipCards = () => {
+export const flipCards = (flip) => {
 	return {
-		type: FLIP_GAME_CARDS
+		type: FLIP_GAME_CARDS,
+		flip
 	}
 }
 
 export const selectAnswer = (isCorrect) => dispatch => {
 	dispatch(stopGame());
-	dispatch(flipCards());
+	dispatch(flipCards(true));
 	setTimeout(() => {
 		dispatch(openResult(isCorrect));
 		dispatch({ type: SELECT_ANSWER, isCorrect});
-	}, 600);
+	}, 500);
 }
 
 export const openResult = (isCorrect) => {
@@ -103,10 +103,30 @@ export const closeResult = () => {
 	}
 }
 
+// @param numberOfDays int - for how many days to fetch facts
+const getFactsFromAPI = (numberOfDays = 4) => {
+	return new Promise(async (resolve, reject) => {
+
+		const month = new Date().getMonth();
+		const day = getRandomNumber(1, 31-numberOfDays);
+		const randomDate = new Date(2017, month, day);
+		let bulkDates = [];
+
+		// create a bulk of dates
+		for (let i = numberOfDays - 1; i >= 0; i--) {
+			const nextDateTimestamp = randomDate.setDate(randomDate.getDate() + i);
+			const factDate = toApiFactDate(timestamp)
+			bulkDates.push(factDate);
+		}
+
+		const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
+		const { data, date } = response.data;
+	});
+}
+
 const getFactsFromState = (state) => {
 	const { historyOnDay: { facts } } = state;
 	let events = {};
-	
 	if (!facts) { return; }
 
 	for (date in facts) {

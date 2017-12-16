@@ -4,9 +4,9 @@ import {
   View,
   Text,
   TextInput,
-  Linking,
   ActivityIndicator
 } from 'react-native';
+import { WebBrowser } from 'expo';
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import TimelineList from 'react-native-timeline-listview'
 import PropTypes from 'prop-types';
@@ -137,7 +137,7 @@ class Timeline extends PureComponent {
           value={rowData.description}
           RootComponent={Text}
           style={[styles.description, borderItemStyle]}
-          onLinkPress={(url) => Linking.openURL(url)}
+          onLinkPress={(url) => WebBrowser.openBrowserAsync(url)}
           stylesheet={htmlViewStyles}
         />
       </View>

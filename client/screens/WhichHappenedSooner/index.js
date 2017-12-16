@@ -30,19 +30,43 @@ class WhichHappenedSooner extends PureComponent {
 
   state = {}
 
-  componentDidMount() {
-    // const { getGameFacts } = this.props;
-    // getGameFacts();
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.timer === 0) {
       stopGame();
     }
+    this._createResultMessage(nextProps);
   }
 
   componentWillUnmount() {
     this.props.stopGame();
+  }
+
+  _createResultMessage = (nextProps) => {
+    const { score, bestScore } = nextProps;
+
+    if (bestScore > this.props.bestScore) {
+      this._resultMessage = `New best score: ${bestScore}`;
+    } else if (score === 0) {
+      this._resultMessage = `Final score: ${this.props.score}`;
+    } else {
+      this._resultMessage = (
+        <View style={styles.messageContainer}>
+          <Text style={styles.message}>
+            Score: {score}
+          </Text>
+          <Text style={styles.message}>
+            Score to beat: {bestScore}
+          </Text>
+        </View>
+      )
+      return;
+    }
+
+    this._resultMessage = (
+      <Text style={styles.message}>
+        { this._resultMessage }
+      </Text>
+    )
   }
 
   _selectAnswer = (answer) => {
@@ -81,7 +105,7 @@ class WhichHappenedSooner extends PureComponent {
     return (
       <View style={styles.container}>
       {
-        fact &&
+        fact && this.props.flip &&
         <FactCard 
           {...fact}
           isImgShown={true}
@@ -95,7 +119,6 @@ class WhichHappenedSooner extends PureComponent {
   _renderContinueButton = (isCorrect) => {
     const { startGame } = this.props;
     const title = isCorrect ? 'Continue' : 'Play again';
-    const onPress = isCorrect ? () => null : startGame;
 
     return (
       <Button 
@@ -198,6 +221,7 @@ class WhichHappenedSooner extends PureComponent {
           </ScrollView>
           
           <ResultBox
+            message={this._resultMessage}
             isOpen={isResultOpen}
             isCorrect={isCorrect}
             onClosed={closeResult}
@@ -248,7 +272,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 80,
-    // backgroundColor: 'red'
   },
   timer: {
     marginTop: 35,
@@ -263,7 +286,6 @@ const styles = StyleSheet.create({
   cardsContainer: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: 'yellow'
   },
   cardsContainerContent: {
     justifyContent: 'space-around',
@@ -298,9 +320,18 @@ const styles = StyleSheet.create({
   continueBtn: {
     backgroundColor: COLORS.yellowDark
   },
+  messageContainer: {
+    flexDirection: 'column', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  message: {
+    color: '#fff',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
   container: {
     flex:1,
-    // flexDirection: 'column'
   }
 });
 

@@ -24,23 +24,33 @@ class ResultBox extends PureComponent {
 	}
 
   render() {
-  	const { isOpen, isCorrect, onClosed } = this.props;
-
+  	const { message, isOpen, isCorrect, onClosed } = this.props;
+  	const style = isCorrect ? styles.modalCorrect : styles.modalWrong;
+  	const iconName = isCorrect ? 'check' : 'cross';
     return (
      	<Modal
 	      isOpen={isOpen}
 	      onClosed={onClosed}
-	      style={styles.modal}
+	      swipeThreshold={20}
+	      animationDuration={0}
+	      style={[styles.modal, style]}
 	    >
-	      <Text>
-	        { this._getMessage(isCorrect) }
-	      </Text>
+	      <View style={styles.messageContainer}>
+	      	<Icon 
+	      		name={iconName}
+	      		type='entypo'
+	      		color='#fff'
+	      		size={40}
+	      	/>
+	        { message }
+	      </View>
 	    </Modal>
     );
   }
 }
 
 ResultBox.propTypes = {
+	message: PropTypes.node,
   isOpen: PropTypes.bool,
   result: PropTypes.bool,
   onPlay: PropTypes.func,
@@ -48,6 +58,7 @@ ResultBox.propTypes = {
 }
 
 ResultBox.defaultProps = {
+	message: '',
 	isOpen: false
 }
 
@@ -56,8 +67,21 @@ const styles = StyleSheet.create({
 	modal: {
 		justifyContent: 'center',
     alignItems: 'center',
-    height: height/2,
+    height: height/4,
     width: width-30,
+    borderRadius: 5
+	},
+	modalCorrect: {
+		backgroundColor: '#4db03a',
+	},
+	modalWrong: {
+		backgroundColor: '#c63030',
+	},
+	messageContainer: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
 	}
 });
 

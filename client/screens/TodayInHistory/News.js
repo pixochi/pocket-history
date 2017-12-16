@@ -4,8 +4,8 @@ import {
   View,
   ScrollView,
   Text,
-  Linking
 } from 'react-native';
+import { WebBrowser } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -62,7 +62,7 @@ class News extends PureComponent {
     const { selectedDate } = this.props;
     const newsDate = toApiNewsDate(selectedDate.timestamp);
     const onThisDayNewsUrl = NEWS_ROOT_URL + newsDate;
-    Linking.openURL(onThisDayNewsUrl);
+    WebBrowser.openBrowserAsync(onThisDayNewsUrl);
   }
 
   _renderNews = (articles) => {

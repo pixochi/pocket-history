@@ -29,7 +29,7 @@ export const cacheFacts = (date, facts) => {
     console.log(date)
 
     const serializedFacts = JSON.stringify(facts); // array to string
-    const expiresIn = 60*5 // 6 hours in seconds
+    const expiresIn = 60*60*6 // in seconds
 
     const hashedKey = hash(date+'facts');
     

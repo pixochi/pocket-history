@@ -32,7 +32,7 @@ const _fetchFacts = (timestamp, factsState) => {
 			const factApiDate = toApiFactDate(timestamp);
 			// facts - events, births, deaths
 			const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
-			const { data, date } = response.data;
+			const { data, date } = response.data[0];
 
 			let newFacts = {};
 			newFacts[date] = data;

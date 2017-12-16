@@ -13,36 +13,34 @@ const FACTS_API_RUL = 'http://history.muffinlabs.com/date/';
 export const getFacts = async (req, res) => {
 	console.log('GETTING FACTS FROM API');
 
-	const requestDate = req.query.date;
-	if (requestDate == null) {
+	let requestDates = req.query.date;
+	if (requestDates == null) {
 		res.status(400).send('Missing parameter: date');
 		return;
 	}
 
-	const apiUrl = FACTS_API_RUL + requestDate;
+	let result = []; // all facts for dates
+	requestDates = requestDates.split(',');
 
-	try {
-		let { data } = await axios(apiUrl);
+	for (let requestDate of requestDates) {
+		try {
+			const apiUrl = FACTS_API_RUL + requestDate;
+			let { data } = await axios(apiUrl);
 
-		if (data) {
-			if (requestDate === '5/5') {
-				data = addLegendToFacts(data);
+			if (data) {
+				if (requestDate === '5/5') {
+					data = addLegendToFacts(data);
+				}
+				console.log(data)
+				result.push(data)
+				cacheFacts(requestDate, data);
 			}
-			console.log(data)
-			res.send(data);
-			cacheFacts(requestDate, data);
-		} else {
-			res.send({});
+		} catch(err) {
+			console.log('GET FACTS FROM API ERROR:')
+			console.log(err)
 		}
-	} catch(err) {
-		console.log('GET FACTS FROM API ERROR:')
-		console.log(err)
-		const error = {
-			err,
-			message: 'Failed to load the facts. Please try again later.'
-		}
-		res.status(400).send(error);
 	}
+	res.send(result);
 }
 
 export const getRandomFact = async () => {

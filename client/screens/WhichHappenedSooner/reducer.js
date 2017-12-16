@@ -35,7 +35,7 @@ const happenedSoonerReducer = (state = defaultState, action) => {
     case GET_GAME_FACTS:
       return { ...state, gameFacts: action.gameFacts }
     case FLIP_GAME_CARDS:
-      return { ...state, flip: !state.flip }
+      return { ...state, flip: action.flip }
     case START_GAME:
       return { 
         ...state, 

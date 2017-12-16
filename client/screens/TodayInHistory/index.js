@@ -7,6 +7,7 @@ import {
   AsyncStorage
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -14,7 +15,7 @@ import { toCalendarDate } from '../../utils/date';
 import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // ACTIONS
-import { fetchFacts, fetchFactsImages, changeDate, changeFactsFilter } from './actions';
+import * as actionCreators from './actions';
 import { changeRoute } from '../../navigation/actions';
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
@@ -297,32 +298,18 @@ const mapStateToProps = ({ historyOnDay, offline, persist }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchFacts: (timestamp) => {
-    dispatch(fetchFacts(timestamp));
-  },
-  fetchFactsImages: (date, category, facts) => {
-    dispatch(fetchFactsImages(date, category, facts));
-  },
-  changeDate: (date) => {
-    dispatch(changeDate(date));
-  },
-  changeRoute: (route) => {
-    dispatch(changeRoute(route));
-  },
-  addFavorite: (item, category) => {
-    dispatch(addFavorite(item, category));
-  },
-  copyToClipboard: (content) => {
-    dispatch(copyToClipboard(content));
-  },
-  changeFilter: (filter) => {
-    dispatch(changeFactsFilter(filter));
-  },
-  openModal: (name) => {
-    dispatch(openModal(name));
-  }
-});
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators({
+    ...actionCreators,
+    changeRoute,
+    addFavorite,
+    copyToClipboard,
+    openModal, 
+  }, dispatch)
+);
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodayInHistory);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodayInHistory);

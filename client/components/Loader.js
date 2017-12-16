@@ -48,7 +48,7 @@ class Loader extends PureComponent {
 				<ActivityIndicator 
 					size={indicatorSize}
 					animating={this.props.animating}
-					color={COLORS.header}
+					color={COLORS.yellowDark}
 				/>
 				{ canShowMessage && 
 					<Text style={styles.message}>

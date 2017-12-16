@@ -4,10 +4,13 @@ import {
   View,
   ScrollView,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
+  Dimensions
 } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -15,8 +18,9 @@ import FactCard from '../../components/FactCard';
 import Header from '../../components/Header';
 import GuessCard from './components/GuessCard';
 import MenuIcon from '../../components/MenuIcon';
+import ResultBox from './components/ResultBox';
 
-import { fetchFacts, getGameFacts, flipCards, selectAnswer } from './actions';
+import * as actionCreators from './actions';
 
 import { COLORS } from '../../constants/components';
 import gStyles from '../../styles';
@@ -27,43 +31,47 @@ class WhichHappenedSooner extends PureComponent {
   state = {}
 
   componentDidMount() {
-    this.props.fetchFacts();
+    // const { getGameFacts } = this.props;
+    // getGameFacts();
   }
 
   componentWillReceiveProps(nextProps) {
-    const { facts, getGameFacts } = this.props;
-
-    if (_.isEmpty(facts) && !_.isEmpty(nextProps.facts)) {    
-      getGameFacts(nextProps.facts);
+    if (nextProps.timer === 0) {
+      stopGame();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.stopGame();
   }
 
   _selectAnswer = (answer) => {
     const { gameFacts, selectAnswer } = this.props;
-    let correct;
     const compareToId = answer.id === 0 ? 1 : 0;
-    console.log(gameFacts)
-    if (answer.timestamp < gameFacts[compareToId].timestamp) {
+
+    if (answer.timestamp <= gameFacts[compareToId].timestamp) {
       selectAnswer(true);
-    } else if (answer.timestamp > gameFacts[compareToId].timestamp) {
-      selectAnswer(false);
     } else {
-      console.log('DRAW');
+      selectAnswer(false);
     }
   }
 
   _renderFront = (fact) => {
     return (
-      <TouchableHighlight onPress={() => this._selectAnswer(fact)}>
+      <TouchableHighlight 
+        onPress={() => this._selectAnswer(fact)}
+        underlayColor={'rgba(0,0,0,.75)'}
+        style={styles.container}  
+      >
         <View style={styles.container}>
-        {
-          fact &&
-          <FactCard
-            html={fact.text}
-            canShowDetail={false}
-            isImgShown={true}
-          />
-        }
+          {
+            fact &&
+            <FactCard
+              html={fact.text}
+              canShowDetail={false}
+              isImgShown={true}
+            />
+          }
         </View>
       </TouchableHighlight>
     ) 
@@ -84,8 +92,66 @@ class WhichHappenedSooner extends PureComponent {
     )
   }
 
+  _renderContinueButton = (isCorrect) => {
+    const { startGame } = this.props;
+    const title = isCorrect ? 'Continue' : 'Play again';
+    const onPress = isCorrect ? () => null : startGame;
+
+    return (
+      <Button 
+        title={title}
+        onPress={startGame}
+        buttonStyle={styles.playBtn}
+        textStyle={styles.playBtnText}
+      />
+    )
+  }
+
   render() {
-    const { navigation, gameFacts, flip, flipCards, score, bestScore } = this.props;
+    const { navigation, gameFacts, flip, flipCards, score,
+     bestScore, started, startGame, timer, isResultOpen,
+      closeResult, isCorrect } = this.props;
+    let Main;
+
+    if (started) {
+      Main = (
+        <View style={styles.container}>
+          <View style={styles.cardsContainer}>
+            <GuessCard 
+              front={this._renderFront(gameFacts[0])}
+              back={this._renderBack(gameFacts[0])}
+              flip={flip}
+            />
+            <GuessCard 
+              front={this._renderFront(gameFacts[1])}
+              back={this._renderBack(gameFacts[1])}
+              flip={flip}
+            />
+          </View>
+
+          
+        </View>
+        
+      )
+    } else {
+      Main = (
+        <View style={styles.startScreen}>
+          <View style={styles.instructions}>
+            <Text style={styles.instructionsText}>
+              Select the event which happened sooner
+            </Text>
+          </View>
+          
+          <Button 
+            title='Play'
+            onPress={startGame}
+            textStyle={styles.playBtnText}
+            buttonStyle={styles.playBtn}
+          />
+        </View>
+      )
+    }
+
     return (
       <View style={styles.screenContainer}>
         <Header
@@ -95,7 +161,7 @@ class WhichHappenedSooner extends PureComponent {
         />
         <View style={gStyles.screenBody}>
           
-          <ScrollView>
+          <ScrollView style={styles.container}>
             <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>
                 Score: { score }
@@ -105,24 +171,37 @@ class WhichHappenedSooner extends PureComponent {
               </Text>
             </View>
 
-            <View style={styles.cardsContainer}>
-              <GuessCard 
-                front={this._renderFront(gameFacts[0])}
-                back={this._renderBack(gameFacts[0])}
-                flip={flip}
-              />
-              <GuessCard 
-                front={this._renderFront(gameFacts[1])}
-                back={this._renderBack(gameFacts[1])}
-                flip={flip}
-              />
+            <View style={styles.timerContainer}>
+              <AnimatedCircularProgress
+                size={70}
+                width={8}
+                fill={(100/15)*timer}
+                prefill={0}
+                rotation={0}
+                tintColor={COLORS.header}
+                backgroundColor={COLORS.yellowDark}
+                style={styles.timer}
+              >
+                { () => (
+                    <Text style={styles.timerText}>
+                      { timer }
+                    </Text>
+                  )
+                }
+              </AnimatedCircularProgress>
             </View>
+          
+            { Main }
+
+            { flip && this._renderContinueButton(isCorrect) }
+
           </ScrollView>
           
-
-          <Text onPress={() => flipCards()}>
-            FLIP
-          </Text>
+          <ResultBox
+            isOpen={isResultOpen}
+            isCorrect={isCorrect}
+            onClosed={closeResult}
+          />
         </View>
       </View>
     );
@@ -134,10 +213,10 @@ WhichHappenedSooner.navigationOptions = ({navigation}) => ({
   drawerLabel: 'Which Happened Sooner',
   drawerIcon: ({tintColor}) => (
     <Icon 
-      name='cards' 
-      type='material-community' 
+      name='trophy' 
+      type='font-awesome' 
       color={tintColor} 
-      size={28} 
+      size={26} 
     />
   )
 });
@@ -164,44 +243,84 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.yellowLight
   },
+  timerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    // backgroundColor: 'red'
+  },
+  timer: {
+    marginTop: 35,
+  },
+  timerText: {
+    position: 'relative',
+    bottom: 55,
+    textAlign: 'center',
+    fontSize: 27,
+    color: COLORS.greyDark
+  },
   cardsContainer: {
     flex: 1,
     flexDirection: 'column',
+    // backgroundColor: 'yellow'
   },
   cardsContainerContent: {
     justifyContent: 'space-around',
     alignItems: 'center',
   },
+  startScreen: {
+    flex: 1,
+    flexDirection: 'column',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginTop: 50
+  },
+  instructions: {
+    marginBottom: 15
+  },
+  instructionsText: {
+    padding: 5,
+    textAlign: 'center',
+    fontSize: 25,
+    color: COLORS.greyDark
+  },
+  playBtn: {
+    marginVertical: 5,
+    borderRadius: 4,
+    backgroundColor: COLORS.yellowDark,
+  },
+  playBtnText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  continueBtn: {
+    backgroundColor: COLORS.yellowDark
+  },
   container: {
-    flex:1
+    flex:1,
+    // flexDirection: 'column'
   }
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchFacts: () => {
-    dispatch(fetchFacts());
-  },
-  getGameFacts: (facts) => {
-    dispatch(getGameFacts(facts));
-  },
-  flipCards: () => {
-    dispatch(flipCards());
-  },
-  selectAnswer: (correct) => {
-    dispatch(selectAnswer(correct))
-  }
-});
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(actionCreators, dispatch);
+}
 
 const mapStateToProps = ({happenedSooner}) => {
-  const { facts, gameFacts, flip, score,
-   bestScore, isLoading, error } = happenedSooner;
+  const { gameFacts, flip, score, bestScore,
+   started, timer, isResultOpen, isCorrect, isLoading, error } = happenedSooner;
 
   return {
-    facts,
     gameFacts,
     flip,
     score,
     bestScore,
+    started,
+    timer,
+    isResultOpen,
+    isCorrect,
     isLoading,
     error,
   }

@@ -33,6 +33,11 @@ export const GET_FACTS_FROM_STATE = 'GET_FACTS_FROM_STATE';
 export const GET_GAME_FACTS = 'GET_GAME_FACTS';
 export const FLIP_GAME_CARDS = 'FLIP_GAME_CARDS';
 export const SELECT_ANSWER = 'SELECT_ANSWER';
+export const START_GAME = 'START_GAME';
+export const STOP_GAME = 'STOP_GAME';
+export const CHANGE_TIMER = 'CHANGE_TIMER';
+export const OPEN_RESULT = 'OPEN_RESULT';
+export const CLOSE_RESULT = 'CLOSE_RESULT';
 
 // MODAL - COMPONENT
 export const CLOSE_MODAL = 'CLOSE_MODAL';

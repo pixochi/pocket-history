@@ -126,7 +126,7 @@ export const changeDate = (timestamp) => {
 	}
 }
 
-export const changeFactsFilter = (filter) => {
+export const changeFilter = (filter) => {
 	return {
 		type: CHANGE_FACTS_FILTER,
 		filter

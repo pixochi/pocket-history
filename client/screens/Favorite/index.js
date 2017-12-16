@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SearchBar, Icon } from 'react-native-elements';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 // COMPONENTS
@@ -10,7 +11,7 @@ import MenuIcon from '../../components/MenuIcon';
 import Modal from '../../components/Modal';
 
 // ACTIONS
-import { removeFavorite, changeFavoritesFilter } from './actions';
+import * as actionCreators from './actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
 
@@ -32,7 +33,7 @@ class Favorite extends PureComponent {
       <Icon 
         name='search'
         color={COLORS.headerIcon}
-        underlayColor={COLORS.headerIconUnderlay}
+        underlayColor={COLORS.underlay}
         iconStyle={styles.searchIcon}
         containerStyle={{flex:1}}
         onPress={this._openSearchScreen}
@@ -41,7 +42,7 @@ class Favorite extends PureComponent {
   }
 
 	render(){
-		const { removeFavorite, changeFilter, filter, copyToClipboard, navigation } = this.props;
+		const { removeFavorite, filter, copyToClipboard, navigation } = this.props;
 		return (
 			<View style={{flex:1}}>
         <Header 
@@ -72,18 +73,13 @@ const mapStateToProps = ({favorite}) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  removeFavorite: (item, category) => {
-    dispatch(removeFavorite(item, category));
-  },
+  ...bindActionCreators(actionCreators, dispatch),
   copyToClipboard: (content) => {
     dispatch(copyToClipboard(content));
   },
   openModal: (name) => {
   	dispatch(openModal(name))
   },
-  changeFilter: (filter) => {
-  	dispatch(changeFavoritesFilter(filter));
-  }
 });
 
 

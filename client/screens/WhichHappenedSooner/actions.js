@@ -6,32 +6,72 @@ import {
 	GET_GAME_FACTS,
 	FLIP_GAME_CARDS,
 	SELECT_ANSWER,
+	START_GAME,
+	STOP_GAME,
+	CHANGE_TIMER,
+	OPEN_RESULT,
+	CLOSE_RESULT
 } from '../../constants/actionTypes';
 import { getRandomNumber } from '../../utils/random';
 import { getDateNums, getYear } from '../../utils/date';
 
 
-export const fetchFacts = () => (dispatch, getState) => {
-	const { online } = getState();
-
-	dispatch(getFactsFromState());
-
+const fetchFacts = (state) => {
+	return new Promise((resolve, reject) => {
+		// const { online } = getState();
+		const stateFacts = getFactsFromState(state);
+		console.log('STATE FACTS')
+		console.log(stateFacts)
+		resolve(stateFacts);
+	});
+	
 	// return {
 	// 	type: FETCH_GAME_FACTS,
 
 	// }
 }
 
-export const getGameFacts = (facts) => {
-	let fact1 = getRandomFact(facts);
-	fact1.id = 0;
-	let fact2 = getRandomFact(facts);
-	fact2.id = 1;
-	const gameFacts = [ fact1, fact2 ]
+const getGameFacts = (state) => {
+	return new Promise(async (resolve, reject) => {
+		const facts = await fetchFacts(state);
+		let fact1 = getRandomFact(facts);
+		fact1.id = 0;
+		let fact2 = getRandomFact(facts);
+		fact2.id = 1;
+		const gameFacts = [ fact1, fact2 ]
 
-	return {
-		type: GET_GAME_FACTS,
+		resolve(gameFacts);
+	});
+}
+
+let gameTimer = null;
+
+export const startGame = () => async (dispatch, getState) => {
+	const state = getState();
+	const gameFacts = await getGameFacts(state);
+	clearInterval(gameTimer);
+	dispatch({
+		type: START_GAME,
 		gameFacts
+	});
+	gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
+}
+
+// export const continueGame = () => async (dispatch, getState) => {
+// 	const state = getState();
+// 	const gameFacts = await getGameFacts(state);
+// 	clearInterval(gameTimer);
+// 	dispatch({
+// 		type: START_GAME,
+// 		gameFacts
+// 	});
+// 	gameTimer = setInterval(() => dispatch({type: CHANGE_TIMER, timeEdit: -1}), 1000);	
+// }
+
+export const stopGame = () => {
+	clearInterval(gameTimer);
+	return {
+		type: STOP_GAME
 	}
 }
 
@@ -41,16 +81,30 @@ export const flipCards = () => {
 	}
 }
 
-// @param correct bool
-export const selectAnswer = (correct) => {
+export const selectAnswer = (isCorrect) => dispatch => {
+	dispatch(stopGame());
+	dispatch(flipCards());
+	setTimeout(() => {
+		dispatch(openResult(isCorrect));
+		dispatch({ type: SELECT_ANSWER, isCorrect});
+	}, 600);
+}
+
+export const openResult = (isCorrect) => {
 	return {
-		type: SELECT_ANSWER,
-		correct
+		type: OPEN_RESULT,
+		isCorrect
 	}
 }
 
-const getFactsFromState = () => (dispatch, getState) => {
-	const { historyOnDay: { facts } } = getState();
+export const closeResult = () => {
+	return {
+		type: CLOSE_RESULT
+	}
+}
+
+const getFactsFromState = (state) => {
+	const { historyOnDay: { facts } } = state;
 	let events = {};
 	
 	if (!facts) { return; }
@@ -59,10 +113,7 @@ const getFactsFromState = () => (dispatch, getState) => {
 		events[date] = facts[date].Events;
 	}
 
-	dispatch({
-		type: GET_FACTS_FROM_STATE,
-		facts: events
-	});
+	return events;
 }
 
 const getRandomFact = (facts) => {

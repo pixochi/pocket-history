@@ -8,11 +8,12 @@ import {
   ScrollView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
 // ACTIONS
-import { removeFavorite, changeSearch, toggleCategory } from './actions';
+import * as actionCreators from './actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
 
@@ -320,17 +321,9 @@ const mapStateToProps = ({ favorite }) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  changeSearch: (search) => {
-    dispatch(changeSearch(search));
-  },
-  toggleCategory: (category) => {
-    dispatch(toggleCategory(category))
-  },
+  ...bindActionCreators(actionCreators, dispatch),
   copyToClipboard: (content) => {
     dispatch(copyToClipboard(content))
-  },
-  removeFavorite: (id, category) => {
-    dispatch(removeFavorite(id, category));
   },
   openModal: (name) => {
     dispatch(openModal(name));

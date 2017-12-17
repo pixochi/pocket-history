@@ -44,30 +44,26 @@ class SearchScreen extends PureComponent {
   state = {}
 
   _renderFact = ({item}) => {
-    const { text, date, year } = item;
     const { navigation } = this.props;
-    const copyText = `${date}, ${year} - ${text}`;
-    const { copyToClipboard, removeFavorite } = this.props;
-    const copy = () => copyToClipboard(copyText);
-    const remove = () => removeFavorite(item.id, 'facts');    
     return (
       <FactCard 
-        {...item}
+        fact={item}
+        date={item.date}
+        canShowDate={true}
         isFavorite={true}
         navigation={navigation}
-        menuOptions={createCardMenuOptions(item, copyText, copy, remove)}
       />
     );
   }
 
   _renderArticle = ({item}) => {
     const { copyToClipboard, removeFavorite } = this.props;
-    const copy = () => copyToClipboard(item.title);
+    const copy = () => copyToClipboard(item.link);
     const remove = () => removeFavorite(item.id, 'articles');
     return (
       <ArticleCard
         {...item}
-        menuOptions={createCardMenuOptions(item, item.title, copy, remove)}
+        menuOptions={createCardMenuOptions(item, item.link, copy, remove)}
       />
     );
   }
@@ -97,14 +93,16 @@ class SearchScreen extends PureComponent {
   }
 
   _renderBook = ({item}) => {
+    const { id, title, previewLink } = item;
     const { copyToClipboard, removeFavorite } = this.props;
-    const copy = () => copyToClipboard(item.title);
+    const shareText = `${title} - ${previewLink}`
+    const copy = () => copyToClipboard(shareText);
     const remove = () => removeFavorite(item.id, 'books');
     return (
       <BookCard
         book={item}
         onBookPress={this._onBookPress}
-        menuOptions={createCardMenuOptions(item, item.title, copy, remove)}
+        menuOptions={createCardMenuOptions(item, shareText, copy, remove)}
       />
     );
   }
@@ -147,6 +145,11 @@ class SearchScreen extends PureComponent {
     )
   }
 
+
+  _renderBanner = (data) => {
+    return (data && data.length > 1) && <Banner />;
+  }
+
   render() {
     const { navigation, categories, facts, articles, videos, 
       books, toggleCategory, removeFavorite, copyToClipboard } = this.props;
@@ -176,7 +179,7 @@ class SearchScreen extends PureComponent {
                 category='facts'
                 renderFavorite={this._renderFact}
               />
-              <Banner />
+              { this._renderBanner(facts) }
             </View>
           }
 
@@ -192,7 +195,7 @@ class SearchScreen extends PureComponent {
                 category='articles'
                 renderFavorite={this._renderArticle}
               />
-              <Banner />
+              { this._renderBanner(articles) }
             </View>
           }
 
@@ -211,7 +214,7 @@ class SearchScreen extends PureComponent {
               <VideoModal 
                 videoUrl={VIDEO_ROOT_URL+selectedVideoId}
               />
-              <Banner />
+              { this._renderBanner(videos) }
             </View>
           }
           
@@ -230,7 +233,7 @@ class SearchScreen extends PureComponent {
               <BookModal
                 bookDescription={bookDescription}
               />
-              <Banner />
+              { this._renderBanner(books) }
             </View>
           }
 

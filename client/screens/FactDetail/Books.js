@@ -47,11 +47,12 @@ class Books extends PureComponent {
   }
 
   _cardMenuOptions = (book) => {
-    const { title } = book;
+    const { title, previewLink } = book;
     const { addFavorite, copyToClipboard } = this.props.screenProps;
+    const shareText = `${title} - ${previewLink}`
     const menuOptions = [
-      copy({ onSelect: () => copyToClipboard(title) }),
-      share({ message: title }),
+      copy({ onSelect: () => copyToClipboard(shareText) }),
+      share({ message: shareText }),
       save({ onSelect: () => addFavorite(book, 'books')})
     ]
     return menuOptions;

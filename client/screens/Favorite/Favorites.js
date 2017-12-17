@@ -5,6 +5,7 @@ import {
   FlatList
 } from 'react-native';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import EmptyFavorites from '../../components/EmptyFavorites';
 
@@ -12,7 +13,7 @@ import EmptyFavorites from '../../components/EmptyFavorites';
 class Favorites extends PureComponent {
 
   render() {
-    const { data, category = 'favorites', renderFavorite } = this.props;
+    const { data, category, renderFavorite } = this.props;
 
     if (!data.length) {
       return (
@@ -34,6 +35,16 @@ class Favorites extends PureComponent {
       </View>
     );
   }
+}
+
+Favorites.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  category: PropTypes.string,
+  renderFavorite: PropTypes.func,
+}
+
+Favorites.defaultProps = {
+  category: 'favorites'
 }
 
 const styles = StyleSheet.create({

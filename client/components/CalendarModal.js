@@ -77,7 +77,7 @@ class CalendarModal extends PureComponent {
 
 const calendarTheme = {
   textMonthFontSize: 20,
-  selectedDayBackgroundColor: COLORS.header,
+  selectedDayBackgroundColor: COLORS.yellowDark,
 }
 
 const styles = StyleSheet.create({

@@ -23,7 +23,7 @@ const defaultState = {
   isResultOpen: false,
   isCorrect: false,
   isLoading: false,
-  error: '',
+  error: false,
 }
 
 const happenedSoonerReducer = (state = defaultState, action) => {
@@ -37,12 +37,13 @@ const happenedSoonerReducer = (state = defaultState, action) => {
         started: true,
         isLoading: false,
         flip: false,
+        error: false,
         timer: defaultState.timer,
         facts: action.facts,
         gameFacts: action.gameFacts 
       }
     case STOP_GAME:
-      return { ...state, flip: true, score: 0 }
+      return { ...state, flip: true, score: 0, error: false }
     case GAME_ERROR:
       return { ...state, isLoading: false, error: action.error }
     case CHANGE_TIMER:
@@ -56,7 +57,7 @@ const happenedSoonerReducer = (state = defaultState, action) => {
     case CLOSE_RESULT: 
       return { ...state, isResultOpen: false }
     case FETCH_GAME_FACTS_PENDING:
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, error: false };
     default:
       return state;
   }

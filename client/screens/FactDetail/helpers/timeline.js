@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { isString, addLeadingChars } from '../../../utils/string';
 
 
-export const buildTimelineBorders = (timelineRange, factText, factCategory) => {
+export const buildTimelineBorders = (timelineRange, factText, factCategory = 'Events') => {
 
   if (_.isEmpty(timelineRange) || !isString(factText) || !isString(factCategory) ) {
     return {};

@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
   },
   optionContainer: {
     flexDirection: 'row',
-    paddingLeft: 5
+    paddingLeft: 5,
+    paddingVertical: 5,
   },
   optionText: {
     paddingLeft: 15

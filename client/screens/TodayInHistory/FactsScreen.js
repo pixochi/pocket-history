@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import hash from 'string-hash';
 
 // COMPONENTS
 import Banner from '../../components/AdMob';
@@ -20,10 +19,8 @@ import MenuIcon from '../../components/MenuIcon';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { showInterstitial } from '../../components/AdMob/actions';
-import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
 import { HEADER_HEIGHT } from '../../constants/components';
-
 import gStyles from '../../styles';
 
 const IMAGES_ON_LOAD = 3;
@@ -45,48 +42,25 @@ class FactsScreen extends PureComponent {
   	}
   }
 
-  _addFactToFavorite = (fact) => {
-    const { addFavorite, selectedDate } = this.props;
-    const id = hash(fact.html+fact.year);
-    let favoriteFact = _.omit(fact, ['links']);
-    favoriteFact = { ...favoriteFact, date: selectedDate.factDate, id }
-    addFavorite(favoriteFact, 'facts');
-  }
-
-  _cardMenuOptions = (item) => {
-    const { text, year } = item;
-  	const { copyToClipboard, selectedDate } = this.props;
-    const copyText = `${selectedDate.factDate}, ${year} - ${text}`;
-    
-    return [
-      copy({ onSelect: () => copyToClipboard(copyText)}),
-      share({ message: copyText }),
-      save({ onSelect: () => this._addFactToFavorite(item) })
-    ]
-  }
-
   _isImgShown = (factIndex, img) => {
-
   	if (!img) { return false; }
-
   	const { category, itemsScrolled } = this.props;
   	const currentScroll = itemsScrolled[category] || 0;
-
   	return (factIndex < (currentScroll + IMAGES_ON_LOAD));
   }
   
-
   _renderFact = (fact) => {
   	const { item, index } = fact;
-  	const { navigation, category } = this.props;
+  	const { navigation, category, selectedDate } = this.props;
 
   	const Fact = (
   		<FactCard
-		  	{...item}
+		  	fact={item}
+        date={selectedDate.factDate}
+        canShowDate={false}
 		  	isImgShown={this._isImgShown(index, item.img)}
 		  	category={category}
 		  	navigation={navigation}
-		  	menuOptions={this._cardMenuOptions(item)}
 	  	/>
   	);
 

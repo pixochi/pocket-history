@@ -73,6 +73,14 @@ export const startGame = () => async (dispatch, getState) => {
 		} else {
 			allFacts = factsForGame;
 		}
+
+		if (Object.keys(allFacts).length === 0) {
+			dispatch({
+				type: GAME_ERROR,
+				error: 'Sorry, the Internet connection appears to be offline and there are no saved facts on your device.'
+			});
+			return;
+		}
 		
 		const gameFacts = getGameFacts(allFacts);
 		dispatch({
@@ -169,6 +177,7 @@ const getFactsFromState = (state) => {
 	if (!factsForGame && ! factsOnDay) { return; }
 
 	for (date in facts) {
+		// if facts[date] is undefined
 		if (!facts[date]) { continue; }
 		events[date] = facts[date].Events;
 	}
@@ -189,6 +198,7 @@ const getRandomFact = (facts) => {
   let randomFact = factsSet[randomFactNum];
   const factTimestamp = new Date(getYear(randomFact.year), month, day).getTime();
   randomFact.timestamp = factTimestamp;
+  randomFact.date = `${month+1}/${day}`;
 
   return randomFact;
 }

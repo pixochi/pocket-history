@@ -52,7 +52,7 @@ class Favorite extends PureComponent {
           rightComponent={this._renderSearchIcon()}
         />
         <View style={gStyles.screenBody}>
-         <RoutesFavGroups screenProps={{removeFavorite, copyToClipboard, navigation}} />
+         <RoutesFavGroups screenProps={{ mainNavigation: navigation, copyToClipboard, removeFavorite }} />
         </View>
       </View>			
 		)

@@ -24,7 +24,7 @@ class FavoriteArticles extends PureComponent {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;
     const menuOptions = [
       copy({ onSelect: () => copyToClipboard(link), optionText: 'Copy Link' }),
-      share({ message: title }),
+      share({ message: link }),
       remove({ onSelect: () => removeFavorite(id, 'articles') })
     ]
     return menuOptions;

@@ -21,11 +21,12 @@ class FavoriteBooks extends PureComponent {
 
   state = {}
 
-  _cardMenuOptions = ({id, title}) => {
+  _cardMenuOptions = ({id, title, previewLink}) => {
     const { removeFavorite, copyToClipboard } = this.props.screenProps;
+    const shareText = `${title} - ${previewLink}`
     const menuOptions = [
-      copy({ onSelect: () => copyToClipboard(title)}),
-      share({ message: title }),
+      copy({ onSelect: () => copyToClipboard(shareText)}),
+      share({ message: shareText }),
       remove({ onSelect: () => removeFavorite(id, 'books') })
     ]
     return menuOptions;

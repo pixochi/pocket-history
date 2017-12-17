@@ -111,8 +111,8 @@ class WhichHappenedSooner extends PureComponent {
           {
             fact &&
             <FactCard
-              html={fact.text}
-              canShowDetail={false}
+              fact={{html: fact.text}}
+              canShowDetail={false} 
               isImgShown={true}
             />
           }
@@ -126,8 +126,10 @@ class WhichHappenedSooner extends PureComponent {
       <View style={styles.container}>
       {
         fact && this.props.flip &&
-        <FactCard 
-          {...fact}
+        <FactCard
+          fact={fact}
+          date={fact.date}
+          canShowDate={true}
           category='Events'
           isImgShown={true}
           navigation={this.props.navigation}

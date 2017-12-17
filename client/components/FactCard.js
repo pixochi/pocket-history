@@ -6,15 +6,21 @@ import {
   Dimensions,
   Platform
 } from 'react-native';
+import { connect } from 'react-redux';
 import { WebBrowser } from 'expo';
 import { Icon } from 'react-native-elements';
 import HTMLView from 'react-native-htmlview'; // not same as webview
 import Image from 'react-native-scalable-image';
 import PropTypes from 'prop-types';
+import hash from 'string-hash';
 
 import CardMenu from './CardMenu';
 
-import { yearsAgo } from '../utils/date';
+import { addFavorite, removeFavorite } from '../screens/Favorite/actions';
+import { copyToClipboard } from '../screens/FactDetail/actions';
+import { copy, share, save, remove } from './utils/cardMenuOptions';
+
+import { yearsAgo, getDateNums } from '../utils/date';
 import { fixWikiLink } from '../utils/link';
 
 import { COLORS } from '../constants/components';
@@ -35,7 +41,8 @@ class FactCard extends PureComponent {
   }
 
   _openFactDetail = () => {
-    const { navigation, html, text, links, category, year  } = this.props;
+    const { fact, navigation, category } = this.props;
+    const { html, text, links, year } = fact;
     navigation.navigate('factDetail', { 
       navigatedFrom: navigation.state.routeName,
       html, 
@@ -51,9 +58,41 @@ class FactCard extends PureComponent {
     WebBrowser.openBrowserAsync(url);
   }
 
+  _addFactToFavorite = (fact) => {
+    const { addFavorite } = this.props;
+    let { date } = this.props;
+    // const { day, month } = getDateNums(new Date().getTime());
+    if (!fact.date) {
+      // date e.g. October 17
+      const { day, month } = getDateNums(new Date(date).getTime());
+      date = `${month+1}/${day}`;
+    }
+    const id = hash(fact.html+fact.year);
+    const favoriteFact = { ...fact, date, id }
+    addFavorite(favoriteFact, 'facts');
+  }
+
+  _cardMenuOptions = (fact) => {
+    if (!fact) { return null; }
+    const { text, year, id } = fact;
+    const { copyToClipboard, removeFavorite, isFavorite, date } = this.props;
+    const copyText = `${date}, ${year} - ${text}`;
+    let options = [
+      copy({ onSelect: () => copyToClipboard(copyText)}),
+      share({ message: copyText }),    
+    ]
+    if (isFavorite && id) {
+      options.push(remove({ onSelect: () => removeFavorite(id) }));
+    } else {
+      options.push(save({ onSelect: () => this._addFactToFavorite(fact) }));
+    }
+    return options;
+  }
+
   render() {
-    const { year, html, text, img, isImgShown, links,
-      category, isFavorite, canShowDetail, menuOptions } = this.props;
+    const { fact, date, isImgShown, category, isFavorite,
+     canShowDetail, canShowDate } = this.props;
+    const { year, html, text, img, links } = fact;
 
     return (
       <View style={styles.factCard}>
@@ -77,6 +116,11 @@ class FactCard extends PureComponent {
               <Text style={styles.year}>
                 { year }
               </Text>
+              { canShowDate &&
+                <Text style={styles.yearsAgoText}>
+                  /{ date }
+                </Text>
+              }
               <View style={styles.yearsAgoContainer}>
                 { year && 
                   <Text style={styles.yearsAgoText}>
@@ -84,8 +128,11 @@ class FactCard extends PureComponent {
                   </Text>
                 }
               </View>
-            </View> 
-            { menuOptions && <CardMenu options={menuOptions} /> }
+            </View>
+            {
+              canShowDetail &&
+              <CardMenu options={this._cardMenuOptions(fact)} />
+            }
           </View>
           
           <View style={styles.htmlView}>
@@ -97,8 +144,8 @@ class FactCard extends PureComponent {
               onLinkPress={(url) => this._openFactLink(url)}
             />
           </View>
-
-          { canShowDetail &&
+          {
+            canShowDetail &&
             <Icon
               name='chevron-double-right'
               type='material-community'
@@ -107,8 +154,8 @@ class FactCard extends PureComponent {
               underlayColor={COLORS.underlay}
               style={styles.openDetailIcon}
               onPress={this._openFactDetail}
-            /> 
-          }
+            />     
+          }      
         </View>
         
       </View>
@@ -117,16 +164,12 @@ class FactCard extends PureComponent {
 }
 
 FactCard.propTypes = {
+  fact: PropTypes.object,
   canShowDetail: PropTypes.bool,
   category: PropTypes.string,
-  html: PropTypes.string,
-  img: PropTypes.string,
   isFavorite: PropTypes.bool,
   isImgShown: PropTypes.bool,
-  links: PropTypes.arrayOf(PropTypes.object),
   menuOptions: PropTypes.arrayOf(PropTypes.object),
-  text: PropTypes.string,
-  year: PropTypes.string,
 }
 
 FactCard.defaultProps = {
@@ -218,5 +261,10 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapDispatchToProps = (dispatch) => ({
+  addFavorite: (fact) => dispatch(addFavorite(fact, 'facts')),
+  removeFavorite: (id) => dispatch(removeFavorite(id, 'facts')),
+  copyToClipboard: (content) => dispatch(copyToClipboard(content))
+});
 
-export default FactCard;
+export default connect(null, mapDispatchToProps)(FactCard);

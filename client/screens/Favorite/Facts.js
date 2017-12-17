@@ -13,11 +13,6 @@ import FactCard from '../../components/FactCard';
 import FactsLabel from '../../components/TabBarLabels/FactsLabel';
 import Favorites from './Favorites';
 
-import { removeFavorite } from './actions';
-import { copy, share, remove } from '../../components/utils/cardMenuOptions';
-import { createCardMenuOptions } from './helpers/facts';
-
-
 class FavoriteFacts extends PureComponent {
   static navigationOptions = {
     tabBarLabel: <FactsLabel />
@@ -28,29 +23,16 @@ class FavoriteFacts extends PureComponent {
     navigation: PropTypes.object.isRequired
   }
 
-  _cardMenuOptions = (fact) => {
-    const { id, text, date, year } = fact;
-    const { removeFavorite, copyToClipboard } = this.props.screenProps;
-    const copyText = `${date}, ${year} - ${text}`;
-    const menuOptions = [
-      copy({ onSelect: () => copyToClipboard(copyText)}),
-      share({ message: copyText }),
-      remove({ onSelect: () => removeFavorite(id, 'facts') })
-    ]
-
-    return menuOptions;
-  }
-
   _renderFact = ({item}) => {
     const { navigation } = this.props;
-    const { copyToClipboard, removeFavorite } = this.props.screenProps;
+    const { copyToClipboard, removeFavorite, mainNavigation } = this.props.screenProps;
     return (
       <FactCard 
-        {...item}
+        fact={item}
+        date={item.date}
+        canShowDate={true}
         isFavorite={true}
-        canShowDetail={false}
-        navigation={navigation}
-        menuOptions={this._cardMenuOptions(item)} 
+        navigation={mainNavigation}
       />
     );
   }

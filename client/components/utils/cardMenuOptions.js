@@ -1,5 +1,4 @@
 import { Share, Clipboard } from 'react-native';
-import { copyToClipboard } from '../../screens/FactDetail/actions';
 
 
 export const share = (props) => {

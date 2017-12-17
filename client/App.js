@@ -49,12 +49,12 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
 	toastContainer: {
-		backgroundColor: COLORS.yellowDark
+		backgroundColor: '#333'
 	},
 	toastMessage: {
-		padding: 2,
-		fontSize: 16,
+		padding: 4,
+		fontSize: 18,
 		fontWeight: 'bold',
-		color: '#fff'
+		color: COLORS.yellowDark
 	}
 });

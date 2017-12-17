@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View } from 'react-native';
+import { View, Platform, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -14,20 +14,33 @@ import { RoutesFactDetail } from '../../navigation/factDetail';
 
 class FactDetail extends PureComponent {
 
-	static propTypes = {
-		adMobCounter: PropTypes.number.isRequired,
-	  navigation: PropTypes.object.isRequired,
-	  changeRoute: PropTypes.func.isRequired,
-	  copyToClipboard: PropTypes.func.isRequired,
-	  addFavorite: PropTypes.func.isRequired,
-	  showInterstitial: PropTypes.func.isRequired,
-	}
+	componentDidMount() {
+    if (Platform.OS === 'android') {
+	    this.backBtnListener = BackHandler.addEventListener('hardwareBackPress', this._handleBackButtonPress);
+    }
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+    	this.backBtnListener.remove();
+    }
+  }
 
 	componentDidUpdate(prevProps, prevState) {
 	  const { showInterstitial, adMobCounter } = this.props;
 	  if (adMobCounter === 10) {
 	  	showInterstitial('factDetailCounter');
 	  }
+	}
+
+	_handleBackButtonPress = () => {
+		const { navigation } = this.props;
+		const { navigatedFrom } = navigation.state.params;
+		if (navigatedFrom) {
+			navigation.navigate(navigatedFrom);
+			return true;
+		}
+		return false;
 	}
 
 	_onNavigationStateChange = (prevState, nextState, action) => {
@@ -47,6 +60,15 @@ class FactDetail extends PureComponent {
 			</View>
 		)
 	}
+}
+
+FactDetail.propTypes = {
+	adMobCounter: PropTypes.number.isRequired,
+  navigation: PropTypes.object.isRequired,
+  changeRoute: PropTypes.func.isRequired,
+  copyToClipboard: PropTypes.func.isRequired,
+  addFavorite: PropTypes.func.isRequired,
+  showInterstitial: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = ({adMob}) => ({

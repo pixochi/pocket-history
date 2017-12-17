@@ -196,8 +196,8 @@ class Timeline extends PureComponent {
               onEndReached: this._onEndReached
             }}
             lineWidth={1}
-            lineColor={COLORS.greyLight}
-            circleColor={COLORS.header}
+            lineColor={'#bbb'}
+            circleColor={COLORS.yellowDark}
           />
         </View>      
       );

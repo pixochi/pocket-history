@@ -6,13 +6,15 @@ import {
   FETCH_FACT_BOOKS,
   FETCH_FACT_VIDEOS,
   FETCH_TIMELINE_FACTS,
+  GAME_LOST
 } from '../../constants/actionTypes';
 
 
 const defaultState = {
   initiated: false,
   factsCounter: 0,
-  factDetailCounter: 0
+  factDetailCounter: 0,
+  happenedSoonerCounter: 0,
 }
 
 const adMobReducer = (state = defaultState, action) => {
@@ -23,9 +25,12 @@ const adMobReducer = (state = defaultState, action) => {
       let counterReset = {};
       counterReset[action.counterName] = 0;
       return { ...state, ...counterReset };
+    case GAME_LOST:
+      console.log('GAME LOST')
+      return { ...state, happenedSoonerCounter: ++state.happenedSoonerCounter }
     case `${FETCH_FACTS}_FULFILLED`:
     case `${FETCH_NEWS}_FULFILLED`: 
-      return { ...state, imagesCounter: ++state.factsCounter }
+      return { ...state, factsCounter: ++state.factsCounter }
     case `${FETCH_FACT_BOOKS}_FULFILLED`:
     case `${FETCH_FACT_VIDEOS}_FULFILLED`:
     case `${FETCH_TIMELINE_FACTS}_FULFILLED`:

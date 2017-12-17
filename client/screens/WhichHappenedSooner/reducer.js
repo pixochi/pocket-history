@@ -41,14 +41,14 @@ const happenedSoonerReducer = (state = defaultState, action) => {
         facts: action.facts,
         gameFacts: action.gameFacts 
       }
-    case STOP_GAME: 
+    case STOP_GAME:
       return { ...state, flip: true, score: 0 }
     case GAME_ERROR:
       return { ...state, isLoading: false, error: action.error }
     case CHANGE_TIMER:
       return { ...state, timer: state.timer + action.timeEdit }
     case SELECT_ANSWER:
-      const newScore = action.isCorrect ? state.score + 1 : 0;
+      const newScore = action.isCorrect ? ++state.score : 0;
       const newBestScore = (newScore > state.bestScore) ? newScore : state.bestScore;
       return { ...state, score: newScore, bestScore: newBestScore }
     case OPEN_RESULT:
@@ -57,13 +57,10 @@ const happenedSoonerReducer = (state = defaultState, action) => {
       return { ...state, isResultOpen: false }
     case FETCH_GAME_FACTS_PENDING:
       return { ...state, isLoading: true };
-
     default:
       return state;
   }
 }
-
-
 
 
 export default happenedSoonerReducer;

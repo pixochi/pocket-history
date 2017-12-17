@@ -24,6 +24,7 @@ import NetworkProblem from '../../components/NetworkProblem';
 import ResultBox from './components/ResultBox';
 
 import * as actionCreators from './actions';
+import { showInterstitial } from '../../components/AdMob/actions';
 
 import { COLORS } from '../../constants/components';
 import gStyles from '../../styles';
@@ -40,6 +41,9 @@ class WhichHappenedSooner extends PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.timer === 0) {
       nextProps.stopGame();
+    }
+    if (nextProps.adMobCounter === 10) {
+      this.props.showInterstitial('happenedSoonerCounter');
     }
     this._createResultMessage(nextProps);
   }
@@ -124,6 +128,7 @@ class WhichHappenedSooner extends PureComponent {
         fact && this.props.flip &&
         <FactCard 
           {...fact}
+          category='Events'
           isImgShown={true}
           navigation={this.props.navigation}
         />
@@ -153,12 +158,16 @@ class WhichHappenedSooner extends PureComponent {
     let Main;
 
     if (isLoading) {
-      Main = <Loader />
+      Main = (
+        <View style={styles.loader}>
+          <Loader />
+        </View>   
+      )   
     } else if (error) {
       Main = (
         <NetworkProblem 
           message={error}
-          solveConnectin={startGame}
+          solveConnection={startGame}
         />
       )
     } else if (started) {
@@ -206,7 +215,7 @@ class WhichHappenedSooner extends PureComponent {
         />
         <View style={gStyles.screenBody}>
           
-          <ScrollView style={styles.container}>
+          <ScrollView style={[styles.container, styles.scroller]}>
             <View style={styles.scoreContainer}>
               <Text style={styles.scoreText}>
                 Score: { score }
@@ -235,7 +244,7 @@ class WhichHappenedSooner extends PureComponent {
                 }
               </AnimatedCircularProgress>
             </View>
-          
+            
             { Main }
 
             { flip && this._renderContinueButton(isCorrect) }
@@ -271,9 +280,16 @@ WhichHappenedSooner.propTypes = {
   navigation: PropTypes.object.isRequired
 }
 
+const { width, height } = Dimensions.get('screen');
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1
+  },
+  loader: {
+    minWidth: width - 20,
+    minHeight: height/2,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   scoreContainer: {
     flexDirection: 'row',
@@ -358,10 +374,13 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(actionCreators, dispatch);
+  return {
+    ...bindActionCreators(actionCreators, dispatch),
+    showInterstitial: (counterName) => dispatch(showInterstitial(counterName)),
+  }
 }
 
-const mapStateToProps = ({happenedSooner}) => {
+const mapStateToProps = ({happenedSooner, adMob}) => {
   const { gameFacts, flip, score, bestScore,
    started, timer, isResultOpen, isCorrect, isLoading, error } = happenedSooner;
 
@@ -376,6 +395,7 @@ const mapStateToProps = ({happenedSooner}) => {
     isCorrect,
     isLoading,
     error,
+    adMobCounter: adMob.happenedSoonerCounter
   }
 }
 

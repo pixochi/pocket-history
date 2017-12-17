@@ -37,6 +37,7 @@ export const CHANGE_TIMER = 'CHANGE_TIMER';
 export const OPEN_RESULT = 'OPEN_RESULT';
 export const CLOSE_RESULT = 'CLOSE_RESULT';
 export const GAME_ERROR = 'GAME_ERROR';
+export const GAME_LOST = 'GAME_LOST';
 
 // MODAL - COMPONENT
 export const CLOSE_MODAL = 'CLOSE_MODAL';

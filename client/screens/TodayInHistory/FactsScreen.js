@@ -33,7 +33,7 @@ class FactsScreen extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { adMobCounter, showInterstitial } = this.props;
-    if (adMobCounter === 7) {
+    if (adMobCounter === 8) {
       showInterstitial('factsCounter');
     } 
   }

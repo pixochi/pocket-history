@@ -20,10 +20,10 @@ class GuessCard extends Component {
           perspective={1000}
           style={styles.card}
         > 
-          <View style={{flex: 1}}> 
+          <View style={styles.container}> 
             { this.props.front }
           </View> 
-          <View style={{flex: 1}}> 
+          <View style={styles.container}> 
            { this.props.back }
           </View>
         </FlipCard> 
@@ -43,6 +43,9 @@ GuessCard.defaultProps = {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
 	cardContainer: {
     flex: 1,
     flexDirection: 'row'

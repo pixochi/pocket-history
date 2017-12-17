@@ -9,6 +9,7 @@ import {
 	SELECT_ANSWER,
 	START_GAME,
 	STOP_GAME,
+	GAME_LOST,
 	GAME_ERROR,
 	CHANGE_TIMER,
 	OPEN_RESULT,
@@ -106,8 +107,11 @@ export const flipCards = (flip) => {
 export const selectAnswer = (isCorrect) => dispatch => {
 	clearInterval(gameTimer);
 	dispatch(flipCards(true));
-	setTimeout(() => {
+	setTimeout(() => {	
 		dispatch(openResult(isCorrect));
+		if (!isCorrect) {
+			dispatch({ type: GAME_LOST });
+		}
 		dispatch({ type: SELECT_ANSWER, isCorrect});
 	}, 500);
 }

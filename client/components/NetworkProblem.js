@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
+import PropTypes from 'prop-types';
 
 import gStyles from '../styles';
 
@@ -8,12 +9,12 @@ import gStyles from '../styles';
 class NetworkProblem extends PureComponent {
 
   render() {
-    const { solveConnection = () => null } = this.props;
+    const { solveConnection, message } = this.props;
 
     return (
       <View style={gStyles.screenMiddle}>
         <Text style={styles.connectionMsg}>
-          Check your internet connection and try again.
+          { message }
         </Text>
         <Button 
           title='Retry' 
@@ -24,6 +25,16 @@ class NetworkProblem extends PureComponent {
       </View>
     );
   }
+}
+
+NetworkProblem.propTypes = {
+  message: PropTypes.string,
+  solveConnection: PropTypes.func,
+}
+
+NetworkProblem.defaultProps = {
+  message: 'Check your internet connection and try again.',
+  solveConnection: () => null,
 }
 
 const styles = StyleSheet.create({

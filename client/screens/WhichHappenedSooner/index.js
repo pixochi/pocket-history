@@ -5,7 +5,8 @@ import {
   ScrollView,
   Text,
   TouchableHighlight,
-  Dimensions
+  Dimensions,
+  AppState
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -17,7 +18,9 @@ import _ from 'lodash';
 import FactCard from '../../components/FactCard';
 import Header from '../../components/Header';
 import GuessCard from './components/GuessCard';
+import Loader from '../../components/Loader';
 import MenuIcon from '../../components/MenuIcon';
+import NetworkProblem from '../../components/NetworkProblem';
 import ResultBox from './components/ResultBox';
 
 import * as actionCreators from './actions';
@@ -30,15 +33,28 @@ class WhichHappenedSooner extends PureComponent {
 
   state = {}
 
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.timer === 0) {
-      stopGame();
+      nextProps.stopGame();
     }
     this._createResultMessage(nextProps);
   }
 
   componentWillUnmount() {
-    this.props.stopGame();
+    if (!this.props.flip) {
+      this.props.stopGame();
+    } 
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = (nextAppState) => {
+    if (nextAppState.match(/inactive|background/) && !this.props.flip) {
+      this.props.stopGame();
+    }
   }
 
   _createResultMessage = (nextProps) => {
@@ -133,10 +149,19 @@ class WhichHappenedSooner extends PureComponent {
   render() {
     const { navigation, gameFacts, flip, flipCards, score,
      bestScore, started, startGame, timer, isResultOpen,
-      closeResult, isCorrect } = this.props;
+      closeResult, isCorrect, isLoading, error } = this.props;
     let Main;
 
-    if (started) {
+    if (isLoading) {
+      Main = <Loader />
+    } else if (error) {
+      Main = (
+        <NetworkProblem 
+          message={error}
+          solveConnectin={startGame}
+        />
+      )
+    } else if (started) {
       Main = (
         <View style={styles.container}>
           <View style={styles.cardsContainer}>
@@ -150,11 +175,8 @@ class WhichHappenedSooner extends PureComponent {
               back={this._renderBack(gameFacts[1])}
               flip={flip}
             />
-          </View>
-
-          
-        </View>
-        
+          </View> 
+        </View> 
       )
     } else {
       Main = (

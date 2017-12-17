@@ -42,7 +42,7 @@ const happenedSoonerReducer = (state = defaultState, action) => {
         gameFacts: action.gameFacts 
       }
     case STOP_GAME: 
-      return { ...state }
+      return { ...state, flip: true, score: 0 }
     case GAME_ERROR:
       return { ...state, isLoading: false, error: action.error }
     case CHANGE_TIMER:

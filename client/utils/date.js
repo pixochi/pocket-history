@@ -89,9 +89,9 @@ export const yearsAgo = (year) => {
 // @param selectedDate timestamp - date of a birth or death
 // @param year int - year of a birth or death
 // @return object{beginDate, endDate}, both format: [YYYYMMDD]
-export const dateRangeFromString = (str, category, selectedDate, year) => {
+export const dateRangeFromString = (str, category = 'Events', selectedDate, year) => {
 
-  if (!str || !category || !selectedDate || !year) {
+  if (!str || !year) {
     return false;
   }
 

@@ -32,13 +32,16 @@ const _fetchFacts = (timestamp, factsState) => {
 			const factApiDate = toApiFactDate(timestamp);
 			// facts - events, births, deaths
 			const response = await axios.get(`${API_ROOT_URL}/facts?date=${factApiDate}`);
-			const { data, date } = response.data[0];
+			const { data, date } = response.data;
+			
 
 			let newFacts = {};
 			newFacts[date] = data;
 			newFacts = await saveFactsSubset({...facts, ...newFacts }, MAX_FACTS, selectedDate);
 			resolve(newFacts);
 		} catch(e) {
+			console.log('FETCH FACTS ERROR')
+			console.log(e)
 			reject(e)
 		}	
 	});

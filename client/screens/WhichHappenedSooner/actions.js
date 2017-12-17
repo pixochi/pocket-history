@@ -104,7 +104,7 @@ export const flipCards = (flip) => {
 }
 
 export const selectAnswer = (isCorrect) => dispatch => {
-	dispatch(stopGame());
+	clearInterval(gameTimer);
 	dispatch(flipCards(true));
 	setTimeout(() => {
 		dispatch(openResult(isCorrect));
@@ -165,6 +165,7 @@ const getFactsFromState = (state) => {
 	if (!factsForGame && ! factsOnDay) { return; }
 
 	for (date in facts) {
+		if (!facts[date]) { continue; }
 		events[date] = facts[date].Events;
 	}
 

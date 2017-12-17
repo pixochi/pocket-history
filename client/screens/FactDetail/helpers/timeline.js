@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { isString, addLeadingChars } from '../../../utils/string';
 
 
-export const buildTimelineBorders = (timelineRange, factText, factCategory) => {
+export const buildTimelineBorders = (timelineRange, factText, factCategory = 'Events') => {
 
   if (_.isEmpty(timelineRange) || !isString(factText) || !isString(factCategory) ) {
     return {};
@@ -78,9 +78,9 @@ export const getTimeRange = (lastFactDate, timelineEnd) => {
   return range;
 }
 
-export const getRangeFilterProps = (category, timelineRange) => {
+export const getRangeFilterProps = (category = 'Events', timelineRange) => {
 
-  if (!category || _.isEmpty(timelineRange)) {
+  if (_.isEmpty(timelineRange)) {
     return {}
   }
 

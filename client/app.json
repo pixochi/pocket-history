@@ -17,6 +17,12 @@
     },
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "splash": {
+        // "image": "./assets/splash.png",
+        "backgroundColor": "#FEF9B0"
+      }     
     }
   }
 }

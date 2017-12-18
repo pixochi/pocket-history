@@ -44,7 +44,7 @@ class FactDetailHeader extends PureComponent {
  		const { navigation, changeRoute } = this.props;
     const prevRoute = navigation.state.params.navigatedFrom;
  		changeRoute('articles');
-    if (prevRoute) {
+    if (prevRoute && prevRoute !== 'todayInHistory') {
       navigation.navigate(prevRoute);
     } else {
       navigation.goBack();

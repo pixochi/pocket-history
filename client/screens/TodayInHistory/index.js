@@ -16,7 +16,7 @@ import { filterBySearch, sortByDate } from '../../utils/filters';
 
 // ACTIONS
 import * as actionCreators from './actions';
-import { changeRoute } from '../../navigation/actions';
+import { changeRouteOnDay } from '../../navigation/actions';
 import { addFavorite } from '../Favorite/actions';
 import { copyToClipboard } from '../FactDetail/actions';
 import { openModal } from '../../components/Modal/actions';
@@ -115,9 +115,10 @@ class TodayInHistory extends PureComponent {
   }
 
   _onNavigationStateChange = (prevState, nextState, action) => {
-    const { changeRoute } = this.props;
+    const { changeRouteOnDay } = this.props;
     this._showDate();
-    changeRoute(action.routeName);
+    changeRouteOnDay(action.routeName);
+    console.log('ROUTE CHANGED')
   }
   
   _handleMomentumScrollEnd = (evt) => {
@@ -301,7 +302,7 @@ const mapStateToProps = ({ historyOnDay, offline, persist }) => {
 const mapDispatchToProps = (dispatch) => (
   bindActionCreators({
     ...actionCreators,
-    changeRoute,
+    changeRouteOnDay,
     addFavorite,
     copyToClipboard,
     openModal, 

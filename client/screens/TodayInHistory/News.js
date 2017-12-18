@@ -83,8 +83,8 @@ class News extends PureComponent {
   render() {
     const { filteredArticles, allArticles, isLoading, isOnline } = this.props;
 
-    if (true) {
-      return <Loader />;
+    if (isLoading) {
+      return <Loader isAnimating={isLoading} />;
     }
 
     if (allArticles.length === 0 && !isOnline) {

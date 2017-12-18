@@ -182,7 +182,7 @@ class Timeline extends PureComponent {
     if (!isOnline && !timelineFacts.length) {
       Main = <NetworkProblem />
     } else if (isLoading && !allTimelineFacts.length) {
-      Main = <Loader />
+      Main = <Loader isAnimating={(isLoading && !allTimelineFacts.length)} />;
     } else {
       const { _timelineStart = {}, _timelineEnd = {} } = this;
       Main = (

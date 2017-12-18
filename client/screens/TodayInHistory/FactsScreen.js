@@ -30,7 +30,7 @@ class FactsScreen extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { adMobCounter, showInterstitial } = this.props;
-    if (adMobCounter === 8) {
+    if (adMobCounter === 9) {
       showInterstitial('factsCounter');
     } 
   }
@@ -43,9 +43,29 @@ class FactsScreen extends PureComponent {
   }
 
   _isImgShown = (factIndex, img) => {
+    // console.log('FACT INDEX')
+    // console.log(factIndex)
+
+    // console.log('IMG')
+    // console.log(img)
+
+
+
   	if (!img) { return false; }
   	const { category, itemsScrolled } = this.props;
   	const currentScroll = itemsScrolled[category] || 0;
+
+    // console.log('ITEMS SCOLLED')
+    // console.log(itemsScrolled)
+
+    // console.log('CATEGORY')
+    // console.log(category)
+
+    // console.log('CURRENT SCROLL')
+    // console.log(currentScroll)
+
+
+
   	return (factIndex < (currentScroll + IMAGES_ON_LOAD));
   }
   
@@ -100,7 +120,7 @@ class FactsScreen extends PureComponent {
 	  } else {
 	  	Main = (
 	  		<View style={styles.container}>
-	  			<Loader animating={!isReady} />
+	  			{ !isReady && <Loader isAnimating={!isReady} /> }
 		      <AnimatedFlatList
 		       	contentContainerStyle={styles.list}
 		        data = {filteredFacts[category]}

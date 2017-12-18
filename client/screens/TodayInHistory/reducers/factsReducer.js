@@ -4,7 +4,7 @@ import {
   FETCH_FACTS_IMAGES,
   CHANGE_DATE,
   CHANGE_FACTS_FILTER,
-  NAVIGATION_CHANGE,
+  NAVIGATION_CHANGE_FACTS,
   CHANGE_IMG_AJAX_SRC
 } from '../../../constants/actionTypes';
 import { toFactDate } from '../../../utils/date';
@@ -58,7 +58,7 @@ const factsReducer = (state = defaultState, action) => {
 
     case CHANGE_DATE: 
       return { ...state, selectedDate: {...action.date}, isLoading: false, error: false }
-    case NAVIGATION_CHANGE:
+    case NAVIGATION_CHANGE_FACTS:
       return { ...state, selectedCategory: action.route, isLoading: false, error: false }
     case CHANGE_FACTS_FILTER: 
       return {...state, filter: action.filter}

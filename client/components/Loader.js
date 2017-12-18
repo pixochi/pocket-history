@@ -15,18 +15,18 @@ import { COLORS } from '../constants/components';
 class Loader extends PureComponent {
 
 	static propTypes = {
-	  animating: PropTypes.bool
+	  isAnimating: PropTypes.bool
 	}
 
 	static defaultProps = {
-	  animating: true
+	  isAnimating: true
 	}
 
 	// shows a message if loading takes
 	// more than specified time
 	state = {
 		message: '',
-		timer: 0
+		timer: 0,
 	}
 
 	_quotes = [
@@ -47,6 +47,21 @@ class Loader extends PureComponent {
 		"We are not makers of history. We are made by history.",
 	]
 
+	componentDidMount() {
+	  this._startInterval();
+	}
+
+	componentWillUnmount() {
+	  clearInterval(this._interval);
+	}
+
+	componentWillReceiveProps(nextProps) {
+	  if (!nextProps.isAnimating) {
+	  	clearInterval(this._interval);
+	  	this.setState({ message: '' });
+	  }
+	}
+
 	_getQuote = () => {
 		const max = this._quotes.length === 0 ? 0 : this._quotes.length-1;
 		const index = getRandomNumber(0, this._quotes.length-1);
@@ -59,13 +74,7 @@ class Loader extends PureComponent {
 		), 6000);
 	}
 
-	componentDidMount() {
-	  this._startInterval();
-	}
-
-	componentWillUnmount() {
-	  clearInterval(this._interval);
-	}
+	
 
 	render() {
 		const canShowMessage = this.state.isMessageVisible && this.props.animating;

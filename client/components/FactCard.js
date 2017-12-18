@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  TouchableOpacity,
   Dimensions,
   Platform
 } from 'react-native';
@@ -42,7 +43,9 @@ class FactCard extends PureComponent {
 
   _openFactDetail = () => {
     const { fact, navigation, category } = this.props;
+    console.log(navigation.state)
     const { html, text, links, year } = fact;
+    console.log(navigation.state.routeName)
     navigation.navigate('factDetail', { 
       navigatedFrom: navigation.state.routeName,
       html, 
@@ -50,7 +53,7 @@ class FactCard extends PureComponent {
       links, 
       category, 
       year,
-    });
+    }); 
   }
 
   _openFactLink = (url) => {
@@ -99,7 +102,11 @@ class FactCard extends PureComponent {
 
       {
         (img && (isImgShown || isFavorite)) &&
-        <View style={styles.imgContainer}>
+        <TouchableOpacity 
+          activeOpacity={0.8}   
+          onPress={this._openFactDetail}
+          style={styles.imgContainer} 
+        >
           <Image
             resizeMode='cover'
             style={styles.img}
@@ -107,7 +114,7 @@ class FactCard extends PureComponent {
             maxHeight={SCREEN_HEIGHT *0.6}
             width={SCREEN_WIDTH}
           />  
-        </View>
+        </TouchableOpacity>
       }
 
         <View style={styles.cardBody}>

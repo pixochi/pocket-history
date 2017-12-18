@@ -95,7 +95,7 @@ class Books extends PureComponent {
     let Main;
 
     if (isLoading) {
-      Main = <Loader />;
+      Main = <Loader isAnimating={isLoading}/>;
     } else if (!isOnline && !books.length) {
       Main = <NetworkProblem />;
     } else if (books.length === 0) {

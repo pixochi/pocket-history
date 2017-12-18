@@ -105,7 +105,7 @@ class Videos extends PureComponent {
     let Main;
 
     if (isLoading) {
-      Main = <Loader />;
+      Main = <Loader isAnimating={isLoading} />;
     } else if (!isOnline && videos.length === 0) {
       Main = <NetworkProblem />
     } else if (!videos.length) {

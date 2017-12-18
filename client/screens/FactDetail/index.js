@@ -36,11 +36,12 @@ class FactDetail extends PureComponent {
 	_handleBackButtonPress = () => {
 		const { navigation } = this.props;
 		const { navigatedFrom } = navigation.state.params;
-		if (navigatedFrom) {
+		if (navigatedFrom && navigatedFrom !== 'todayInHistory') {
 			navigation.navigate(navigatedFrom);
 			return true;
 		}
-		return false;
+		navigation.goBack();
+		return true;
 	}
 
 	_onNavigationStateChange = (prevState, nextState, action) => {

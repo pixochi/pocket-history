@@ -43,7 +43,7 @@ class Articles extends PureComponent {
 				{...item}
 			/>
 		)
-		if (index && index % 5 === 0) {
+		if (index && index % 4 === 0) {
 			return (
 				<View>
 					<Banner />

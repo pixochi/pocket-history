@@ -1,6 +1,6 @@
+import { Notifications } from 'expo';
 import axios from 'axios';
 import _ from 'lodash';
-import config from '../../constants/config';
 
 import {
 	FETCH_GAME_FACTS_PENDING, 
@@ -13,8 +13,10 @@ import {
 	GAME_ERROR,
 	CHANGE_TIMER,
 	OPEN_RESULT,
-	CLOSE_RESULT
+	CLOSE_RESULT,
+	SCHEDULE_GAME_NOTIFICATION
 } from '../../constants/actionTypes';
+import config from '../../constants/config';
 import { getRandomNumber } from '../../utils/random';
 import { getDateNums, getYear, toApiFactDate } from '../../utils/date';
 
@@ -102,10 +104,36 @@ export const startGame = () => async (dispatch, getState) => {
 	}
 }
 
-export const stopGame = () => {
+export const stopGame = () => (dispatch, getState) => {
 	clearInterval(gameTimer);
-	return {
-		type: STOP_GAME
+	dispatch({ type: STOP_GAME });
+	dispatch(scheduleGameNotification());
+}
+
+export const scheduleGameNotification = () => (dispatch, getState) => {
+
+	const { happenedSooner } = getState();
+
+	if (!happenedSooner.isNotificationScheduled) {
+		dispatch({type: SCHEDULE_GAME_NOTIFICATION});
+		Notifications.cancelAllScheduledNotificationsAsync();
+
+		const gameNotification = {
+	    title: 'Beat Your Best Score',
+	    body: 'It\'s time to pump those numbers up!' ,
+	    sound: true,
+	    vibrate: true,
+	    priority: 'high', 
+	  }
+	  // SCHEDULING
+	  let d = new Date();
+		d.setHours(d.getHours() + 4);
+		const schedulingOptions = {
+	    time: d,
+	    repeat: 'day',
+	  };
+
+	  Notifications.scheduleLocalNotificationAsync(gameNotification, schedulingOptions);
 	}
 }
 

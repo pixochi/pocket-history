@@ -8,7 +8,8 @@ import {
   GAME_ERROR,
   CHANGE_TIMER,
   OPEN_RESULT,
-  CLOSE_RESULT
+  CLOSE_RESULT,
+  SCHEDULE_GAME_NOTIFICATION
 } from '../../constants/actionTypes';
 
 
@@ -22,6 +23,7 @@ const defaultState = {
   timer: 15, // number of seconds
   isResultOpen: false,
   isCorrect: false,
+  isNotificationScheduled: false,
   isLoading: false,
   error: false,
 }
@@ -58,6 +60,8 @@ const happenedSoonerReducer = (state = defaultState, action) => {
       return { ...state, isResultOpen: false }
     case FETCH_GAME_FACTS_PENDING:
       return { ...state, isLoading: true, error: false };
+    case SCHEDULE_GAME_NOTIFICATION:
+      return { ...state, isNotificationScheduled: true }
     default:
       return state;
   }

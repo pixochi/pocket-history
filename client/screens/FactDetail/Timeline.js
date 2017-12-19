@@ -144,11 +144,10 @@ class Timeline extends PureComponent {
     )
 
     rowID = parseInt(rowID);
-    if (rowID && rowID % 14 === 0) {
-      console.log(rowID)
+    if (rowID && rowID % 15 === 0) {
       return (
         <View>
-          <Banner size='smartBanner' />
+          <Banner />
           { TimelineFact }
         </View>
       )
@@ -157,8 +156,6 @@ class Timeline extends PureComponent {
   }
 
   _onRangeChange = (values, rangeKey) => {
-    // const { filter: { range } } = this.props;
-    // const { start, end } = range;
     const { changeFilter } = this.props;
     let rangeFilter = { start: {}, end: {} }
 
@@ -253,7 +250,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   timeContainer: {
-    marginLeft: 4,
+    marginLeft: 2,
     minWidth: 70,
   },
   time: {

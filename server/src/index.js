@@ -47,13 +47,11 @@ app.use(wikiImagesRoute);
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = [new schedule.Range(0, 24)];
-rule.minute = [new schedule.Range(0, 59)];
+rule.hour = [7, 14, 21];
+// rule.minute = [new schedule.Range(0, 59)];
+rule.minute = 10;
 const notificationScheduler = schedule.scheduleJob(rule, () => {
-	console.log("ID")
-	console.log(cluster)
 	if(!cluster.worker || cluster.worker && cluster.worker.id === 1 ){
-	 	console.log('SENDING')
 		sendRandomFactNotification();
 	}
 });

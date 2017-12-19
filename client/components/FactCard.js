@@ -43,9 +43,7 @@ class FactCard extends PureComponent {
 
   _openFactDetail = () => {
     const { fact, navigation, category } = this.props;
-    console.log(navigation.state)
     const { html, text, links, year } = fact;
-    console.log(navigation.state.routeName)
     navigation.navigate('factDetail', { 
       navigatedFrom: navigation.state.routeName,
       html, 

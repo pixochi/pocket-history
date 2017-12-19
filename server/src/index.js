@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cluster from 'cluster';
 import cors from 'cors';
 import passport from 'passport';
 import schedule from 'node-schedule';
@@ -46,10 +47,15 @@ app.use(wikiImagesRoute);
 app.get('*', (req, res) => res.status(404).send('PAGE NOT FOUND'));
 
 const rule = new schedule.RecurrenceRule();
-rule.hour = [7, 20];
-rule.minute = 50;
+rule.hour = [new schedule.Range(0, 24)];
+rule.minute = [new schedule.Range(0, 59)];
 const notificationScheduler = schedule.scheduleJob(rule, () => {
-	sendRandomFactNotification();
+	console.log("ID")
+	console.log(cluster)
+	if(!cluster.worker || cluster.worker && cluster.worker.id === 1 ){
+	 	console.log('SENDING')
+		sendRandomFactNotification();
+	}
 });
 
 app.listen(PORT , () => {

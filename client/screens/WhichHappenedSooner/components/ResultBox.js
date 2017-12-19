@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
@@ -13,26 +14,30 @@ import PropTypes from 'prop-types';
 class ResultBox extends PureComponent {
 
   render() {
-  	const { message, isOpen, isCorrect, onClosed } = this.props;
+  	const { message, isOpen, isCorrect, onClosed, onPress } = this.props;
   	const style = isCorrect ? styles.modalCorrect : styles.modalWrong;
   	const iconName = isCorrect ? 'thumbs-up' : 'cross';
     return (
+
      	<Modal
 	      isOpen={isOpen}
 	      onClosed={onClosed}
 	      animationDuration={0}
 	      style={[styles.modal, style]}
 	    >
-	      <View style={styles.messageContainer}>
-	      	<Icon 
-	      		name={iconName}
-	      		type='entypo'
-	      		color='#fff'
-	      		size={45}
-	      	/>
-	        { message }
-	      </View>
+		    <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+		      <View style={styles.messageContainer}>
+		      	<Icon 
+		      		name={iconName}
+		      		type='entypo'
+		      		color='#fff'
+		      		size={45}
+		      	/>
+		        { message }
+		      </View>
+		    </TouchableOpacity>
 	    </Modal>
+
     );
   }
 }

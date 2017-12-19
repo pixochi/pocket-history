@@ -32,7 +32,7 @@ class CalendarModal extends PureComponent {
       <Icon 
         name={iconName}
         type='ionicon'
-        color={COLORS.greyDark}
+        color={COLORS.header}
         size={35}
       />
     )

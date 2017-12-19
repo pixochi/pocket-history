@@ -21,6 +21,10 @@ import { getDateNums, getYear, toApiFactDate } from '../../utils/date';
 
 const ENV = config.env;
 const API_ROOT_URL = config[ENV].apiRootUrl;
+const MONTHS =  [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 const fetchFacts = (state) => {
 	return new Promise(async (resolve, reject) => {
@@ -186,18 +190,21 @@ const getFactsFromState = (state) => {
 }
 
 const getRandomFact = (facts) => {
-  if (_.isEmpty(facts)) { return null; }
+  if (_.isEmpty(facts)) { return {}; }
 
-  const factsKeys = Object.keys(facts);
+  let factsKeys = Object.keys(facts);
+  factsKeys = factsKeys.filter(factDate => factDate);
   const factDaysLength = factsKeys.length - 1;
   const randomDateNum = getRandomNumber(0, factDaysLength);
   const factsSet = facts[factsKeys[randomDateNum]];
   const randomFactNum = getRandomNumber(0, factsSet.length -1);
-  const { day, month } = getDateNums(new Date(factsKeys[randomDateNum]).getTime());
-
+  const factDate = factsKeys[randomDateNum]; // factDate - "October 17"
+  const arr = factDate.split(" ");
+  month = MONTHS.findIndex(m => arr[0] === m);
+  day = arr[1];
   let randomFact = factsSet[randomFactNum];
   const factTimestamp = new Date(getYear(randomFact.year), month, day).getTime();
-  randomFact.timestamp = factTimestamp;
+ 	randomFact.timestamp = factTimestamp;
   randomFact.date = `${month+1}/${day}`;
 
   return randomFact;

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   Dimensions,
   AppState
 } from 'react-native';
@@ -258,7 +259,9 @@ class WhichHappenedSooner extends PureComponent {
             isOpen={isResultOpen}
             isCorrect={isCorrect}
             onClosed={closeResult}
+            onPress={closeResult}
           />
+
         </View>
       </View>
     );

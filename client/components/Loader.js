@@ -12,24 +12,7 @@ import { getRandomNumber } from '../utils/random';
 
 import { COLORS } from '../constants/components';
 
-class Loader extends PureComponent {
-
-	static propTypes = {
-	  isAnimating: PropTypes.bool
-	}
-
-	static defaultProps = {
-	  isAnimating: true
-	}
-
-	// shows a message if loading takes
-	// more than specified time
-	state = {
-		message: '',
-		timer: 0,
-	}
-
-	_quotes = [
+const QUOTES = [
 		"Patience is the companion of wisdom.",
 		"Patience is not simply the ability to wait - it's how we behave while we're waiting.",
 		"You usually have to wait for that which is worth waiting for.",
@@ -47,6 +30,25 @@ class Loader extends PureComponent {
 		"We are not makers of history. We are made by history.",
 	]
 
+class Loader extends PureComponent {
+
+	static propTypes = {
+	  isAnimating: PropTypes.bool
+	}
+
+	static defaultProps = {
+	  isAnimating: true
+	}
+
+	// shows a message if loading takes
+	// more than specified time
+	state = {
+		message: '',
+		timer: 0,
+	}
+
+	
+
 	componentDidMount() {
 	  this._startInterval();
 	}
@@ -63,9 +65,9 @@ class Loader extends PureComponent {
 	}
 
 	_getQuote = () => {
-		const max = this._quotes.length === 0 ? 0 : this._quotes.length-1;
-		const index = getRandomNumber(0, this._quotes.length-1);
-		return this._quotes[index];
+		const max = QUOTES.length === 0 ? 0 : QUOTES.length-1;
+		const index = getRandomNumber(0, QUOTES.length-1);
+		return QUOTES[index];
 	}
 
 	_startInterval(){

@@ -6,6 +6,7 @@ import {
 import { AdMobBanner } from 'expo';
 import PropTypes from 'prop-types';
 
+import CONFIG from '../../constants/config';
 
 class Banner extends PureComponent {
 
@@ -23,7 +24,7 @@ class Banner extends PureComponent {
     return (
       <AdMobBanner
 	      bannerSize={size}
-	      adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
+	      adUnitID={CONFIG.common.adMob.testBanner} // Test ID, Replace with your-admob-unit-id
 	      testDeviceID="EMULATOR"
 	      style={[bannerStyle, style]}
 	    />

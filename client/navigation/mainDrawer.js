@@ -19,7 +19,7 @@ export class DrawerContent extends PureComponent {
 			      inactiveTintColor='#444'
 			      activeTintColor='#fff'
 			      activeBackgroundColor={ COLORS.yellowDark }
-			      inactiveBackgroundColor='#eee'
+			      inactiveBackgroundColor='#fff'
 			      labelStyle={styles.label}
 		      />
 		    </View>

@@ -47,8 +47,6 @@ const favoriteReducer = (state = defaultState, action) => {
       let toggledCategory = {};
       const { category } = action;
       toggledCategory[category] = !state.categories[category];
-      console.log('TOGGLE_CATEGORY')
-      console.log(toggledCategory)
       return {
         ...state,
         categories: {

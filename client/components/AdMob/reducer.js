@@ -26,7 +26,6 @@ const adMobReducer = (state = defaultState, action) => {
       counterReset[action.counterName] = 0;
       return { ...state, ...counterReset };
     case GAME_LOST:
-      console.log('GAME LOST')
       return { ...state, happenedSoonerCounter: ++state.happenedSoonerCounter }
     case `${FETCH_FACTS}_FULFILLED`:
     case `${FETCH_NEWS}_FULFILLED`: 

@@ -40,7 +40,6 @@ const _fetchFacts = (timestamp, factsState) => {
 			newFacts = await saveFactsSubset({...facts, ...newFacts }, MAX_FACTS, selectedDate);
 			resolve(newFacts);
 		} catch(e) {
-			console.log('FETCH FACTS ERROR')
 			console.log(e)
 			reject(e)
 		}	

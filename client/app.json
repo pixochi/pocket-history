@@ -1,27 +1,26 @@
 {
   "expo": {
     "name": "Pocket History",
-    "description": "All about what happened, is happening and will happen.",
+    "description": "Explore important events from the history, watch videos and read books about them.",
     "slug": "pocket-history",
     "privacy": "public",
     "sdkVersion": "21.0.0",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "default",
-    "primaryColor": "#092f3a",
-    "icon": "./assets/icons/app-icon.png",
-    "loading": {
-      "icon": "./assets/icons/app-icon.png"
-    },
+    "primaryColor": "#0c3441",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#0C3644"
-    },     
-    "packagerOpts": {
-      "assetExts": ["ttf", "mp4"]
+      "backgroundColor": "#0c3441"
     },
     "ios": {
+      "bundleIdentifier": "com.pixo.pockethistory",
+      "icon": "./assets/icons/ios.png",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.pixo.pockethistory",
+      "icon": "./assets/icons/android.png"
     }
   }
 }

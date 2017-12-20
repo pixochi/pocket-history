@@ -8,7 +8,7 @@ const dbConfig = require('../config/db.json')[env];
 const db = {};
 
 let sequelize;
-console.log(dbConfig);
+
 if (dbConfig.url) {
   sequelize = new Sequelize(dbConfig.url, { dialect: dbConfig.dialect, operatorsAliases: false });
 } else {

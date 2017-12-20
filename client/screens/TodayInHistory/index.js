@@ -115,7 +115,6 @@ class TodayInHistory extends PureComponent {
     const { changeRouteOnDay } = this.props;
     this._showDate();
     changeRouteOnDay(action.routeName);
-    console.log('ROUTE CHANGED')
   }
   
   _handleMomentumScrollEnd = (evt) => {

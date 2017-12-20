@@ -11,8 +11,6 @@ const GOOGLE_API_KEY = CONFIG.googleAPI.key;
 const GOOGLE_BOOKS_API_URL = 'https://www.googleapis.com/books/v1/volumes?';
 
 export const getBooks = async (req, res) => {
-	console.log('GETTING BOOKS FROM API');
-
 	const { textQuery } = req.query;
 	if (textQuery == null) {
 		res.status(400).send('Missing parameter: textQuery');
@@ -58,7 +56,6 @@ export const getBooks = async (req, res) => {
 			cacheBooks(textQuery, books);
 		}	
 	} catch(err) {
-		console.log('GET BOOKS FROM API ERROR:')
 		console.log(err)
 		const error = {
 			err,

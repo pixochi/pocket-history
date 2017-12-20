@@ -23,7 +23,7 @@ class Articles extends PureComponent {
 
 	_cardMenuOptions = ({link, title}) => {
 		const { addFavorite, copyToClipboard } = this.props.screenProps;
-		const id = hash(link+title);
+		const id = hash(link + title);
 		const message = `${title} - ${link}`
 		const menuOptions = [
 			copy({ onSelect: () => copyToClipboard(message), optionText: 'Copy Link' }),

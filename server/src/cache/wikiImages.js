@@ -62,9 +62,6 @@ export const cacheWikiImages = (titlesString, images) => {
       return imageInfo;
     });
 
-    console.log('IMAGES AFTER OPTIMIZING')
-    console.log(images)
-
     const serializedImages = JSON.stringify(images);
     const expiresIn = 60*60*6 // 6 hours in seconds
     

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   ActivityIndicator
 } from 'react-native';
 import { WebBrowser } from 'expo';
@@ -21,11 +20,10 @@ import Loader from '../../components/Loader';
 import NetworkProblem from '../../components/NetworkProblem';
 import TimelineLabel from '../../components/TabBarLabels/TimelineLabel';
 
-import { dateRangeFromString, addLeadingChars } from '../../utils/date';
+import { dateRangeFromString } from '../../utils/date';
 import { filterBySearch, filterTimelineByDate, sortByDate } from '../../utils/filters';
 
-import { buildTimelineBorders, renderTimelineFact,
-  getTimeRange, getRangeFilterProps } from './helpers/timeline';
+import { buildTimelineBorders, getTimeRange, getRangeFilterProps } from './helpers/timeline';
 
 import { fetchTimeline, changeFilter } from './actions';
 
@@ -53,8 +51,7 @@ class Timeline extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { screenProps, allTimelineFacts, timelineRange, filter, isOnline } = this.props;
-    const category = screenProps.navigation.state.params.category;
+    const { screenProps, allTimelineFacts, filter, isOnline } = this.props;
     const currentSort = filter.sort;
     const nextSort = nextProps.filter.sort;
     const gotConnected = !isOnline && nextProps.isOnline;

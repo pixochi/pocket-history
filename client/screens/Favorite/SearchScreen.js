@@ -4,13 +4,11 @@ import {
   View,
   Text,
   TextInput,
-  FlatList,
   ScrollView,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 // ACTIONS
 import * as actionCreators from './actions';
@@ -76,7 +74,7 @@ class SearchScreen extends PureComponent {
 
   _renderVideo = ({item}) => {
     const url = VIDEO_ROOT_URL+item.id;
-    const { copyToClipboard, removeFavorite, openModal } = this.props;
+    const { copyToClipboard, removeFavorite } = this.props;
     const copy = () => copyToClipboard(url);
     const remove = () => removeFavorite(item.id, 'videos');
     return (
@@ -151,8 +149,8 @@ class SearchScreen extends PureComponent {
   }
 
   render() {
-    const { navigation, categories, facts, articles, videos, 
-      books, toggleCategory, removeFavorite, copyToClipboard } = this.props;
+    const { navigation, categories, facts, articles,
+     videos, books, toggleCategory, } = this.props;
 
     const { selectedVideoId, bookDescription } = this.state;
 

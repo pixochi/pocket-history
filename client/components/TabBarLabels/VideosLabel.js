@@ -18,5 +18,3 @@ class VideoLabel extends PureComponent {
 
 
 export default VideoLabel;
-
-      

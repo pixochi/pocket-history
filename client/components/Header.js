@@ -3,14 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   Platform
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { Constants } from 'expo';
-import { Header, SearchBar } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 
-import MenuIcon from './MenuIcon';
 import { COLORS } from '../constants/components';
 
 

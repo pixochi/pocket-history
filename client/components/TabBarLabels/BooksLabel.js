@@ -18,5 +18,3 @@ class BooksLabel extends PureComponent {
 
 
 export default BooksLabel;
-
-      

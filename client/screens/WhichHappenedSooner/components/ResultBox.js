@@ -2,11 +2,10 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   Dimensions,
   TouchableOpacity
 } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
 import PropTypes from 'prop-types';
 

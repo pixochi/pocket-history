@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { 
   ADD_FAVORITE,
   REMOVE_FAVORITE,
-  FETCH_FAVORITE,
   CHANGE_SEARCH,
   TOGGLE_CATEGORY
 } from '../../constants/actionTypes';

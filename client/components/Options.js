@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import {
   StyleSheet,
-  View,
   Text
 } from 'react-native';
-import { Icon, Button, Slider } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import {
   Menu,
   MenuOptions,

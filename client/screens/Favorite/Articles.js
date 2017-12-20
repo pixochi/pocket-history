@@ -2,11 +2,8 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  Text
 } from 'react-native';
 import { connect } from 'react-redux';
-
-import { removeFavorite } from './actions';
 
 import ArticleCard from '../../components/ArticleCard';
 import ArticlesLabel from '../../components/TabBarLabels/ArticlesLabel';

@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  Text
 } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -64,10 +63,6 @@ class FavoriteBooks extends PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  
-})
 
 const mapStateToProps = ({ favorite }) => ({
   books: favorite.books

@@ -1,11 +1,4 @@
 import React, { PureComponent } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList
-} from 'react-native';
-import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -24,8 +17,7 @@ class FavoriteFacts extends PureComponent {
   }
 
   _renderFact = ({item}) => {
-    const { navigation } = this.props;
-    const { copyToClipboard, removeFavorite, mainNavigation } = this.props.screenProps;
+    const { mainNavigation } = this.props.screenProps;
     return (
       <FactCard 
         fact={item}

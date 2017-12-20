@@ -15,7 +15,7 @@ import Loader from '../../components/Loader';
 import NewsCard from '../../components/NewsCard';
 import NetworkProblem from '../../components/NetworkProblem';
 
-import { fetchNews, changeFactsFilter } from './actions';
+import { fetchNews } from './actions';
 import { toApiNewsDate } from '../../utils/date';
 import { filterBySearch, sortByDate } from '../../utils/filters';
 
@@ -42,7 +42,7 @@ class News extends PureComponent {
   }
 
   componentDidMount() {
-    const { fetchNews, articles, isOnline, lastTimeFetched } = this.props;
+    const { fetchNews, articles, lastTimeFetched } = this.props;
     const diff = new Date().getTime() - lastTimeFetched;
     const allowedDiff = 1000*60*60*2; // 2 hours in miliseconds
     if ((diff > allowedDiff) || articles.length === 0 ) {
@@ -51,7 +51,7 @@ class News extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetchNews, articles, isOnline, lastTimeFetched } = this.props;
+    const { fetchNews, isOnline } = this.props;
     const didConnect = !isOnline && nextProps.isOnline;
     if (didConnect && nextProps.articles.length === 0) {
       fetchNews();

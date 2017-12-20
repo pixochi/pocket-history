@@ -17,7 +17,6 @@ export const share = (props) => {
 
 export const copy = (props) => {
   const { 
-    content = '',
     onSelect = () => Clipboard.setString(props.content),
     optionText = 'Copy',
     iconProps = { name: 'clipboard', type: 'font-awesome' }

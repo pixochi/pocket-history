@@ -4,8 +4,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Share,
-  Clipboard,
   Dimensions
 } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -25,7 +23,6 @@ class VideoCard extends PureComponent {
   render() {
   	const { id, title, onVideoPress, menuOptions } = this.props;
   	const imgUri = `${IMG_ROOT_URL}/${id}/${IMG_SIZE}`;
-  	const videoUrl = 'https://www.youtube.com/watch?v='+id;
 
     return (
       <View
@@ -66,9 +63,6 @@ class VideoCard extends PureComponent {
     );
   }
 }
-
-const IMG_WIDTH = 320;
-const IMG_HEIGHT =  180;
 
 const styles = StyleSheet.create({
 	videoCardContainer: {

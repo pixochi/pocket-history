@@ -14,7 +14,6 @@ import BookModal from '../../components/BookModal';
 import BooksLabel from '../../components/TabBarLabels/BooksLabel';
 import Header from './Header';
 import Loader from '../../components/Loader';
-import Modal from '../../components/Modal';
 import NetworkProblem from '../../components/NetworkProblem';
 import { copy, share, save } from '../../components/utils/cardMenuOptions';
 
@@ -38,7 +37,7 @@ class Books extends PureComponent {
   } 
 
   componentWillReceiveProps(nextProps) {
-    const { books, isLoading, isOnline, screenProps, fetchBooks } = nextProps;
+    const { isLoading, isOnline, screenProps, fetchBooks } = nextProps;
     const gotConnected = !this.props.isOnline && isOnline;
 
     if (!isLoading && gotConnected) {

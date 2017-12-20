@@ -18,5 +18,3 @@ class ArticlesLabel extends PureComponent {
 
 
 export default ArticlesLabel;
-
-      

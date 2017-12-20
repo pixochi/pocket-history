@@ -7,14 +7,12 @@ import { parseXml } from '../../utils/xmlParser'
 
 import config from '../../constants/config';
 
-import { DEFAULT_TIMELINE_FILTER } from './constants';
 import { 
 	FETCH_FACT_BOOKS,
 	FETCH_FACT_VIDEOS,
 	FETCH_TIMELINE_FACTS,
 	CHANGE_TIMELINE_RANGE,
 	CHANGE_TIMELINE_FILTER,
-	COPY_TO_CLIPBOARD
 } from '../../constants/actionTypes';
 
 

@@ -5,8 +5,6 @@ import {
   Text,
   FlatList,
   Animated,
-  Clipboard,
-  Share
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -15,7 +13,6 @@ import _ from 'lodash';
 import Banner from '../../components/AdMob';
 import Loader from '../../components/Loader';
 import FactCard from '../../components/FactCard';
-import MenuIcon from '../../components/MenuIcon';
 import NetworkProblem from '../../components/NetworkProblem';
 
 import { showInterstitial } from '../../components/AdMob/actions';
@@ -78,7 +75,7 @@ class FactsScreen extends PureComponent {
 
   render() {
 	  const { allFacts, filteredFacts, selectedDate, filter,
-	   renderFact, category, isReady,onMomentumScrollBegin, 
+	   category, isReady,onMomentumScrollBegin, 
 	   onMomentumScrollEnd, onScroll, onScrollEndDrag } = this.props;
 	   
 	  let Main;

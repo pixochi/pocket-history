@@ -1,8 +1,4 @@
 import React, { PureComponent } from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
 import { AdMobBanner } from 'expo';
 import PropTypes from 'prop-types';
 
@@ -25,7 +21,7 @@ class Banner extends PureComponent {
       <AdMobBanner
 	      bannerSize={size}
 	      adUnitID={CONFIG.common.adMob.testBanner} // Test ID, Replace with your-admob-unit-id
-	      testDeviceID="EMULATOR"
+	      testDeviceID='EMULATOR'
 	      style={[bannerStyle, style]}
 	    />
     );

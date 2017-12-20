@@ -18,5 +18,3 @@ class FactsLabel extends PureComponent {
 
 
 export default FactsLabel;
-
-      

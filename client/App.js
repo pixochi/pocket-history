@@ -1,6 +1,6 @@
 // REACT
 import React, { Component } from 'react';
-import { View, StyleSheet, AsyncStorage } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { MenuContext } from 'react-native-popup-menu';
 import { Toast } from 'react-native-redux-toast';
 
@@ -34,8 +34,8 @@ export default class App extends Component {
   		return (
 	      <Provider store={store}>
 	      	<MenuContext backHandler={true}>
-	      		<Toast 
-	      			messageStyle={styles.toastMessage} 
+	      		<Toast
+	      			messageStyle={styles.toastMessage}
 	      			containerStyle={styles.toastContainer}
 	      		/>
 	        	<MainNavigator />

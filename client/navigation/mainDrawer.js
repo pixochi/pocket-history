@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { DrawerItems, SafeAreaView } from 'react-navigation';
+import { DrawerItems } from 'react-navigation';
 import { Constants } from 'expo';
 
 import { RoutesFavorites } from './favorites';
 import { RoutesTodayInHistory } from './todayInHistory';
+import About from '../screens/About';
 import WhichHappenedSooner from '../screens/WhichHappenedSooner';
 
 import { COLORS } from '../constants/components'
@@ -45,8 +46,6 @@ const styles = StyleSheet.create({
 export const routesDrawer = {
   todayInHistory: { screen: RoutesTodayInHistory },
   happenedSooner: { screen: WhichHappenedSooner },
-  // predictions: { screen: FuturePredictions },
-  // diary: { screen: Diary },
   favorite: { screen: RoutesFavorites }, 
-  // myAccount: { screen: MyAccount }
+  about: { screen: About }
 }

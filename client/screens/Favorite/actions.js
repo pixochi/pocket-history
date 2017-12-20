@@ -1,8 +1,6 @@
-import axios from 'axios';
 import _ from 'lodash';
 
 import { ToastActionsCreators } from 'react-native-redux-toast';
-
 import { 
   ADD_FAVORITE,
   REMOVE_FAVORITE,

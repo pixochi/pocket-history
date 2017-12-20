@@ -2,11 +2,9 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   Animated,
   AsyncStorage
 } from 'react-native';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -31,8 +29,7 @@ import MenuIcon from '../../components/MenuIcon';
 import { RoutesFactCategories } from '../../navigation/todayInHistory';
 
 //CONSTANTS
-import { HEADER_HEIGHT, COLORS } from '../../constants/components';
-
+import { HEADER_HEIGHT } from '../../constants/components';
 import gStyles from '../../styles';
 
 
@@ -49,7 +46,7 @@ class TodayInHistory extends PureComponent {
   };
 
   componentDidMount() {
-    AsyncStorage.clear();
+    // AsyncStorage.clear();
     this.state.scrollAnim.addListener(this._handleScroll);
   }
 
@@ -59,7 +56,7 @@ class TodayInHistory extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { allFacts, selectedDate, selectedCategory,
-      fetchFacts, fetchFactsImages, isOnline, filter, imgFetchSrc } = nextProps;
+      fetchFacts, fetchFactsImages, imgFetchSrc } = nextProps;
     const dateChanged = this.props.selectedDate.factDate !== selectedDate.factDate;
     const categoryChanged = this.props.selectedCategory !== selectedCategory;
     const hasImages = _.get(allFacts,`[${selectedDate.factDate}].images[${selectedCategory}]`, false);
@@ -164,7 +161,7 @@ class TodayInHistory extends PureComponent {
 
   _canFetchImages = (props) => {
     const { isFetchingImages, allFacts, 
-      selectedDate, selectedCategory, imgErr } = props;
+      selectedDate, selectedCategory } = props;
     const nextFacts = _.get(allFacts, `[${selectedDate.factDate}][${selectedCategory}]`, false);
     const hasFacts = !_.isEmpty(nextFacts);
 

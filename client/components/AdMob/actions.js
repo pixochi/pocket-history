@@ -9,7 +9,7 @@ import CONFIG from '../../constants/config';
 
 export const initInterstitial = () => {
 	AdMobInterstitial.setAdUnitID(CONFIG.common.adMob.testInterstitial);
-  AdMobInterstitial.setTestDeviceID("EMULATOR");
+  AdMobInterstitial.setTestDeviceID('EMULATOR');
 	return { type: INIT_INTERSTITIAL }
 }
 

@@ -4,8 +4,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Share,
-  Clipboard,
   TouchableHighlight
 } from 'react-native';
 import { WebBrowser } from 'expo';
@@ -13,7 +11,6 @@ import { WebBrowser } from 'expo';
 import CardMenu from './CardMenu';
 import { fixWikiLink } from '../utils/link';
 import { COLORS } from '../constants/components';
-import gStyles from '../styles';
 
 
 class ArticleCard extends PureComponent {

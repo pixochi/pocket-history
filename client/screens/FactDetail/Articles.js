@@ -5,10 +5,7 @@ import {
   Text,
   FlatList
 } from 'react-native';
-import { Button } from 'react-native-elements';
 import hash from 'string-hash';
-
-import { dateRangeFromString } from '../../utils/date';
 
 import Banner from '../../components/AdMob';
 import ArticleCard from '../../components/ArticleCard';
@@ -27,9 +24,10 @@ class Articles extends PureComponent {
 	_cardMenuOptions = ({link, title}) => {
 		const { addFavorite, copyToClipboard } = this.props.screenProps;
 		const id = hash(link+title);
+		const message = `${title} - ${link}`
 		const menuOptions = [
-			copy({ onSelect: () => copyToClipboard(link), optionText: 'Copy Link' }),
-			share({ message: title }),
+			copy({ onSelect: () => copyToClipboard(message), optionText: 'Copy Link' }),
+			share({ message }),
 			save({ onSelect: () => addFavorite({link, title, id}, 'articles') })
 		]
 		return menuOptions;

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { 
   FETCH_FACTS,
   FETCH_FACTS_IMAGES,
@@ -8,8 +7,8 @@ import {
   CHANGE_IMG_AJAX_SRC
 } from '../../../constants/actionTypes';
 import { toFactDate } from '../../../utils/date';
-
 import { DEFAULT_FACTS_FILTER } from '../constants';
+
 
 const currentTimestamp = new Date().getTime();
 
@@ -54,7 +53,7 @@ const factsReducer = (state = defaultState, action) => {
         imgErr: false 
       }
     case `${FETCH_FACTS_IMAGES}_REJECTED`:
-      return { ...state,  isFetchingImages: false, imgErr: true }
+      return { ...state, isFetchingImages: false, imgErr: true }
 
     case CHANGE_DATE: 
       return { ...state, selectedDate: {...action.date}, isLoading: false, error: false }
@@ -72,8 +71,6 @@ const factsReducer = (state = defaultState, action) => {
       return state;
   }
 }
-
-
 
 
 export default factsReducer;

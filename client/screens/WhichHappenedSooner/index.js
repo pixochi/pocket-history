@@ -5,7 +5,6 @@ import {
   ScrollView,
   Text,
   TouchableHighlight,
-  TouchableOpacity,
   Dimensions,
   AppState
 } from 'react-native';
@@ -14,7 +13,6 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 import FactCard from '../../components/FactCard';
 import Header from '../../components/Header';
@@ -250,7 +248,7 @@ class WhichHappenedSooner extends PureComponent {
             
             { Main }
 
-            { flip && this._renderContinueButton(isCorrect) }
+            { started && flip && this._renderContinueButton(isCorrect) }
 
           </ScrollView>
           

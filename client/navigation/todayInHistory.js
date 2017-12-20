@@ -10,7 +10,6 @@ import FactDetail from '../screens/FactDetail';
 import News from '../screens/TodayInHistory/News';
 import TodayInHistory from '../screens/TodayInHistory';
 
-import { COLORS } from '../constants/components';
 import { tabBarOptions } from './common';
 
 

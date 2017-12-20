@@ -10,19 +10,18 @@
     "primaryColor": "#092f3a",
     "icon": "./assets/icons/app-icon.png",
     "loading": {
-      "icon": "./assets/icons/loading-icon.png"
+      "icon": "./assets/icons/app-icon.png"
     },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0C3644"
+    },     
     "packagerOpts": {
       "assetExts": ["ttf", "mp4"]
     },
     "ios": {
       "supportsTablet": true
-    },
-    "android": {
-      "splash": {
-        // "image": "./assets/splash.png",
-        "backgroundColor": "#FEF9B0"
-      }     
     }
   }
 }

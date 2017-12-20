@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { 
   FETCH_GAME_FACTS_PENDING,
   FLIP_GAME_CARDS,

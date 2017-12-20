@@ -4,7 +4,6 @@ import {
   View,
   Picker,
   Dimensions,
-  Platform
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';

@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import {
   StyleSheet,
   View,
-  Text,
-  WebView,
   Platform
 } from 'react-native';
 import { WebBrowser } from 'expo';

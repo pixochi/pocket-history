@@ -8,14 +8,12 @@ import {
   Linking,
   Dimensions
 } from 'react-native';
-import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
 
 import CardMenu from './CardMenu';
-import { copy, share, save } from './utils/cardMenuOptions';
+import { copy, share } from './utils/cardMenuOptions';
 
 import { COLORS } from '../constants/components';
-import gStyles from '../styles';
 
 
 class NewsCard extends PureComponent {
@@ -34,8 +32,8 @@ class NewsCard extends PureComponent {
 	render() {
 		const { title, description, img, link } = this.props;
 		const menuOptions = [
-	  	copy({ content: `${title}. ${description}` }),
-			share({ message: `${title}. ${description}` })
+	  	copy({ content: `${title} - ${link}` }),
+			share({ message: `${title} - ${link}` })
 		]
 		
 	  return (

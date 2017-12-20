@@ -55,8 +55,8 @@ class FactCard extends PureComponent {
   }
 
   _openFactLink = (url) => {
-    url = fixWikiLink(url);
-    WebBrowser.openBrowserAsync(url);
+    const fixedUrl = fixWikiLink(url);
+    WebBrowser.openBrowserAsync(fixedUrl);
   }
 
   _addFactToFavorite = (fact) => {
@@ -91,9 +91,10 @@ class FactCard extends PureComponent {
   }
 
   render() {
-    const { fact, date, isImgShown, category, isFavorite,
+    const { fact, date, isImgShown, isFavorite,
      canShowDetail, canShowDate } = this.props;
-    const { year, html, text, img, links } = fact;
+    const { year, html, img, } = fact;
+    const timeAgo = year && yearsAgo(year);
 
     return (
       <View style={styles.factCard}>
@@ -129,7 +130,7 @@ class FactCard extends PureComponent {
               <View style={styles.yearsAgoContainer}>
                 { year && 
                   <Text style={styles.yearsAgoText}>
-                    { yearsAgo(year) } years ago
+                    { timeAgo } year{ timeAgo !== 1 && 's' } ago
                   </Text>
                 }
               </View>
@@ -141,7 +142,7 @@ class FactCard extends PureComponent {
           </View>
           
           <View style={styles.htmlView}>
-            <HTMLView 
+            <HTMLView
               value={html}
               RootComponent={Text}
               style={styles.factText}
@@ -159,10 +160,10 @@ class FactCard extends PureComponent {
               underlayColor={COLORS.underlay}
               style={styles.openDetailIcon}
               onPress={this._openFactDetail}
-            />     
-          }      
+            />   
+          }    
         </View>
-        
+       
       </View>
     );
   }
@@ -188,8 +189,8 @@ const TEXT_COLOR = COLORS.greyDark;
 
 const htmlViewStyles = {
   a: {
-      color: COLORS.link,
-      fontWeight: 'bold'
+    color: COLORS.link,
+    fontWeight: 'bold'
   }
 }
 

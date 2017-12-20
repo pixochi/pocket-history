@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
   StyleSheet,
-  View,
 } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 

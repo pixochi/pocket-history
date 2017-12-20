@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import {
 	FETCH_GAME_FACTS_PENDING, 
-	GET_GAME_FACTS,
 	FLIP_GAME_CARDS,
 	SELECT_ANSWER,
 	START_GAME,
@@ -18,7 +17,7 @@ import {
 } from '../../constants/actionTypes';
 import config from '../../constants/config';
 import { getRandomNumber } from '../../utils/random';
-import { getDateNums, getYear, toApiFactDate } from '../../utils/date';
+import { getYear, toApiFactDate } from '../../utils/date';
 
 
 const ENV = config.env;
@@ -104,7 +103,7 @@ export const startGame = () => async (dispatch, getState) => {
 	}
 }
 
-export const stopGame = () => (dispatch, getState) => {
+export const stopGame = () => (dispatch) => {
 	clearInterval(gameTimer);
 	dispatch({ type: STOP_GAME });
 	dispatch(scheduleGameNotification());

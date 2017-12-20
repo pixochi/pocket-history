@@ -18,5 +18,3 @@ class TimelineLabel extends PureComponent {
 
 
 export default TimelineLabel;
-
-      

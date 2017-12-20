@@ -17,7 +17,7 @@ import { DRAWER_ICON_SIZE } from '../constants/components';
 export const RoutesFavorites = StackNavigator(
 	{
 		favorite: {
-		  screen: (props) =>  <Favorite {...props} />, 
+		  screen: (props) => <Favorite {...props} />,
 		 },
 		searchFavorite: { screen: SearchFavorite }
 	},

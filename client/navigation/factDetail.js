@@ -12,7 +12,7 @@ import { tabBarOptions } from './common';
 
 export const RoutesFactDetail = TabNavigator(
   {
-    articles: {  screen: Articles },
+    articles: { screen: Articles },
     videos: { screen: Videos },
     books: { screen: Books },
     timeline: { screen: Timeline }

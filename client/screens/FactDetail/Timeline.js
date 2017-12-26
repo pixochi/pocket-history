@@ -141,7 +141,7 @@ class Timeline extends PureComponent {
     )
 
     rowID = parseInt(rowID);
-    if (rowID && rowID % 15 === 0) {
+    if (rowID && rowID % 14 === 0) {
       return (
         <View>
           <Banner />

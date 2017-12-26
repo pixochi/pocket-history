@@ -28,7 +28,7 @@ class FactDetail extends PureComponent {
 
 	componentDidUpdate(prevProps, prevState) {
 	  const { showInterstitial, adMobCounter } = this.props;
-	  if (adMobCounter === 10) {
+	  if (adMobCounter === 9) {
 	  	showInterstitial('factDetailCounter');
 	  }
 	}

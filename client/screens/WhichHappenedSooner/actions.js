@@ -119,15 +119,20 @@ export const scheduleGameNotification = () => (dispatch, getState) => {
 
 		const gameNotification = {
 	    title: 'Beat Your Best Score',
-	    body: 'It\'s time to pump those numbers up!' ,
+	    body: 'It\'s time to pump those numbers up!',
+	    icon: '../../assets/icons/android.png',
 	    sound: true,
 	    vibrate: true,
 	    priority: 'high', 
+	    data: {
+	    	category: 'Events',
+	    	timestamp: (new Date()).getTime()
+	    }
 	  }
 	  // SCHEDULING
 	  let d = new Date();
-		d.setHours(d.getHours() + 4);
-		const schedulingOptions = {
+		d.setSeconds(d.getSeconds() + 10);
+		let schedulingOptions = {
 	    time: d,
 	    repeat: 'day',
 	  };

@@ -27,7 +27,7 @@ class FactsScreen extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { adMobCounter, showInterstitial } = this.props;
-    if (adMobCounter === 9) {
+    if (adMobCounter === 5) {
       showInterstitial('factsCounter');
     } 
   }
@@ -62,7 +62,7 @@ class FactsScreen extends PureComponent {
 	  	/>
   	);
 
-    if (index && index % 14 === 0) {
+    if (index && index % 13 === 0) {
       return (
         <View>
           <Banner />
@@ -75,7 +75,7 @@ class FactsScreen extends PureComponent {
 
   render() {
 	  const { allFacts, filteredFacts, selectedDate, filter,
-	   category, isReady,onMomentumScrollBegin, 
+	   category, isReady, onMomentumScrollBegin, 
 	   onMomentumScrollEnd, onScroll, onScrollEndDrag } = this.props;
 	   
 	  let Main;

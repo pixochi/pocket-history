@@ -33,11 +33,13 @@ const QUOTES = [
 class Loader extends PureComponent {
 
 	static propTypes = {
-	  isAnimating: PropTypes.bool
+	  isAnimating: PropTypes.bool,
+	  hasQuote: PropTypes.bool,
 	}
 
 	static defaultProps = {
-	  isAnimating: true
+	  isAnimating: true,
+	  hasQuote: true
 	}
 
 	// shows a message if loading takes
@@ -80,6 +82,8 @@ class Loader extends PureComponent {
 
 	render() {
 		const indicatorSize = Platform.OS === 'android' ? 70 : 'large';
+		const { hasQuote } = this.props;
+
 		return (
 			<View style={styles.spinner}>
 				<ActivityIndicator 
@@ -87,9 +91,13 @@ class Loader extends PureComponent {
 					animating={this.props.animating}
 					color={COLORS.yellowDark}
 				/>
-				<Text style={styles.message}>
-			  	{ this.state.message }
-				</Text> 
+				{
+					hasQuote &&
+					<Text style={styles.message}>
+			  		{ this.state.message }
+					</Text> 
+				}
+				
 			</View>
 		); 
 	}
@@ -99,13 +107,14 @@ class Loader extends PureComponent {
 const styles = StyleSheet.create({
 	spinner: {
 		position: 'absolute',
-		zIndex: -1000,
+		zIndex: 1000,
 		justifyContent: 'center',
 		alignItems: 'center',
 		top: 0,
 		left: 0,
 		right: 0,
-		bottom: 0
+		bottom: 0,
+		backgroundColor: 'rgba(0,0,0,0)',
 	},
 	message: {
 		textAlign: 'center',

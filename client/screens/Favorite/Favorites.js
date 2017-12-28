@@ -4,7 +4,6 @@ import {
   View,
   FlatList
 } from 'react-native';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import EmptyFavorites from '../../components/EmptyFavorites';
@@ -53,9 +52,5 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ account }) => ({
-  user: account.user
-});
 
-
-export default connect(mapStateToProps)(Favorites);
+export default Favorites;

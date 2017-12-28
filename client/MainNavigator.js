@@ -20,7 +20,11 @@ class MainNavigator extends PureComponent {
 
   render() {
   	const MainNavigator = DrawerNavigator(routesDrawer, {
-      contentComponent: DrawerContent
+      contentComponent: DrawerContent,
+      drawerWidth: 320,
+      drawerOpenRoute: 'DrawerOpen',
+      drawerCloseRoute: 'DrawerClose',
+      drawerToggleRoute: 'DrawerToggle',
     });
 
     return (

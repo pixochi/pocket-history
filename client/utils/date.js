@@ -57,6 +57,13 @@ export const toApiNewsDate = (timestamp) => {
   return `${monthText}/${day}`; // october/25
 }
 
+export const factDateToNumbers = (factDate) => {
+  const arr = factDate.split(" ");
+  month = MONTHS.findIndex(m => arr[0] === m);
+  day = arr[1];
+  return { month, day }
+}
+
 // returns the format of the selected date
 // in the state
 // format: October 25

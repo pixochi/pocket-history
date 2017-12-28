@@ -1,7 +1,6 @@
 {
   "name": "pocket-history",
   "version": "0.0.0",
-  "description": "All about what happened, is happeninng and will happen.",
   "author": "Jakub Kozak",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
@@ -44,6 +43,7 @@
   },
   "devDependencies": {
     "enzyme": "^3.1.0",
+    "eslint": "^4.9.0",
     "eslint-plugin-react": "^7.4.0",
     "jest-serializer-enzyme": "^1.0.0",
     "react-addons-test-utils": "^15.6.2",

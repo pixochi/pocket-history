@@ -17,15 +17,11 @@ import {
 } from '../../constants/actionTypes';
 import config from '../../constants/config';
 import { getRandomNumber } from '../../utils/random';
-import { getYear, toApiFactDate } from '../../utils/date';
+import { getYear, toApiFactDate, factDateToNumbers } from '../../utils/date';
 
 
 const ENV = config.env;
 const API_ROOT_URL = config[ENV].apiRootUrl;
-const MONTHS =  [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
 
 const fetchFacts = (state) => {
 	return new Promise(async (resolve, reject) => {
@@ -131,7 +127,7 @@ export const scheduleGameNotification = () => (dispatch, getState) => {
 	  }
 	  // SCHEDULING
 	  let d = new Date();
-		d.setSeconds(d.getSeconds() + 10);
+		d.setHours(d.getHours() + 3);
 		let schedulingOptions = {
 	    time: d,
 	    repeat: 'day',
@@ -231,9 +227,7 @@ const getRandomFact = (facts) => {
   const factsSet = facts[factsKeys[randomDateNum]];
   const randomFactNum = getRandomNumber(0, factsSet.length -1);
   const factDate = factsKeys[randomDateNum]; // factDate - "October 17"
-  const arr = factDate.split(" ");
-  month = MONTHS.findIndex(m => arr[0] === m);
-  day = arr[1];
+  const { month, day } = factDateToNumbers(factDate);
   let randomFact = factsSet[randomFactNum];
   const factTimestamp = new Date(getYear(randomFact.year), month, day).getTime();
  	randomFact.timestamp = factTimestamp;

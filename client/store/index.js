@@ -28,7 +28,6 @@ const offlineConfig = {
       createFilter('happenedSooner', ['score', 'bestScore']),
       createBlacklistFilter('factDetail', ['books', 'videos', 'timeline', 'error', 'isLoading', 'selectedRoute' ]),
       createBlacklistFilter('favorite', ['filter']),
-      createBlacklistFilter('account', ['error', 'isLoading']),
       createBlacklistFilter('persist', ['rehydrated']),
       createBlacklistFilter('toast', ['message', 'error', 'warning', 'duration']),
       createBlacklistFilter('modal', ['isVisible', 'currentName'])

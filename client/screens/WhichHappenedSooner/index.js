@@ -315,13 +315,13 @@ const styles = StyleSheet.create({
     height: 80,
   },
   timer: {
-    marginTop: 35,
+    marginTop: 10,
   },
   timerText: {
     position: 'relative',
-    bottom: 55,
+    bottom: 2,
     textAlign: 'center',
-    fontSize: 27,
+    fontSize: 35,
     color: COLORS.greyDark
   },
   cardsContainer: {

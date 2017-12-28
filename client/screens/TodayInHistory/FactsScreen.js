@@ -98,7 +98,7 @@ class FactsScreen extends PureComponent {
 	  } else {
 	  	Main = (
 	  		<View style={styles.container}>
-	  			{ !isReady && <Loader isAnimating={!isReady} /> }
+	  			{ !isReady && <Loader isAnimating={!isReady} hasQuote={false} /> }
 		      <AnimatedFlatList
 		       	contentContainerStyle={styles.list}
 		        data = {filteredFacts[category]}

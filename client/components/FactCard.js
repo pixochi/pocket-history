@@ -21,7 +21,7 @@ import { addFavorite, removeFavorite } from '../screens/Favorite/actions';
 import { copyToClipboard } from '../screens/FactDetail/actions';
 import { copy, share, save, remove } from './utils/cardMenuOptions';
 
-import { yearsAgo, getDateNums } from '../utils/date';
+import { yearsAgo, factDateToNumbers } from '../utils/date';
 import { fixWikiLink } from '../utils/link';
 
 import { COLORS } from '../constants/components';
@@ -55,17 +55,16 @@ class FactCard extends PureComponent {
   }
 
   _openFactLink = (url) => {
-    const fixedUrl = fixWikiLink(url);
-    WebBrowser.openBrowserAsync(fixedUrl);
+    url = fixWikiLink(url);
+    WebBrowser.openBrowserAsync(url);
   }
 
   _addFactToFavorite = (fact) => {
     const { addFavorite } = this.props;
     let { date } = this.props;
-    // const { day, month } = getDateNums(new Date().getTime());
     if (!fact.date) {
       // date e.g. October 17
-      const { day, month } = getDateNums(new Date(date).getTime());
+      const { day, month } = factDateToNumbers(date);
       date = `${month+1}/${day}`;
     }
     const id = hash(fact.html+fact.year);
@@ -91,10 +90,9 @@ class FactCard extends PureComponent {
   }
 
   render() {
-    const { fact, date, isImgShown, isFavorite,
+    const { fact, date, isImgShown, category, isFavorite,
      canShowDetail, canShowDate } = this.props;
-    const { year, html, img, } = fact;
-    const timeAgo = year && yearsAgo(year);
+    const { year, html, text, img, links } = fact;
 
     return (
       <View style={styles.factCard}>
@@ -130,7 +128,7 @@ class FactCard extends PureComponent {
               <View style={styles.yearsAgoContainer}>
                 { year && 
                   <Text style={styles.yearsAgoText}>
-                    { timeAgo } year{ timeAgo !== 1 && 's' } ago
+                    { yearsAgo(year) } years ago
                   </Text>
                 }
               </View>
@@ -142,7 +140,7 @@ class FactCard extends PureComponent {
           </View>
           
           <View style={styles.htmlView}>
-            <HTMLView
+            <HTMLView 
               value={html}
               RootComponent={Text}
               style={styles.factText}
@@ -160,10 +158,10 @@ class FactCard extends PureComponent {
               underlayColor={COLORS.underlay}
               style={styles.openDetailIcon}
               onPress={this._openFactDetail}
-            />   
-          }    
+            />     
+          }      
         </View>
-       
+        
       </View>
     );
   }
@@ -189,8 +187,8 @@ const TEXT_COLOR = COLORS.greyDark;
 
 const htmlViewStyles = {
   a: {
-    color: COLORS.link,
-    fontWeight: 'bold'
+      color: COLORS.link,
+      fontWeight: 'bold'
   }
 }
 

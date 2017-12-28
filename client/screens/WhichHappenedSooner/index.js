@@ -41,7 +41,7 @@ class WhichHappenedSooner extends PureComponent {
     if (nextProps.timer === 0) {
       nextProps.stopGame();
     }
-    if (nextProps.adMobCounter === 2) {
+    if (nextProps.adMobCounter === 3) {
       this.props.showInterstitial('happenedSoonerCounter');
     }
     this._createResultMessage(nextProps);

@@ -20,8 +20,7 @@ class Banner extends PureComponent {
     return (
       <AdMobBanner
 	      bannerSize={size}
-	      adUnitID={CONFIG.common.adMob.testBanner} // Test ID, Replace with your-admob-unit-id
-	      testDeviceID='EMULATOR'
+	      adUnitID={CONFIG.common.adMob.banner1}
 	      style={[bannerStyle, style]}
 	    />
     );

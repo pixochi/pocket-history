@@ -8,6 +8,10 @@
     "version": "1.0.1",
     "orientation": "default",
     "primaryColor": "#0c3441",
+    "notification": {
+      "icon": "./assets/icons/android.png",
+      "color": "#0c3441"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",

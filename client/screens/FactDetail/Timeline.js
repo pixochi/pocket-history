@@ -102,7 +102,7 @@ class Timeline extends PureComponent {
     const isLoadingNext = (!isLastFetched && isLoading);
     const loader = (
       <View style={styles.footer}>
-        <ActivityIndicator size='large' /> 
+        <ActivityIndicator size='large' color={COLORS.yellowDark} /> 
         <View style={styles.loadingMsgContainer}>
           <Text style={styles.textLoading} >
             Loading...

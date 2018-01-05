@@ -130,7 +130,7 @@ export const scheduleGameNotification = () => (dispatch, getState) => {
 		d.setHours(d.getHours() + 3);
 		let schedulingOptions = {
 	    time: d,
-	    repeat: 'day',
+	    repeat: 'week',
 	  };
 
 	  Notifications.scheduleLocalNotificationAsync(gameNotification, schedulingOptions);

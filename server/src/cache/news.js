@@ -24,7 +24,7 @@ export const getCachedNews = (req, res, next) => {
 export const cacheNews = (news) => {
   return new Promise((resolve, reject) => {
     const serializedNews = JSON.stringify(news); // array to string
-    const expiresIn = 60*60*2 // 2 hours in seconds
+    const expiresIn = 60*60*6 // hours in seconds
     
     redisClient.setex('news', expiresIn, serializedNews, (err, reply) => {
       if (err) {
